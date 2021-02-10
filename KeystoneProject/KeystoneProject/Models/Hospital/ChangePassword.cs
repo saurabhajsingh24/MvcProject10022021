@@ -15,6 +15,9 @@ namespace KeystoneProject.Models.Hospital
         public string oldpswd { get; set; }
         public string newpswd { get; set; }
         public string CnfrmNewpswd { get; set; }
+        public string Saurabh { get; set; }
+
+
       
     }
 }
