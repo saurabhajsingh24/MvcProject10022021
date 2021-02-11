@@ -234,7 +234,9 @@
         //        $(this).toggle($(this).text(text).toLowerCase().indexOf(value) > -1)
         //    });
         //})
-
+       
+       
+       
         $('#PrintRegNo').change(function () {
             debugger
             var printReg = $(this).val();
@@ -261,7 +263,7 @@
 
 
                     d = $("#RegNo").val();
-
+                
 
                     if (d > 0) {
 
@@ -1022,6 +1024,7 @@
 
                     })
 
+                
 
 
                 }
@@ -1031,8 +1034,8 @@
             });
 
 
-
-
+         
+         
 
 
 
@@ -1292,7 +1295,7 @@
 
         })*@
 
-
+      
 
         $("#OrganizationName").autocomplete({
 
@@ -1928,6 +1931,8 @@
                     $("#CityName").val(data[0].CityName);
                 
                     $("#RegistrationDate").val(data[1].PatientRegistrationDate);
+                    $('#RegistrationDate').attr('min', data[1].PatientRegistrationDate);
+                    
                     $("#RegistrationTime").val(data[1].time);
                     if (data[1].TemporaryDoctorStatus == "True") {
                         $("#TemporaryDoctorID").prop("checked", true);
@@ -2911,14 +2916,29 @@ $(document).ready(function(){
     function TPAWiseRate() {
         debugger
         if ($("#RegNo").val() > 0) {
-           
+            debugger
+            var IPDChk = document.getElementById("IPD").checked;
+            var OPDIPDID = "";
+            var type = "";
+            if (IPDChk)
+            {
+                OPDIPDID = $("#PatientIPDNO").val();
+                type = "IPD";
 
+            }
+            else
+            {
+                OPDIPDID = $("#PatientOPDNO").val();
+                type = "OPD";
+            }
             debugger
 
             if ($("#TPAName").val() != null && $("#TPAName").val() != "") {
+                debugger
              //   alert($("#TPAName").val());
                 $("#TPAChk").text('TPA');
                 $("#TPACheck").prop("checked", true);
+               
 
                 //var ans = confirm("Do you want to change Rate according to  TPA wise?");
                 //if (ans)
@@ -2927,9 +2947,10 @@ $(document).ready(function(){
                     type: "POST",
                   
                     url: '@Url.Action("EditTPAWiseBills", "PatientOPD")',
-                    data: { PatientRegNo: $("#RegNo").val(), PatientIPDNo: $("#PatientIPDNO").val(), TPAID: $("#TPANameID").val(), WardID: $("#WardID").val() },
+                    data: { PatientRegNo: $("#RegNo").val(), PatientIPDNo: OPDIPDID, TPAID: $("#TPANameID").val(), WardID: $("#WardID").val(), type: type },
                     dataType: "json",
                     success: function (data) {
+                        debugger
                         if (data == "Reason Deleted Successfully") {
                             alert("Reason Deleted Successfully");
                             window.location.reload(true);
@@ -2954,7 +2975,7 @@ $(document).ready(function(){
                     type: "POST",
                     //url: "/Department/DeleteDepartment?DepartmentID=" + DepartmentID,
                     url: '@Url.Action("EditTPAWiseBills", "PatientOPD")',
-                    data: { PatientRegNo: $("#RegNo").val(), PatientIPDNo: $("#PatientIPDNO").val(), WardID: $("#WardID").val() },
+                    data: { PatientRegNo: $("#RegNo").val(), PatientIPDNo: OPDIPDID, WardID: $("#WardID").val(), type: type },
                     dataType: "json",
                     success: function (data) {
                         //if (data == "Reason Deleted Successfully") {
@@ -2965,7 +2986,8 @@ $(document).ready(function(){
                         //    alert(data);
                         //}
                     },
-                    error: function (errormessage) {
+                    error: function (errormessage)
+                    {
                        // alert(errormessage.responseText);
                     }
                 });

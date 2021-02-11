@@ -272,28 +272,46 @@
         });
     })
     $(document).ready(function () {
+
         $("#submit").click(function () {
+       
             debugger
+           
             $.ajax({
                 url: '@Url.Action("RptMISVoucherWise", "PatientReport")',
                 type: "POST",
                 dataType: "json",
                 data: { FromDate: $("#FromDate").val(), ToDate: $("#ToDate").val(), Voucher: $("#Voucher").val() },
                 success: function (data) {
+
                     debugger
                     $("#voucherReportTableId tbody tr").remove();
+                    var Debitcard = "";
+                    var CreditAmount = "";
                     for (var i = 0; i < data.length; i++) {
                         $("#voucherReportTableId").append('<tr><td>' + data[i].VouheEntryDetailID + '</td><td>' + data[i].VoucherName + '</td><td>' + data[i].DrAmount + '</td><td>' + data[i].CrAmount + '</td><td>' + data[i].Date + '</td><td>' + data[i].ChequeNo + '</td><td>' + data[i].BankName + '</td><td>' + data[i].Narration + '</td></tr>');
+                        $("#debitAmount").val(data[i].DrAmount1)
+                        $("#creditAmount").val(data[i].CrAmount1)
+                        Debitcard = data[0].DrAmount1;
+                        CreditAmount = data[0].CrAmount1;
+                      
                     };
+
+
+                    if (Debitcard > 0 || CreditAmount > 0) {
+                        debugger
+                        $("#voucherReportTableId").append('<tr><td></td><td>Total</td><td>' + Debitcard + '</td><td>' + CreditAmount + '</td><td></td><td></td><td></td><td></td></tr>');
+                    }
+                    $('#voucherReportTableId').dataTable().fnDestroy();
                     $('.ex-btn').css('display', 'inline-flex');
                     $('#voucherReportTableId').DataTable({
-                        "fixedHeader": true,
+                        "fixedHeader": false,
                         "paging": true,
-                        "lengthChange": true,
+                        "lengthChange": false,
                         "searching": true,
-                        "ordering": true,
-                        "info": true,
-                        "autoWidth": true,
+                        "ordering": false,
+                        "info": false,
+                        "autoWidth": false,
                         "responsive": false,
                     });
                     var buttons = new $.fn.dataTable.Buttons($('#voucherReportTableId').DataTable(), {
@@ -391,7 +409,7 @@
                             </div>
                             <div class="btn-group dropdown-split-warning">
                                 <button type="button" id="submit" name="submit" class="btn btn-app">
-                                    <i class="fa fa-search"></i>Search
+                                    <i class="fa fa-search"></i>View
                                 </button>
                             </div>
                             <div class="btn-group dropdown-split-warning ex-btn" style="display: none;">
@@ -401,7 +419,7 @@
                     </div>
 
                     <div class="row">
-                        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
                             <table id="voucherReportTableId" class="table table-bordered hover display dataTable table-hover" role="grid" style="width: 100%">
                                 <thead style="background-color: #bddff7;">
                                     <tr>
@@ -417,6 +435,31 @@
                                 </thead>
                                 <tbody class="scrollbar"></tbody>
                             </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="card-body">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <!-- Debit Amount-->
+                                <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Debit Amt.</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <input type="text" name="debitAmount" id="debitAmount" class="form-control" placeholder="Debit Amount">
+                                    </div>
+                                </div>
+                                <!-- Credit Amount -->
+                                <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Credit Amt.</label>
+                                    </div>
+                                    <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+                                        <input type="text" name="creditAmount" id="creditAmount" class="form-control" placeholder="Credit Amount">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

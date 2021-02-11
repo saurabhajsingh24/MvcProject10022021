@@ -6,7 +6,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>ftp://info@keystonehms.com</_PublishTargetUrl>
+    <_PublishTargetUrl>E:\Saurabh\MvcProject11022021</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/Antlr3.Runtime.dll">
@@ -82,7 +82,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/16/2020 12:54:28</publishTime>
     </File>
     <File Include="bin/KeystoneProject.dll">
-      <publishTime>02/07/2021 12:39:05</publishTime>
+      <publishTime>02/11/2021 10:15:33</publishTime>
     </File>
     <File Include="bin/Microsoft.ApplicationBlocks.Data.dll">
       <publishTime>03/15/2018 23:36:26</publishTime>
@@ -8622,6 +8622,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Application/Financial.cshtml">
       <publishTime>10/16/2020 21:32:31</publishTime>
     </File>
+    <File Include="Views/Application/Hospital.cshtml">
+      <publishTime>02/09/2021 16:43:35</publishTime>
+    </File>
     <File Include="Views/Application/Laboratory.cshtml">
       <publishTime>10/16/2020 21:30:57</publishTime>
     </File>
@@ -8632,13 +8635,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/03/2020 17:00:35</publishTime>
     </File>
     <File Include="Views/Application/Patient.cshtml">
-      <publishTime>10/19/2020 17:47:48</publishTime>
+      <publishTime>02/09/2021 16:05:47</publishTime>
     </File>
     <File Include="Views/Application/PatientMaster.cshtml">
-      <publishTime>11/27/2020 15:30:54</publishTime>
+      <publishTime>02/09/2021 17:29:48</publishTime>
     </File>
     <File Include="Views/Application/PatientReport.cshtml">
-      <publishTime>09/30/2020 09:46:38</publishTime>
+      <publishTime>02/08/2021 11:07:13</publishTime>
     </File>
     <File Include="Views/Authorised/Authorised.cshtml">
       <publishTime>12/04/2020 15:11:53</publishTime>
@@ -8770,7 +8773,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/16/2019 12:05:44</publishTime>
     </File>
     <File Include="Views/Home/Dashboard.cshtml">
-      <publishTime>02/05/2021 09:56:01</publishTime>
+      <publishTime>02/08/2021 22:52:33</publishTime>
     </File>
     <File Include="Views/Home/Dashboard1.cshtml">
       <publishTime>08/14/2019 11:06:14</publishTime>
@@ -8788,7 +8791,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/25/2021 15:51:10</publishTime>
     </File>
     <File Include="Views/HospitalLocation/HospitalLocation.cshtml">
-      <publishTime>01/30/2021 17:04:55</publishTime>
+      <publishTime>02/08/2021 13:37:27</publishTime>
     </File>
     <File Include="Views/HospitalProduct/HospitalProduct.cshtml">
       <publishTime>07/13/2019 13:01:38</publishTime>
@@ -8809,7 +8812,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/15/2019 16:49:56</publishTime>
     </File>
     <File Include="Views/IPDBill/IPDBill.cshtml">
-      <publishTime>02/06/2021 16:09:18</publishTime>
+      <publishTime>02/10/2021 17:02:38</publishTime>
     </File>
     <File Include="Views/IPDBill/RptPatientIPDBill.cshtml">
       <publishTime>12/15/2020 10:47:50</publishTime>
@@ -8974,7 +8977,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/15/2019 17:23:44</publishTime>
     </File>
     <File Include="Views/OPDBill/OPDBill.cshtml">
-      <publishTime>02/06/2021 19:34:09</publishTime>
+      <publishTime>02/10/2021 12:51:03</publishTime>
     </File>
     <File Include="Views/OPDRegisterForDoctor/OPDRegisterForDoctor.cshtml">
       <publishTime>08/22/2019 15:31:34</publishTime>
@@ -9010,7 +9013,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/11/2021 11:44:54</publishTime>
     </File>
     <File Include="Views/PatientBillNoReport/PatientBillNoReport.cshtml">
-      <publishTime>09/12/2020 20:33:58</publishTime>
+      <publishTime>02/10/2021 12:30:07</publishTime>
     </File>
     <File Include="Views/PatientCWProfile/PatientCWProfile.cshtml">
       <publishTime>12/03/2020 12:17:41</publishTime>
@@ -9064,7 +9067,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/02/2021 10:56:17</publishTime>
     </File>
     <File Include="Views/PatientOPD/PatientOPD.cshtml">
-      <publishTime>02/05/2021 17:10:25</publishTime>
+      <publishTime>02/10/2021 17:58:15</publishTime>
     </File>
     <File Include="Views/PatientOPDNoReport/PatientOPDNoReport.cshtml">
       <publishTime>09/12/2020 20:34:38</publishTime>
@@ -9085,31 +9088,31 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/11/2021 11:44:54</publishTime>
     </File>
     <File Include="Views/PatientReport/ExportPatientData.cshtml">
-      <publishTime>09/12/2020 20:30:54</publishTime>
+      <publishTime>02/08/2021 11:11:36</publishTime>
     </File>
     <File Include="Views/PatientReport/NewIPDPatient.cshtml">
-      <publishTime>09/12/2020 20:30:54</publishTime>
+      <publishTime>02/09/2021 12:09:32</publishTime>
     </File>
     <File Include="Views/PatientReport/OPDPatientReport.cshtml">
-      <publishTime>09/12/2020 20:30:54</publishTime>
+      <publishTime>02/09/2021 11:14:56</publishTime>
     </File>
     <File Include="Views/PatientReport/PatientAll.cshtml">
-      <publishTime>09/12/2020 20:30:54</publishTime>
+      <publishTime>02/09/2021 11:15:13</publishTime>
     </File>
     <File Include="Views/PatientReport/PatientHistory.cshtml">
-      <publishTime>09/12/2020 20:30:54</publishTime>
+      <publishTime>02/09/2021 11:15:31</publishTime>
     </File>
     <File Include="Views/PatientReport/PatientIPDAdmit.cshtml">
-      <publishTime>09/12/2020 20:30:54</publishTime>
+      <publishTime>02/09/2021 11:16:23</publishTime>
     </File>
     <File Include="Views/PatientReport/PatientOPDToIPD.cshtml">
-      <publishTime>09/12/2020 20:30:54</publishTime>
+      <publishTime>02/09/2021 11:16:11</publishTime>
     </File>
     <File Include="Views/PatientReport/PatientReAddmission.cshtml">
-      <publishTime>09/12/2020 20:30:56</publishTime>
+      <publishTime>02/09/2021 11:16:37</publishTime>
     </File>
     <File Include="Views/PatientReport/PatientRevisit.cshtml">
-      <publishTime>09/12/2020 20:30:56</publishTime>
+      <publishTime>02/09/2021 11:16:55</publishTime>
     </File>
     <File Include="Views/PatientReport/ReportMISMonthlyConsultancyCharges.cshtml">
       <publishTime>09/12/2020 20:30:58</publishTime>
@@ -9142,7 +9145,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/08/2021 11:37:20</publishTime>
     </File>
     <File Include="Views/PatientReport/VoucherReport.cshtml">
-      <publishTime>09/12/2020 20:31:02</publishTime>
+      <publishTime>02/09/2021 11:17:37</publishTime>
     </File>
     <File Include="Views/PatientSearch/PatientSearch.cshtml">
       <publishTime>12/31/2020 18:43:12</publishTime>
@@ -9172,7 +9175,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/02/2021 11:05:58</publishTime>
     </File>
     <File Include="Views/PreBalanceAmount/PreBalanceAmount.cshtml">
-      <publishTime>02/05/2021 17:06:39</publishTime>
+      <publishTime>02/10/2021 17:56:06</publishTime>
     </File>
     <File Include="Views/PreBalanceAmount/RptPreBalanceAmount.cshtml">
       <publishTime>02/05/2021 17:06:39</publishTime>
@@ -9292,7 +9295,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/20/2020 18:32:22</publishTime>
     </File>
     <File Include="Views/RoleRightstwo/RoleRightstwo.cshtml">
-      <publishTime>02/04/2021 09:39:15</publishTime>
+      <publishTime>02/09/2021 14:00:00</publishTime>
     </File>
     <File Include="Views/SampleType/SampleType.cshtml">
       <publishTime>10/09/2020 17:54:03</publishTime>
@@ -9322,16 +9325,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/03/2020 19:28:12</publishTime>
     </File>
     <File Include="Views/Shared/_Header.cshtml">
-      <publishTime>02/05/2021 10:47:57</publishTime>
+      <publishTime>02/09/2021 17:57:51</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>01/30/2021 10:41:49</publishTime>
+      <publishTime>02/09/2021 17:43:28</publishTime>
     </File>
     <File Include="Views/Shared/_LoginPartial.cshtml">
       <publishTime>05/20/2019 13:05:06</publishTime>
     </File>
     <File Include="Views/Shared/_Sidebar.cshtml">
-      <publishTime>09/29/2020 22:43:00</publishTime>
+      <publishTime>02/09/2021 17:08:00</publishTime>
     </File>
     <File Include="Views/Signup/Signup.cshtml">
       <publishTime>12/12/2019 15:26:46</publishTime>
@@ -9391,7 +9394,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/18/2020 21:01:38</publishTime>
     </File>
     <File Include="Views/UserRights/UserRights.cshtml">
-      <publishTime>02/04/2021 09:39:41</publishTime>
+      <publishTime>02/08/2021 22:51:28</publishTime>
     </File>
     <File Include="Views/Users/Users.cshtml">
       <publishTime>11/02/2020 11:22:24</publishTime>
@@ -9409,19 +9412,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/18/2019 15:25:14</publishTime>
     </File>
     <File Include="Views/WardRoomsDetails/WardRoomsDetails.cshtml">
-      <publishTime>12/08/2020 18:33:08</publishTime>
+      <publishTime>02/10/2021 18:00:52</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>04/16/2019 12:05:44</publishTime>
     </File>
     <File Include="Views/XRay/XRay.cshtml">
-      <publishTime>11/04/2020 16:41:48</publishTime>
+      <publishTime>02/08/2021 11:34:59</publishTime>
     </File>
     <File Include="Views/_ViewStart.cshtml">
       <publishTime>04/16/2019 12:05:44</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>02/07/2021 12:39:22</publishTime>
+      <publishTime>02/11/2021 10:15:39</publishTime>
     </File>
   </ItemGroup>
 </Project>

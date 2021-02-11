@@ -369,6 +369,16 @@
                     data: { BillNo: BillId },
                     success: function (data) {
                         debugger;
+                        if (data[0].ForAuthorization == "1") {
+                            $('.Edit').prop("disabled", true);
+                            alert("Previous Amount Not Authorized..");
+                            $('.Edit').prop('title', 'Previous Amount Not Authorized');
+                        }
+                        else {
+                            $('.Edit').prop("disabled", false);
+                            $('.Edit').prop('title', 'Save');
+                        }
+
 
                         $('#BillNo').val(data[0].BillNoPrint);
                         $("#payment_type").val(data[0].PaymentType);

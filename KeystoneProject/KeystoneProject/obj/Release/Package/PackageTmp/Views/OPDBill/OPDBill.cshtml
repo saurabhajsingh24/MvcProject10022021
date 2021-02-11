@@ -1181,7 +1181,7 @@
                 }
             })
         });
-
+        var d = "";
         $("#txtdgvService").autocomplete({
 
             source: function (request, response) {
@@ -1219,7 +1219,7 @@
                     contentType: 'application/json',
                     success: function (data) {
                         debugger
-
+                        d = data;
                         if (document.getElementById("TPA").checked == true) {
                             response($.map(data, function (item) {
                                 return {
@@ -1289,7 +1289,8 @@
                 var UnitID = $("#UnitID").val();
                 var ServiceID = i.item.Serviceid;
                 //  var r = document.getElementById("rate").value = rate.trim();
-
+                $("#DoctorPrintNameID").val("0");
+                $("#DoctorPrintName").val("");
                 debugger
             
                 var svcnm = servicename;
@@ -1313,51 +1314,7 @@
                     var setflag = 'false';
                     var Doctorcharges = $("#drcharges").val(0);
                     $("#quantity").val("1");
-                    $(".total").each(function () {
-                        debugger
-                        var rate = $(this).parent().find('#txt_tbl_rate').val();
-                        var qty = $(this).parent().find('#txt_tbl_qty').val();
-                        var svcrate = $(this).parent().find('#svc_rate_hid').val();
-                        var svcqty = $(this).parent().find('#svc_qty_hid').val();
-                        var total_hid = $(this).parent().find('#tot_hid').val();
-                        var svcid = $(this).parent().find('#svc_hid').val();
-                        var docid = $(this).parent().find('#doc_hid').val();
-                        var tot2 = parseFloat(rate) * parseFloat(qty);
-                        var srvname = $(this).parent().find('#doc_hid').val();
-                        var service_name_hid = $(this).parent().find('#svc_nm_hid').val().trim();
-
-                        if (servicename.trim() == service_name_hid.trim()) {
-                            debugger
-                            var BEd = servicename.split("--");
-
-                            if (BEd[0].trim() == $("#WordName").val().trim()) {
-                                alert("BED CHARGES Alredy Exist");
-                                $("#ServiceID").val("0");
-                                $("#servicename1").val("");
-                                $("#servicename").val("");
-                                $("#ServiceGroupID").val("0");
-                                $("#ServiceGroupName").val("");
-                                $("#rate").val("");
-                                $("#DoctorPrintNameID").val("0");
-                                $("#DoctorPrintName").val("");
-                                $("#quantity").val("1");
-                                $("#ServiceCode").val("");
-                                $("#Unit").val("");
-                                $("#UnitID").val("");
-                                service_name_hid = "";
-                                return false;
-
-                            }
-                            else {
-
-                                $(this).parent().find('#txt_tbl_qty').val(parseFloat($(this).parent().find('#txt_tbl_qty').val()) + (1));
-                                $(this).parent().find('input[name=Authorization]').val(1);
-                                servicename = 0;
-                                billNo = 0;
-                                return false;
-                            }
-                        }
-                    });
+                   
 
                     if (setflag == 'false') {
                         var chk = $('input[name=ServiceInfoChk]:checked').val();
@@ -1416,8 +1373,9 @@
 
                                     }
                                     else {
-                                        $('#datatable-responsive tbody').append('<tr><td>' + $("#txtdgvService").val() + " " + $("#DoctorPrintName").val() + " " + ' <input value="' + $("#ServiceID").val() + '" type="hidden" id="svc_hid" name="svc_hid" /><input value="' + $("#txtdgvService").val() + " " + $("#DoctorPrintName").val() + '" type="hidden" id="svc_nm_hid" name="svc_nm_hid" /> <input type="hidden" value="' + cons_dr_hidden + '" id="doc_hid" name="doc_hid" /><input type="hidden" value="' + UnitID + '" id="unithid" name="unithid" /><input type="hidden" name="svc_rate_hid" id="svc_rate_hid" value="' + $("#rate").val() + '"/><input type="hidden" name="svc_qty_hid" id="svc_qty_hid" value="' + $("#quantity").val() + '"/></td><td><input id="txt_tbl_rate" placeholder="0" class="form-control" type="number" value=' + $("#rate").val() + '></td><td><input id="txt_tbl_qty" class="form-control" type="number" placeholder="0" value=' + parseInt($("#quantity").val()) + '></td> <td><select name="DiscountServiceType" id="DiscountServiceType" class="nr form-control"><option value="Rs">Rs</option><option value="%">%</option></select></td> <td><input value="0" placeholder="0" class="nr form-control" type="number" id="Discount_Service" name="Discount_Service" /></td><td class="total">' + $("#quantity").val() * $("#rate").val() + '</td><td><input type="text" name="doctorID" id="doctorID"  placeholder="Doctor ID.."><select class="fstdropdown-select DoctorPrintNamedgv form-control" ></select></td><td><button type="button" id="tbldel" class="btndivcss" onclick="RemoveSvcTable(this)"><span class="fa fa-trash buttoniconcss"></span>Delete</button><input type="hidden" value="Add" name="Mode"/><td><input value="' + ServiceType + '" type="hidden" id="ServiceType" class="finalbill" name="ServiceType" /><input type="hidden" name="UnitID1" value="' + UnitID + '"> <input type="hidden"  id="Authorization" name="Authorization" value="1"></td></td></tr>');
-
+                                      //  $('#datatable-responsive tbody').append('<tr><td>' + $("#txtdgvService").val() + " " + $("#DoctorPrintName").val() + " " + ' <input value="' + $("#ServiceID").val() + '" type="hidden" id="svc_hid" name="svc_hid" /><input value="' + $("#txtdgvService").val() + " " + $("#DoctorPrintName").val() + '" type="hidden" id="svc_nm_hid" name="svc_nm_hid" /> <input type="hidden" value="' + cons_dr_hidden + '" id="doc_hid" name="doc_hid" /><input type="hidden" value="' + UnitID + '" id="unithid" name="unithid" /><input type="hidden" name="svc_rate_hid" id="svc_rate_hid" value="' + $("#rate").val() + '"/><input type="hidden" name="svc_qty_hid" id="svc_qty_hid" value="' + $("#quantity").val() + '"/></td><td><input id="txt_tbl_rate" placeholder="0" class="form-control" type="number" value=' + $("#rate").val() + '></td><td><input id="txt_tbl_qty" class="form-control" type="number" placeholder="0" value=' + parseInt($("#quantity").val()) + '></td> <td><select name="DiscountServiceType" id="DiscountServiceType" class="nr form-control"><option value="Rs">Rs</option><option value="%">%</option></select></td> <td><input value="0" placeholder="0" class="nr form-control" type="number" id="Discount_Service" name="Discount_Service" /></td><td class="total">' + $("#quantity").val() * $("#rate").val() + '</td><td><input type="text" name="doctorID" id="doctorID"  placeholder="Doctor ID.."><select class="fstdropdown-select DoctorPrintNamedgv form-control" ></select></td><td><button type="button" id="tbldel" class="btndivcss" onclick="RemoveSvcTable(this)"><span class="fa fa-trash buttoniconcss"></span>Delete</button><input type="hidden" value="Add" name="Mode"/><td><input value="' + ServiceType + '" type="hidden" id="ServiceType" class="finalbill" name="ServiceType" /><input type="hidden" name="UnitID1" value="' + UnitID + '"> <input type="hidden"  id="Authorization" name="Authorization" value="1"></td></td></tr>');
+                                        debugger
+                                        EditRateAmt(d, "Add")
                                     }
                                     $("#txtdgvService").val('');
                                     BindDr();
@@ -1786,114 +1744,115 @@
 
     });
 
-    function EditRateAmt(d, Mode) {
-        var chk = document.getElementById("TestID").checked;
-        debugger
-        var ServiceType = "";
-        if (chk == true) {
+    //function EditRateAmt(d, Mode) {
+    //    var chk = document.getElementById("TestID").checked;
+    //    debugger
+    
+    //    var ServiceType = "";
+    //    if (chk == true) {
 
-            ServiceType = "OPDLabBills";
-        }
-        else {
-            ServiceType = "OPD";
-        }
-        debugger
-        if (Mode == "Add") {
-            $('#tbl').append('<tr><td >' + $("#servicename").val() + " " + $("#DoctorPrintName").val() +
-                           '<input value="' + $("#ServiceID").val() + '" type="hidden" id="svc_hid" name="svc_hid" /><input value="' + $("#servicename").val() + " " + $("#DoctorPrintName").val() +
-                          '" type="hidden" id="svc_nm_name" name="svc_nm_name" /><input type="hidden" value="' + d[0].Doctor +
-                          '" id="doc_hid" name="doc_hid" /><input type="hidden" value="' + $("#UnitID").val() +
-                          '" id="unithid" name="unithid" /><input type="hidden" name="svc_rate_hid" id="svc_rate_hid" value="' + $("#rate").val() +
-                          '"/><input type="hidden" name="svc_qty_hid" id="svc_qtyi_hd" value="' + $("#quantity").val() + '"/></td><td value="' + $("#" + i).val() + '"><input type="text" class="nr form-control" name="rate1table"  value="' + $("#rate").val() + '" id="' + i + 'rate"/></td><td  value="' + $("#CalQuantity").val() + '" ><input type="text" name="qty" class="nr form-control" value="' + $("#quantity").val() + '" id="qty"/></td><td><select name="DiscountServiceType" id="DiscountServiceType" class="nr form-control"><option value="Rs">Rs</option><option value="%">%</option></select></td> <td><input value="0" class="nr form-control" type="text" id="Discount_Service" name="Discount_Service" /></td> <input value="' + $("#quantity").val() * $("#rate").val() +
-                          '" type="hidden" id="tot_hid" name="tot_hid"/><td class="total">' + $("#quantity").val() * $("#rate").val() +
-                          '</td><td><input value="' + ServiceType + '" type="hidden" id="ServiceType" name="ServiceType" /><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"><input type="hidden" value="Add" name="Mode"/></a><input type="hidden" name="DoctorCharges" value="' + $("#drcharges").val() + '"</td></tr>');
-        }
-        else {
-            //    $('#datatable-responsive').append('<tr><td>' + d.servicename + '<input value="' + d.ServiceID +
-            //'" type="hidden" id="svc_hid" name="svc_hid" /><input value="' + d.servicename +
-            //'" type="hidden" id="svc_nm_name" name="svc_nm_name" /><input type="hidden" value="' + d.Doctor +
-            //'" id="doc_hid" name="doc_hid" /><input type="hidden" value="' + d.UnitID +
-            //'" id="unithid" name="unithid" /><input type="hidden" name="svc_rate_hid" id="svc_rate_hid" value="' + d.Rate +
-            //'"/><input type="hidden" name="svc_qty_hid" id="svc_qty_hid" value="' + d.Quantity + '"/></td><td>' + d.Rate +
-            //'</td><td>' + d.Quantity + '</td><input value="' + d.Quantity * d.Rate +
-            //'" type="hidden" id="tot_hid" name="tot_hid"/><td class="total">' + d.Quantity * d.Rate +
-            //'</td></tr>');
-            ServiceType = d.ServiceType;
-            $('#datatable-responsive').append('<tr><td >' + d.servicename +
-                '<input value="' + d.ServiceID + '" type="hidden" id="svc_hid" name="svc_hid" /><input value="' + d.servicename +
-               '" type="hidden" id="svc_nm_name" name="svc_nm_name" /><input type="hidden" value="' + d.Doctor +
-               '" id="doc_hid" name="doc_hid" /><input type="hidden" value="' + d.UnitID +
-               '" id="unithid" name="unithid" /><input type="hidden" name="svc_rate_hid" id="svc_rate_hid" value="' + d.Rate +
-               '"/><input type="hidden" name="svc_qty_hid" id="svc_qtyi_hd" value="' + d.Quantity + '"/></td><td value="' + $("#" + i).val() + '"><input type="text" class="nr form-control" name="rate1table"  value="' + d.Rate + '" id="' + i + 'rate"/></td><td  value="' + d.Quantity + '" ><input type="text" name="qty" class="nr form-control" value="' + d.Quantity + '" id="qty"/></td><td><select name="DiscountServiceType" id="DiscountServiceType" class="nr form-control"><option value=' + d.DiscountServiceType + '>' + d.DiscountServiceType + '</option><option value="Rs">Rs</option><option value="%">%</option></select></td><td><input class="nr form-control" value=' + parseFloat(d.Discount_Service).toFixed(0) + ' type="text" id="Discount_Service" name="Discount_Service" /></td></td><input value="' + d.Quantity * d.Rate +
-               '" type="hidden" id="tot_hid" name="tot_hid"/><td class="total">' + d.Quantity * d.Rate +
-               '</td><td><input value="' + ServiceType + '" type="hidden" id="ServiceType" name="ServiceType" /><a href="#" class="fa fa-trash-o"  aria-hidden="true" id="delrow" class="delrow"></a><input type="hidden" value="Edit" name="Mode"/><input type="hidden" name="DoctorCharges" value="' + d.DoctorCharges + '"/></td></tr>');
-        }
-        //$("#datatable-responsive").delegate('td', 'keyup', function () {
-        //    debugger;
-        //    var row_num = parseInt($(this).parent().index());
+    //        ServiceType = "OPDLabBills";
+    //    }
+    //    else {
+    //        ServiceType = "OPD";
+    //    }
+    //    debugger
+    //    if (Mode == "Add") {
+    //        $('#tbl').append('<tr><td >' + $("#servicename").val() + " " + $("#DoctorPrintName").val() +
+    //                       '<input value="' + $("#ServiceID").val() + '" type="hidden" id="svc_hid" name="svc_hid" /><input value="' + $("#servicename").val() + " " + $("#DoctorPrintName").val() +
+    //                      '" type="hidden" id="svc_nm_name" name="svc_nm_name" /><input type="hidden" value="' + d[0].Doctor +
+    //                      '" id="doc_hid" name="doc_hid" /><input type="hidden" value="' + $("#UnitID").val() +
+    //                      '" id="unithid" name="unithid" /><input type="hidden" name="svc_rate_hid" id="svc_rate_hid" value="' + $("#rate").val() +
+    //                      '"/><input type="hidden" name="svc_qty_hid" id="svc_qtyi_hd" value="' + $("#quantity").val() + '"/></td><td value="' + $("#" + i).val() + '"><input type="text" class="nr form-control" name="rate1table"  value="' + $("#rate").val() + '" id="' + i + 'rate"/></td><td  value="' + $("#CalQuantity").val() + '" ><input type="text" name="qty" class="nr form-control" value="' + $("#quantity").val() + '" id="qty"/></td><td><select name="DiscountServiceType" id="DiscountServiceType" class="nr form-control"><option value="Rs">Rs</option><option value="%">%</option></select></td> <td><input value="0" class="nr form-control" type="text" id="Discount_Service" name="Discount_Service" /></td> <input value="' + $("#quantity").val() * $("#rate").val() +
+    //                      '" type="hidden" id="tot_hid" name="tot_hid"/><td class="total">' + $("#quantity").val() * $("#rate").val() +
+    //                      '</td><td><input value="' + ServiceType + '" type="hidden" id="ServiceType" name="ServiceType" /><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"><input type="hidden" value="Add" name="Mode"/></a><input type="hidden" name="DoctorCharges" value="' + $("#drcharges").val() + '"</td></tr>');
+    //    }
+    //    else {
+    //        //    $('#datatable-responsive').append('<tr><td>' + d.servicename + '<input value="' + d.ServiceID +
+    //        //'" type="hidden" id="svc_hid" name="svc_hid" /><input value="' + d.servicename +
+    //        //'" type="hidden" id="svc_nm_name" name="svc_nm_name" /><input type="hidden" value="' + d.Doctor +
+    //        //'" id="doc_hid" name="doc_hid" /><input type="hidden" value="' + d.UnitID +
+    //        //'" id="unithid" name="unithid" /><input type="hidden" name="svc_rate_hid" id="svc_rate_hid" value="' + d.Rate +
+    //        //'"/><input type="hidden" name="svc_qty_hid" id="svc_qty_hid" value="' + d.Quantity + '"/></td><td>' + d.Rate +
+    //        //'</td><td>' + d.Quantity + '</td><input value="' + d.Quantity * d.Rate +
+    //        //'" type="hidden" id="tot_hid" name="tot_hid"/><td class="total">' + d.Quantity * d.Rate +
+    //        //'</td></tr>');
+    //        ServiceType = d.ServiceType;
+    //        $('#datatable-responsive').append('<tr><td >' + d.servicename +
+    //            '<input value="' + d.ServiceID + '" type="hidden" id="svc_hid" name="svc_hid" /><input value="' + d.servicename +
+    //           '" type="hidden" id="svc_nm_name" name="svc_nm_name" /><input type="hidden" value="' + d.Doctor +
+    //           '" id="doc_hid" name="doc_hid" /><input type="hidden" value="' + d.UnitID +
+    //           '" id="unithid" name="unithid" /><input type="hidden" name="svc_rate_hid" id="svc_rate_hid" value="' + d.Rate +
+    //           '"/><input type="hidden" name="svc_qty_hid" id="svc_qtyi_hd" value="' + d.Quantity + '"/></td><td value="' + $("#" + i).val() + '"><input type="text" class="nr form-control" name="rate1table"  value="' + d.Rate + '" id="' + i + 'rate"/></td><td  value="' + d.Quantity + '" ><input type="text" name="qty" class="nr form-control" value="' + d.Quantity + '" id="qty"/></td><td><select name="DiscountServiceType" id="DiscountServiceType" class="nr form-control"><option value=' + d.DiscountServiceType + '>' + d.DiscountServiceType + '</option><option value="Rs">Rs</option><option value="%">%</option></select></td><td><input class="nr form-control" value=' + parseFloat(d.Discount_Service).toFixed(0) + ' type="text" id="Discount_Service" name="Discount_Service" /></td></td><input value="' + d.Quantity * d.Rate +
+    //           '" type="hidden" id="tot_hid" name="tot_hid"/><td class="total">' + d.Quantity * d.Rate +
+    //           '</td><td><input value="' + ServiceType + '" type="hidden" id="ServiceType" name="ServiceType" /><a href="#" class="fa fa-trash-o"  aria-hidden="true" id="delrow" class="delrow"></a><input type="hidden" value="Edit" name="Mode"/><input type="hidden" name="DoctorCharges" value="' + d.DoctorCharges + '"/></td></tr>');
+    //    }
+    //    //$("#datatable-responsive").delegate('td', 'keyup', function () {
+    //    //    debugger;
+    //    //    var row_num = parseInt($(this).parent().index());
 
-        //    var a = Qty;
-        //    // var rate = document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[1].innerHTML;
+    //    //    var a = Qty;
+    //    //    // var rate = document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[1].innerHTML;
 
-        //    var newqty = document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[2].children[0].value;
-        //    var rate = document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[1].children[0].value;
+    //    //    var newqty = document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[2].children[0].value;
+    //    //    var rate = document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[1].children[0].value;
 
-        //    var Total = parseFloat(newqty) * parseFloat(rate);
-
-
-        //    document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[5].innerHTML = Total;
-
-        //    // document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[4].innerHTML = Total;
-
-        //    var child = $("#datatable-responsive td").closest("tr").length;
-
-        //    var gross = 0;
-        //    var Discount_ServiceTotal = 0;
-        //    var DiscountPercent = 0;
-        //    var TotalPer = 0;
-        //    for (var row = 0; row < child; row++) {
-        //        //var aa = aa + document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[3].innerHTML;
-
-        //        // if (document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[3].innerHTML != "Total Amount") {
-        //        gross = gross + parseFloat(document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[5].innerHTML);
-
-        //        $("#grosstotal").val(gross);
-        //        //    }
-
-        //        if (document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[3].children[0].value == "%") {
-        //            DiscountPercent = parseFloat(document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[4].children[0].value);
-        //            if (DiscountPercent <= 100) {
-        //                var Amount = parseFloat(document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[5].innerHTML);
-
-        //                TotalPer = TotalPer + ((Amount * DiscountPercent) / 100);
-
-        //                $("#DiscountAmount").val(TotalPer.toFixed(2));
-        //            }
-        //            else {
-        //                alert("Discount Not Less " + DiscountPercent);
-        //                return false;
-        //            }
-        //        }
-        //        else {
-        //            TotalPer = TotalPer + parseFloat(document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[4].children[0].value);
-
-        //            $("#DiscountAmount").val(TotalPer);
-
-        //        }
+    //    //    var Total = parseFloat(newqty) * parseFloat(rate);
 
 
+    //    //    document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[5].innerHTML = Total;
 
-        //    }
+    //    //    // document.getElementById('datatable-responsive').tBodies[0].rows[row_num].cells[4].innerHTML = Total;
 
-        //    Calculate();
-        //    DiscountPer();
-        //});
+    //    //    var child = $("#datatable-responsive td").closest("tr").length;
+
+    //    //    var gross = 0;
+    //    //    var Discount_ServiceTotal = 0;
+    //    //    var DiscountPercent = 0;
+    //    //    var TotalPer = 0;
+    //    //    for (var row = 0; row < child; row++) {
+    //    //        //var aa = aa + document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[3].innerHTML;
+
+    //    //        // if (document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[3].innerHTML != "Total Amount") {
+    //    //        gross = gross + parseFloat(document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[5].innerHTML);
+
+    //    //        $("#grosstotal").val(gross);
+    //    //        //    }
+
+    //    //        if (document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[3].children[0].value == "%") {
+    //    //            DiscountPercent = parseFloat(document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[4].children[0].value);
+    //    //            if (DiscountPercent <= 100) {
+    //    //                var Amount = parseFloat(document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[5].innerHTML);
+
+    //    //                TotalPer = TotalPer + ((Amount * DiscountPercent) / 100);
+
+    //    //                $("#DiscountAmount").val(TotalPer.toFixed(2));
+    //    //            }
+    //    //            else {
+    //    //                alert("Discount Not Less " + DiscountPercent);
+    //    //                return false;
+    //    //            }
+    //    //        }
+    //    //        else {
+    //    //            TotalPer = TotalPer + parseFloat(document.getElementById('datatable-responsive').tBodies[0].rows[row].cells[4].children[0].value);
+
+    //    //            $("#DiscountAmount").val(TotalPer);
+
+    //    //        }
 
 
 
+    //    //    }
+
+    //    //    Calculate();
+    //    //    DiscountPer();
+    //    //});
 
 
-    }
+
+
+
+    //}
     i++;
     //}
     var Qty = 0;
@@ -3920,8 +3879,7 @@
 
                         if (data.length > 1) {
                             alert("Delete Successfully");
-
-                            // changePatientbind();
+                            location.reload();
                             Restore();
                             $("#datatable-responsive td").remove();
                         }

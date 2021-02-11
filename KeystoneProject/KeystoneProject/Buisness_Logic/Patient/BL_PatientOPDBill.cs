@@ -577,7 +577,7 @@ namespace KeystoneProject.Buisness_Logic.Patient
 
                     if (dsAuthorizationRights.Tables[0].Rows.Count>0)
                     { 
-                 string chkAurthoriseUserWise= dsAuthorizationRights.Tables[0].Rows[0]["AuthorizationRights"].ToString();
+                    string chkAurthoriseUserWise= dsAuthorizationRights.Tables[0].Rows[0]["AuthorizationRights"].ToString();
                     if(chkAurthoriseUserWise=="True")
                     {
                         dsMasterSetting.Tables[0].Rows[0]["ForAuthorization"] = false;
@@ -641,6 +641,9 @@ namespace KeystoneProject.Buisness_Logic.Patient
                         cmdBillModify.Parameters.AddWithValue("@PaidAmount", dr["PaidAmount"]);
                         cmdBillModify.Parameters.AddWithValue("@TaxAmount", dr["TaxAmount"]);
                         cmdBillModify.Parameters.AddWithValue("@DipositAmount", "0.00");
+                        cmdBillModify.Parameters.AddWithValue("@PrintBillNo", dr["PrintBillNo"]);
+                        cmdBillModify.Parameters.AddWithValue("@FinancialYearID", dr["FinancialYearID"]);
+                        cmdBillModify.Parameters.AddWithValue("@BillDate", dr["BillDate"]);
                         cmdBillModify.Parameters.AddWithValue("@ForAuthorization", obj.ForAuthorization);
                         // cmdBillModify.Parameters.AddWithValue(" @DipositAmount", "0.00");
                         cmdBillModify.Parameters.AddWithValue("@IsBillMade", "false");

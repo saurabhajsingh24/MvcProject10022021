@@ -91,12 +91,14 @@
 
 
             var ans = confirm("Are you sure you want to delete this Record?");
-            $("#delModal").modal('show');
+           // alert(ans);
+           
          
             
             var Reason = $("#ReasonToDelete").val();
             debugger
             if (ans) {
+                $("#delModal").modal('show');
                 debugger
                 $("#DeleteSave").click(function () {
                     debugger
@@ -234,12 +236,14 @@
                     })
                 }
                 })
-                }
+            }
+            return false;
                
         }
     }
 
     $(document).ready(function () {
+      
         // window.onload(true);
         $("input[type=text],input[type=number],hidden,input[type=textarea]").val("");
         $("#PaymentType").val("Cash");
@@ -465,10 +469,11 @@
        
             if (searchList[0].SecurityDeposityID > 0) {
              //   $("#chkTPA").prop("checked", true);
-                $("#TpaDetailsCheck").show();
+              
                 if (searchList[0].SecurityDeposityAmt > 0) {
                     $("#Secdep").show();
                     $("#SecurityDepositeTPA").show();
+                    $("#TpaDetailsCheck").show();
                     // $("#SecurityDepositeTPA").prop("checked", true);
 
 
@@ -570,7 +575,7 @@
                         // alert(maxDate);
                         debugger
                         $('#datepicker').attr('min', maxDate);
-                       
+                        $("#editModalDate").attr('min', maxDate);
                     }
                     
                 }
@@ -676,7 +681,7 @@
             else
             {
 
-                $("#paymentAdd tbody").append('<tr><td><input type="hidden" class="tblPaymentType" value=' + $("#PaymentType").val() + ' name="tblPaymentType"/>  ' + $("#PaymentType").val() + '</td><td><input type="hidden" value=' + $("#Number").val() + ' name="tblNumber"/>' + $("#Number").val() + '</td><td><input type="text"  name="tblName" readonly class="form-control input-sm" value=' + $("#Name").val() + '></td><td><input type="date" name="tblpaymentDate" class="form-control input-sm" value=' + $("#paymentDate").val() + '></td><td><input type="text" name="tblRemarks" class="form-control input-sm" value=' + $("#Remarks").val() + '></td><td><input type="number" class=".total"  id="tblPaymentTotal" name="tblPaymentTotal"  class="form-control input-sm" value=' + $("#PaidAmt").val() + '></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
+                $("#paymentAdd tbody").append('<tr><td><input type="hidden" class="tblPaymentType" value="' + $("#PaymentType").val() + '" name="tblPaymentType"/>  ' + $("#PaymentType").val() + '</td><td><input type="hidden" value=' + $("#Number").val() + ' name="tblNumber"/>' + $("#Number").val() + '</td><td><input type="text"  name="tblName" readonly class="form-control input-sm" value=' + $("#Name").val() + '></td><td><input type="date" name="tblpaymentDate" class="form-control input-sm" value=' + $("#paymentDate").val() + '></td><td><input type="text" name="tblRemarks" class="form-control input-sm" value=' + $("#Remarks").val() + '></td><td><input type="number" class=".total"  id="tblPaymentTotal" name="tblPaymentTotal"  class="form-control input-sm" value=' + $("#PaidAmt").val() + '></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
 
             }
 
@@ -693,12 +698,13 @@
             }
 
         })
+       
         $("#btnEdit").click(function () {
             debugger
             $("#payAdd").show()
             //alert($("#Paytype").val());
 
-            if ($("#Paytype").val() == "CASH")
+            if ($("#Paytype").val() == "Cash")
             {
                 // $("#paymentAdd tbody").append('<tr><td><input type="hidden" value="Cash" class="tblPaymentType" name="tblPaymentType"/>Cash</td><td><input type="hidden" value="Cash" name="tblNumber"/>Cash</td><td><input type="text"  name="tblName" readonly class="form-control input-sm" value="Cash"></td><td><input type="date" name="tblpaymentDate" class="form-control input-sm" value=' + $("#paymentDate").val() + '></td><td><input type="text" name="tblRemarks" readonly class="form-control input-sm" value=' + $("#Remarks").val() + '></td><td><input type="number" class=".total"  id="tblPaymentTotal" name="tblPaymentTotal"  class="form-control input-sm" value=' + $("#PaidAmount").val() + '></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
                 $("#payAdd tbody").append('<tr><td><input type="hidden" class="tblPayEditType" value="Cash" name="tblPayEditType"/>CASH</td><td><input type="hidden"  value="Cash" name="tblEditNumber"/>Cash</td><td><input type="text"   name="tblEditName" readonly class="form-control input-sm" value="Cash"></td><td><input type="date" name="tblpayDateEdit" class="form-control input-sm" value=' + $("#payDate").val() + '></td><td><input type="text" readonly name="tblEditRemarks" class="form-control input-sm" value="Cash"></td><td><input type="number" class=".total"  id="tblPayEditTotal" name="tblPayEditTotal"  class="form-control input-sm" value=' + $("#PaidAmtpay").val() + '></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delEdit" class="delEdit"></td></tr>');
@@ -706,7 +712,7 @@
             }
             else
             {
-                $("#payAdd tbody").append('<tr><td><input type="hidden" class="tblPayEditType" value=' + $("#Paytype").val() + ' name="tblPayEditType"/>  ' + $("#Paytype").val() + '</td><td><input type="hidden" value=' + $("#No").val() + ' name="tblEditNumber"/>' + $("#No").val() + '</td><td><input type="text" name="tblEditName" readonly class="form-control input-sm" value=' + $("#Namepay").val() + '></td><td><input type="date" name="tblpayDateEdit" class="form-control input-sm" value=' + $("#payDate").val() + '></td><td><input type="text" name="tblEditRemarks" class="form-control input-sm" value=' + $("#payRemarks").val() + '></td><td><input type="number" class=".total"  id="tblPayEditTotal" name="tblPayEditTotal"  class="form-control input-sm" value=' + $("#PaidAmtpay").val() + '></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delEdit" class="delEdit"></td></tr>');
+                $("#payAdd tbody").append('<tr><td><input type="hidden" class="tblPayEditType" value="' + $("#Paytype").val() + '" name="tblPayEditType"/>' + $("#Paytype").val() + '</td><td><input type="hidden" value="' + $("#No").val() + '" name="tblEditNumber"/>' + $("#No").val() + '</td><td><input type="text" name="tblEditName" readonly class="form-control input-sm" value="' + $("#Namepay").val() + '"></td><td><input type="date" name="tblpayDateEdit" class="form-control input-sm" value="' + $("#payDate").val() + '"></td><td><input type="text" name="tblEditRemarks" class="form-control input-sm" value="' + $("#payRemarks").val() + '"></td><td><input type="number" class=".total"  id="tblPayEditTotal" name="tblPayEditTotal"  class="form-control input-sm" value="' + $("#PaidAmtpay").val() + '"></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delEdit" class="delEdit"></td></tr>');
 
             }
 
@@ -714,8 +720,8 @@
             $("#Namepay").val("");
             $("#payRemarks").val("");
             $("#PaidAmtpay").val("");
-            
-
+            $(".btn-group").hide();
+          //  $("#chkTPA").attr("disabled", false);
 
             var Total = 0;
 
@@ -778,8 +784,9 @@
         $("#payAdd").on('click', '#delEdit', function () {
             debugger;
             $(this).closest('tr').remove();
+            $(".btn-group").show();
             var Total = 0;
-
+          
             var len = $("#payAdd td").closest("tr").length;
             if (len == 0) {
                 $("#PaidAmtedit").val(0);
@@ -945,7 +952,7 @@
                 $(".tblPaymentType").each(function () {
                     if ($(this).val() == $("#PaymentType").val()) {
                         alert("Already Exits");
-                        if ($("#PaymentType").val() == "CASH") {
+                        if ($("#PaymentType").val() == "Cash") {
                             $("#DoctorSaveDiv").show();
                         }
                         return false;
@@ -1220,7 +1227,7 @@
                 $("#payDate11").text("Cheque Date");
 
                 $("#payRemark1").text("Remark");
-                $("#payAdd tbody tr").remove();
+              //  $("#payAdd tbody tr").remove();
                 break;
 
 
@@ -1249,7 +1256,7 @@
                 $("#payDate11").text("Valid UPTO");
 
                 $("#payRemark1").text("Remark");
-                $("#payAdd tbody tr").remove();
+              //  $("#payAdd tbody tr").remove();
                 break;
 
 
@@ -1278,7 +1285,7 @@
                 $("#payDate11").text("Valid UPTO");
 
                 $("#payRemark1").text("Remark");
-                $("#payAdd tbody tr").remove();
+             //   $("#payAdd tbody tr").remove();
                 break;
                 debugger
             case 'E-Money':
@@ -1303,7 +1310,7 @@
                 $("#payName1").text("Bank Name");
                 $("#payDate11").text("Date");
                 $("#payRemark1").text("Remark");
-                $("#payAdd tbody tr").remove();
+            //    $("#payAdd tbody tr").remove();
                 break;
 
             case 'EFT':
@@ -1327,7 +1334,7 @@
                 $("#payDate11").text("Date");
 
                 $("#payRemark1").text("Remark");
-                $("#payAdd tbody tr").remove();
+              //  $("#payAdd tbody tr").remove();
                 break;
 
             case 'CASH':
@@ -1351,8 +1358,15 @@
     }
     var BillType = "";
     $(document).ready(function () {
-        
-      
+        $("#delModalClose").click(function () {
+            $("#delModal").modal('hide');
+        })
+        $("#DoctorSaveDiv").on('click', '#ClosePaymentMode', function () {
+          
+        //$("#ClosePaymentMode").click(function () {
+            debugger
+            $("#payAdd tbody tr").remove();
+        })
         $("#presentor").on('click', '#EditID', function () {
             debugger;
             $("#deleteModal").modal('show');
@@ -1484,7 +1498,7 @@
             //})
             if (BillType == "IPDFinalBill" || BillType == "IPDBill") {
                 var ans = confirm("Are you sure you want to delete this Record?");
-
+               
                 if (ans) {
                     //  window. = '@Url.Action("PaymentAndDeposit", "PaymentAndDeposit")?Reg=' + RegNo
                     localStorage.setItem('BillNo', BillNo);
@@ -2270,7 +2284,7 @@
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h4 class="modal-title">Action</h4>
+                                                    <h4 class="modal-title">Delete Action</h4>
                                                     <button type="button" class="close" id="delModalClose">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -2372,7 +2386,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="exampleModalLabel">Payment</h5>
-                                                            <button type="button" class="close" id="ClosePaymentType" aria-label="Close">
+                                                            <button type="button" class="sd close" id="ClosePaymentType" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -2408,7 +2422,7 @@
                                                                         <input type="radio" class="form-check-input" value="EFT" id="EFT" name="RadioCharge" checked>EFT
                                                                     </label>
                                                                 </div>
-                                                                <button type="button" onclick="document.getElementById('DoctorSaveDiv').style = 'display:none'" id="close" class="close" value="Close" data-dismiss="modal">×</button>
+                                                                <button type="button" onclick="document.getElementById('DoctorSaveDiv').style = 'display:none'" id="close" class="as close" value="Close" data-dismiss="modal">×</button>
                                                             </div>
 
                                                             <div class="row">
@@ -2505,7 +2519,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="ModalLabel">Payment</h5>
-                                                            <button type="button" class="close" id="ClosePaymentMode" aria-label="Close">
+                                                            <button type="button" class="asr close" id="ClosePaymentMode" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>

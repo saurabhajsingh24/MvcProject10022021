@@ -44,114 +44,122 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-hospital-o"></i>
-                        <p>
+
+                <li class="role nav-item ">
+                    <a href="@Url.Action("Hospital", "Application")" class="nav-link">
+                        <i class="nav-icon fa fa-file-text-o"></i>
+                        <p class="role">
                             Hospital
-                            <i class="right fa fa-angle-right"></i>
                         </p>
                     </a>
+                </li>
+
+                <li id="2" class="nav-item has-treeview">
+                    @*<a href="@Url.Action("HospitalLocation", "HospitalLocation")" class="nav-link">
+                        <i class="nav-icon fa fa-hospital-o"></i>
+                        <p>Hospital</p>
+                    </a>*@
                     <ul class="nav nav-treeview">
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fa fa-dot-circle-o"></i>
-                                <p>
+                                @*<p>
                                     Hospital Location Setup
                                     <i class="right fa fa-angle-right"></i>
-                                </p>
+                                </p>*@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="@Url.Action("HospitalLocation", "HospitalLocation")" class="nav-link">
+                                    @*<a href="@Url.Action("HospitalLocation", "HospitalLocation")" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>
                                         <p>Hospital and Location Creation</p>
-                                    </a>
+                                    </a>*@
                                 </li>
                                 @*<li class="nav-item">
                                     <a href="@Url.Action("HospitalLocation", "HospitalLocation")" class="nav-link">
                                         <i class="fa fa-circle-o nav-icon"></i>
                                         <p>Location Creation</p>
                                     </a>*@
-                                </li>
-                                @*<li class="nav-item">
-                                    <a href="@Url.Action("Country", "Country")" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Country</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="@Url.Action("State", "State")" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>State</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="@Url.Action("City", "City")" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>City</p>
-                                    </a>
-                                </li>*@
-                            </ul>
                         </li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fa fa-dot-circle-o"></i>
-                                <p>
-                                    User Role Rights
-                                    <i class="right fa fa-angle-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                @*<li class="nav-item">
-                                    <a href="../../index.html" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Role</p>
-                                    </a>
-                                </li>*@
-                                <li class="nav-item">
-                                    <a href="@Url.Action("RoleRightstwo", "RoleRightstwo", new { RoleID = 0 })" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Role Rights</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="@Url.Action("Users", "Users")" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>Users Creation</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="@Url.Action("UserRights", "UserRights")" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>User Rights</p>
-                                    </a>
-                                </li>
-                                @*<li class="nav-item">
-                                    <a href="../../index.html" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>User Creation</p>
-                                    </a>
-                                </li>*@
-                                @*<li class="nav-item">
-                                    <a href="../../index.html" class="nav-link">
-                                        <i class="fa fa-circle-o nav-icon"></i>
-                                        <p>User Rights</p>
-                                    </a>
-                                </li>*@
-                            </ul>
-                        </li>
+                        @*<li class="nav-item">
+                                <a href="@Url.Action("Country", "Country")" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>Country</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("State", "State")" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>State</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("City", "City")" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>City</p>
+                                </a>
+                            </li>*@
                     </ul>
                 </li>
-                <li class="nav-item ">
-                    <a href="@Url.Action("PatientMaster", "Application")" class="nav-link">
-                        <i class="nav-icon fa fa-file-text-o"></i>
-                        <p>
-                            Masters
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item has-treeview">
+                @*<li  class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-dot-circle-o"></i>
+                            <p>
+                                User Role Rights
+                                <i class="right fa fa-angle-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @*<li class="nav-item">
+                                <a href="../../index.html" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>Role</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("RoleRightstwo", "RoleRightstwo", new { RoleID = 0 })" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>Role Rights</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("Users", "Users")" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>Users Creation</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("UserRights", "UserRights")" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>User Rights</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../index.html" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>User Creation</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../index.html" class="nav-link">
+                                    <i class="fa fa-circle-o nav-icon"></i>
+                                    <p>User Rights</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>*@
+            </ul>
+            </li>
+            <li class="role nav-item ">
+                <a href="@Url.Action("PatientMaster", "Application")" class="nav-link">
+                    <i class="nav-icon fa fa-file-text-o"></i>
+                    <p class="role">
+                        Masters
+                    </p>
+                </a>
+            </li>
+
+            @*<li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-database"></i>
                         <p>
@@ -179,8 +187,9 @@
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item has-treeview">
+                </li>*@
+
+            @*<li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-stethoscope"></i>
                         <p>
@@ -232,16 +241,16 @@
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item ">
-                    <a href="@Url.Action("Patient", "Application")" class="nav-link">
-                        <i class="nav-icon fa fa-file-text-o"></i>
-                        <p>
-                            Patient Module
-                        </p>
-                    </a>
-                </li>
-                @*<li class="nav-item has-treeview">
+                </li>*@
+            <li class="role nav-item ">
+                <a href="@Url.Action("Patient", "Application")" class="nav-link">
+                    <i class="nav-icon fa fa-file-text-o"></i>
+                    <p class="role">
+                        Patient
+                    </p>
+                </a>
+            </li>
+            @*<li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-user-o"></i>
                         <p>
@@ -348,7 +357,7 @@
                         </li>
                     </ul>
                 </li>*@
-                <li class="nav-item has-treeview">
+            @*<li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-cutlery"></i>
                         <p>
@@ -424,14 +433,14 @@
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item ">
-                    <a href="@Url.Action("Laboratory", "Application")" class="nav-link">
-                        <i class="nav-icon fa fa-flask"></i>
-                        <p>Laboratory Module</p>
-                    </a>
-                </li>
-                @*<li class="nav-item has-treeview">
+                </li>*@
+            <li class="role nav-item ">
+                <a href="@Url.Action("Laboratory", "Application")" class="nav-link">
+                    <i class="nav-icon fa fa-flask"></i>
+                    <p class="role">Laboratory Module</p>
+                </a>
+            </li>
+            @*<li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-flask"></i>
                         <p>Laboratory
@@ -483,107 +492,107 @@
                         </li>
                     </ul>
                 </li>*@
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-pencil-square-o"></i>
-                        <p>
-                            Inventory
-                            <i class="right fa fa-angle-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="../examples/404.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Patient Medical Bill</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/500.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Patient Medical Return</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/blank.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Purchase Order</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../../starter.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Purchase</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/legacy-user-menu.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Purchase Return</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/legacy-user-menu.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Product Replacement</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/legacy-user-menu.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Medical Indent</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/legacy-user-menu.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Stock Status</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-th-large"></i>
-                        <p>
-                            Other
-                            <i class="right fa fa-angle-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="../examples/404.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Error 404</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/500.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Error 500</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/blank.html" class="nav-link active">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Blank Page</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../../starter.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Starter Page</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../examples/legacy-user-menu.html" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Legacy User Menu</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item has-treeview">
+            @*<li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fa fa-pencil-square-o"></i>
+                    <p>
+                        Inventory
+                        <i class="right fa fa-angle-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="../examples/404.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Patient Medical Bill</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/500.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Patient Medical Return</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/blank.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Purchase Order</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../starter.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Purchase</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/legacy-user-menu.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Purchase Return</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/legacy-user-menu.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Product Replacement</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/legacy-user-menu.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Medical Indent</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/legacy-user-menu.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Stock Status</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>*@
+            <li class="role nav-item has-treeview">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fa fa-th-large"></i>
+                    <p class="role">
+                        Other
+                        <i class="right fa fa-angle-right"></i>
+                    </p>
+                </a>
+                @*<ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="../examples/404.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Error 404</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/500.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Error 500</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/blank.html" class="nav-link active">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Blank Page</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../../starter.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Starter Page</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../examples/legacy-user-menu.html" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Legacy User Menu</p>
+                        </a>
+                    </li>
+                </ul>*@
+            </li>
+            @*<li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-tint"></i>
                         <p>
@@ -735,79 +744,79 @@
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item ">
-                    <a href="@Url.Action("Financial", "Application")" class="nav-link">
-                        <i class="nav-icon fa fa-inr"></i>
-                        <p>Financial Account</p>
-                    </a>
-                </li>
-                @*<li class="nav-item has-treeview">*@
-                    @*<a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-inr"></i>
-                        <p>
-                            Financial Account
-                            <i class="right fa fa-angle-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="@Url.Action("ChequePrint", "ChequePrint")" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>ChequePrint</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="@Url.Action("VoucherEntry", "VoucherEntry")" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Vouchar Entry</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="@Url.Action("AccountStatement", "AccountStatement")" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Account Statement</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="@Url.Action("ChequeLayout", "ChequeLayout")" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p> ChequeLayout</p>
-                            </a>
-                        </li>*@
-                        @*<li class="nav-item">
-                                <a href="../../starter.html" class="nav-link">
-                                    <i class="fa fa-circle-o nav-icon"></i>
-                                    <p>Cash Receipt</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../examples/legacy-user-menu.html" class="nav-link">
-                                    <i class="fa fa-circle-o nav-icon"></i>
-                                    <p>Journal Vouchar Entry</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../examples/legacy-user-menu.html" class="nav-link">
-                                    <i class="fa fa-circle-o nav-icon"></i>
-                                    <p>Cash Payment</p>
-                                </a>
-                            </li>*@
-                        @*<li class="nav-item">
-                            <a href="@Url.Action("UserPaymentAccount", "UserPaymentAccount")" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>User Payment Account</p>
-                            </a>
-                        </li>*@
-                        @*<li class="nav-item">
-                                <a href="../examples/legacy-user-menu.html" class="nav-link">
-                                    <i class="fa fa-circle-o nav-icon"></i>
-                                    <p>Customer Prebalance & Deposit</p>
-                                </a>
-                            </li>*@
-                    @*</ul>
                 </li>*@
-                <li class="nav-item has-treeview">
+            <li class="role nav-item ">
+                <a href="@Url.Action("Financial", "Application")" class="nav-link">
+                    <i class="nav-icon fa fa-inr"></i>
+                    <p class="role">Financial Accounts</p>
+                </a>
+            </li>
+            @*<li class="nav-item has-treeview">*@
+            @*<a href="#" class="nav-link">
+                    <i class="nav-icon fa fa-inr"></i>
+                    <p>
+                        Financial Account
+                        <i class="right fa fa-angle-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="@Url.Action("ChequePrint", "ChequePrint")" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>ChequePrint</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("VoucherEntry", "VoucherEntry")" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Vouchar Entry</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("AccountStatement", "AccountStatement")" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p>Account Statement</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("ChequeLayout", "ChequeLayout")" class="nav-link">
+                            <i class="fa fa-circle-o nav-icon"></i>
+                            <p> ChequeLayout</p>
+                        </a>
+                    </li>*@
+            @*<li class="nav-item">
+                    <a href="../../starter.html" class="nav-link">
+                        <i class="fa fa-circle-o nav-icon"></i>
+                        <p>Cash Receipt</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../examples/legacy-user-menu.html" class="nav-link">
+                        <i class="fa fa-circle-o nav-icon"></i>
+                        <p>Journal Vouchar Entry</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../examples/legacy-user-menu.html" class="nav-link">
+                        <i class="fa fa-circle-o nav-icon"></i>
+                        <p>Cash Payment</p>
+                    </a>
+                </li>*@
+            @*<li class="nav-item">
+                    <a href="@Url.Action("UserPaymentAccount", "UserPaymentAccount")" class="nav-link">
+                        <i class="fa fa-circle-o nav-icon"></i>
+                        <p>User Payment Account</p>
+                    </a>
+                </li>*@
+            @*<li class="nav-item">
+                    <a href="../examples/legacy-user-menu.html" class="nav-link">
+                        <i class="fa fa-circle-o nav-icon"></i>
+                        <p>Customer Prebalance & Deposit</p>
+                    </a>
+                </li>*@
+            @*</ul>
+                </li>*@
+            @*<li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-files-o"></i>
                         <p>
@@ -847,23 +856,23 @@
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="@Url.Action("PatientReport", "Application")" class="nav-link">
-                        <i class="nav-icon fa fa-bar-chart"></i>
-                        <p>
-                            Patient Reports
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="@Url.Action("MISReports", "Application")" class="nav-link">
-                        <i class="nav-icon fa fa-bar-chart"></i>
-                        <p>
-                            MIS Patient Reports
-                        </p>
-                    </a>
-                </li>
+                </li>*@
+            <li class="role nav-item">
+                <a href="@Url.Action("PatientReport", "Application")" class="nav-link">
+                    <i class="nav-icon fa fa-bar-chart"></i>
+                    <p class="role">
+                        Patient Reports
+                    </p>
+                </a>
+            </li>
+            <li class="role nav-item">
+                <a href="@Url.Action("MISReports", "Application")" class="nav-link">
+                    <i class="nav-icon fa fa-bar-chart"></i>
+                    <p class="role">
+                        MIS Patient Reports
+                    </p>
+                </a>
+            </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

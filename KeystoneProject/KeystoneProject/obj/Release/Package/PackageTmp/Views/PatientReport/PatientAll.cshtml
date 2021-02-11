@@ -272,19 +272,24 @@
         });
     })
     $(document).ready(function () {
+      
         $("#submit").click(function () {
+            alert($("#Department").val());
             debugger
             $.ajax({
                 url: '@Url.Action("ReportPatientAll", "PatientReport")',
                 type: "POST",
                 dataType: "json",
-                data: { FromDate: $("#FromDate").val(), ToDate: $("#ToDate").val(), Consultant: $("#Consultant").val(), Referred: $("#Referred").val() },
+                data: { FromDate: $("#FromDate").val(), ToDate: $("#ToDate").val(), Consultant: $("#Consultant").val(), Referred: $("#Referred").val(), Department: $("#Department").val() },
                 success: function (data) {
                     debugger
                     $("#allPatientTableId tbody tr").remove();
                     for (var i = 0; i < data.length; i++) {
                         $("#allPatientTableId").append('<tr><td>' + data[i].RegNo + '</td><td>' + data[i].OPDNo + '</td><td>' + data[i].Patient + '</td><td>' + data[i].Address + '</td><td>' + data[i].DoctorName + '</td></tr>');
                     };
+
+
+                    $('#allPatientTableId').dataTable().fnDestroy();
                     $('.ex-btn').css('display', 'inline-flex');
                     $('#allPatientTableId').DataTable({
                         "fixedHeader": true,
@@ -314,9 +319,6 @@
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
         <div class="content-wrapper">
-            <h5 class="topheadline">
-                PatientAll
-            </h5>
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row">
@@ -343,7 +345,7 @@
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <!--From Date-->
-                                            <div class="form-group col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                                     <label>From Date</label>
                                                 </div>
@@ -352,7 +354,7 @@
                                                 </div>
                                             </div>
                                             <!--To Date-->
-                                            <div class="form-group col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                                     <label>To Date</label>
                                                 </div>
@@ -360,10 +362,29 @@
                                                     <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" id="ToDate" name="ToDate" class="form-control">
                                                 </div>
                                             </div>
+                                            <!--Department-->
+                                            <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                                    <label>Department </label>
+                                                </div>
+                                                <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+                                                    <select class="form-control" id="Department" name="Department">
+                                                        @{
+                                                            <option value="%">--All--</option>
+                                                            for (int i = 0; i < Model.dsDepartment.Tables[0].Rows.Count; i++)
+                                                            {
+                                                                string DoctorPrintName = Model.dsDepartment.Tables[0].Rows[i]["DepartmentName"].ToString();
+                                                                string DoctorID = Model.dsDepartment.Tables[0].Rows[i]["DepartmentID"].ToString();
+                                                                <option value=@DoctorID>@DoctorPrintName</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <!--Consultant Doctor-->
-                                            <div class="form-group col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                                     <label>Consultant Dr</label>
                                                 </div>
@@ -382,7 +403,7 @@
                                                 </div>
                                             </div>
                                             <!--Referred Doctor-->
-                                            <div class="form-group col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="form-group col-lg-4 col-md-12 col-sm-12 col-xs-12">
                                                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                                     <label>Referred Dr</label>
                                                 </div>
@@ -416,7 +437,7 @@
                             </div>
                             <div class="btn-group dropdown-split-warning">
                                 <button type="button" id="submit" name="submit" class="btn btn-app">
-                                    <i class="fa fa-search"></i>Search
+                                    <i class="fa fa-search"></i>View
                                 </button>
                             </div>
                             <div class="btn-group dropdown-split-warning ex-btn" style="display: none;">
@@ -426,12 +447,12 @@
                     </div>
 
                     <div class="row">
-                        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
                             <table id="allPatientTableId" class="table table-bordered hover display dataTable table-hover" role="grid" style="width: 100%">
                                 <thead style="background-color: #bddff7;">
                                     <tr>
                                         <th>UHID No.</th>
-                                        <th>OPD No.</th>
+                                        <th>OPD/IPD No.</th>
                                         <th>Patient Name</th>
                                         <th>Address</th>
                                         <th>Consultant Doctor / Referred Doctor</th>

@@ -29,7 +29,7 @@ namespace KeystoneProject.Models.Laboratory
         public string SampleCollectionBy { get; set; }
         public string AppointmentDate{get;set;}
         public string Discount_Service { get; set; }
-
+        public string ForAuthorization { get; set; }
         public string DiscountServiceType { get; set; }
         public decimal ServiceTotal { get; set; }
         public string ReportingDate { get; set; }
@@ -49,14 +49,12 @@ namespace KeystoneProject.Models.Laboratory
         public string FullName { get; set; }
         public string UserID { get; set; }
         public string Number { get; set; }
-
+        public string txtinput { get; set; }
         public string Name { get; set; }
         public string Remark { get; set; }
         public string PrintRegNO { get; set; }
         public  string PaymentDate { get; set; }
-
         public string Rate { get; set; }
-
         public string OLDBill { get; set; }
 
         //  public DataSet dsOLDBill { get; set; }
