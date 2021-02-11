@@ -732,7 +732,7 @@
                                                     {
                                                         var Level1 = Convert.ToInt32(drRow["ModuleID"]);
                                                         DataView dataView2 = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + drRow["ModuleID"].ToString() + "", "", DataViewRowState.CurrentRows);
-                                                        <a href="#" class="showhide list-group-item text-center" onclick="Level1('@Level1')">
+                                                        <a href="#" class="showhide list-group-item text-center" onclick="Level1('@Level1')"><input type="checkbox" class="frstmodule checkbox @Level1" name="@Level1" value="@Level1" />
                                                             <input type="hidden" name="allchk" value='@Level1' class="form-check-input" /><input type="hidden" name="Level1" id="Level1" value="@Level1"><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>@drRow["ModuleName"]
                                                         </a>
 
@@ -851,6 +851,7 @@
     var count = 0;
     var len = 0;
     $(document).ready(function () {
+   
         $('.showhide').click(function () {
             $("#hideandshow").show();
         })
@@ -865,8 +866,6 @@
                 $('input[name=allchk]').each(function () {
                     chk = true;
                     Level1($(this).val());
-                   
-
                 })
 
             }
@@ -882,6 +881,33 @@
 
 
     })
+    function checkedmodule(value) {
+        debugger
+
+        //  var value=$(this).val();
+        var moduleID = value.value.split('-')[0];
+        var moduleName = value.value.split('-')[1];
+        var chkall1 = $('input[name=' + moduleID + ']').prop("checked");
+        //    Level2(moduleID, moduleName, value.checked);
+        debugger
+        if (chkall1 == true) {
+            $('.' + moduleID).prop("checked", true);
+            
+            // $('input[name=' + d.ModuleID + ']').prop("checked", true);
+            $('.' + moduleID).prop("checked", true);
+            $('.chkshowhide').prop("checked", true);
+        }
+        else {
+            
+            $('.chkshowhide').prop("checked", false);
+            $('.' + moduleID).prop("checked", false);
+            
+         //   unchk1();
+            // $('input[name=' + d.ModuleID + ']').prop("checked", false);
+            // Level2(d.ModuleID, d.ModuleName, false);
+        }
+    }
+    var ModuleID = "";
         function Level1(Level1ModuleID)
         {
             debugger
@@ -895,7 +921,7 @@
                     $(".m").hide(200);
                     count++;
                     $(data).each(function (index, d) {
-                        $("#level2").append('<a href="#" onclick="Level2(\'' + d.ModuleID + '\',\'' + d.ModuleName + '\')"  class="chkallform list-group-item text-center"><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>' + d.ModuleName + '</a>');
+                        $("#level2").append('<a href="#" onclick="Level2(\'' + d.ModuleID + '\',\'' + d.ModuleName + '\')"  class="chkallform list-group-item text-center"><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>' + d.ModuleName + '</a><div class="form-check-inline"><label class="form-check-label"></a><input type="checkbox" onclick="checkedmodule(this)" value=' + d.ModuleID + "-" + d.ModuleName + ' name= ' + d.ModuleID + '  class="' + Level1ModuleID + ' form-check-input"></label></div>');
                         debugger
                         if ($('input[name=allchk1]').prop("checked") == true) {
                             Level2(d.ModuleID, d.ModuleName);
@@ -1050,6 +1076,7 @@
                         select: function (event, ui) {
                             $('#userName').val(ui.item.label);
                             $('#UserID').val(ui.item.ID)
+
                         }
 
                     })
@@ -1080,6 +1107,23 @@
                             });
 
 
+                            $.ajax({
+                                url: '@Url.Action("RoleRightsLevelChk", "RoleRightstwo")',
+                                type: "GET",
+                                data: { RoleID: $("#RoleID").val() },
+                                dataType: "json",
+                                success: function (data) {
+                                    debugger
+                                    var len = $("#level3 tr").length;
+                                    var row = 0;
+                                    $(data).each(function (index, d) {
+
+                                        $('input[name=' + d.ModuleIDchk + ']').prop("checked", true);
+                                        //$('input[name=' + d.ModuleID + ']').prop("checked", true);
+                                        //  Level1(d.ModuleID);
+                                    })
+                                }
+                            })
                         },
 
                     })

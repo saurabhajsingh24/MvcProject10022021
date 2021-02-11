@@ -71,7 +71,32 @@
         var SrNo = 1;
         $("#Add").click(function () {
             debugger;
-            $("#bedTableId").append('<tr><td style="border-right:1px solid #bddff7"><input type="text" name="BedNo" class="form-control input-sm" required style="border-left-color: red;border-left-width: thick;"  oninvalid="this.setCustomValidity(`Please Enter Bad Number`)" oninput="this.setCustomValidity(``)"> </td><td style="display:none">' + 0 + '</td><td style="border-right:1px solid #bddff7"> <input type="checkbox" class="largerCheckbox" id="1" name="1" value="1" /> </td><td><button type="button" id="delrow" onclick="delete1(0)" class="btn btn-danger"><span class="fa fa-trash"></span></button></td></tr>');
+            $("#bedTableId").append('<tr><td style="border-right:1px solid #bddff7"><input type="text" name="BedNo" class="form-control input-sm" required style="border-left-color: red;border-left-width: thick;"  oninvalid="this.setCustomValidity(`Please Enter Bad Number`)" oninput="this.setCustomValidity(``)"> </td><td style="display:none">' + 0 + '</td><td style="border-right:1px solid #bddff7"> <input type="checkbox" class="largerCheckbox" id="BedStatus" name="BedStatus" value="false"/></td><td><button type="button" id="delrow" onclick="delete1(0)" class="btn btn-danger"><span class="fa fa-trash"></span></button></td></tr>');
+            var count = "";
+            $("#bedTableId").parent().find('input[name=BedStatus]').each(function () {
+                debugger
+                var abc = $(this).parent().find('input[name=BedStatus]').attr("checked");
+               
+                if (abc != 'checked')
+                {
+                    debugger
+                    count += false + ',';
+                    //$(this).parent().find('input[name=Bedcount]').attr("checked", false)
+
+                   // =;
+                }
+                else
+                {
+                    count+= true+',';
+                   // $("#Bedcount").val(count);
+                 //   $(this).parent().find('input[name=Bedcount]').attr("checked", true)
+                }
+                
+                $("#Bedcount").val(count);
+                //alert($("#Bedcount").val());
+            })
+
+          
             SrNo++;
         })
         var row = 0;
@@ -169,7 +194,7 @@
                         {
                             data[i].BedStatus = "";
                         }
-                        $("#bedTableId").append('<tr><td style="border-right:1px solid #bddff7"><input type="text" name="BedNo" class="form-control input-sm" value=' + BedNo + '> </td><td style="display:none">' + data[i].BedID + '</td><td style="border-right:1px solid #bddff7"><input type="checkbox" class="largerCheckbox" id=""  name="BedStatus" value=' + data[i].BedStatus + ' checked=' + data[i].BedStatus + '/></td><td><button type="button" id="delrow" onclick="delete1(' + data[i].BedID + ')" class="btn btn-danger"><span class="fa fa-trash"></span></button></td><td style="display:none">' + obd.WardID + '</td><td style="display:none">' + data[i].RoomID + '</td></tr>');
+                        $("#bedTableId").append('<tr><td style="border-right:1px solid #bddff7"><input type="text" name="BedNo" class="form-control input-sm" value=' + BedNo + '> </td><td style="display:none">' + data[i].BedID + '</td><td style="border-right:1px solid #bddff7"><input type="checkbox" class="largerCheckbox" id="BedStatus"  name="BedStatus" value=' + data[i].BedStatus + ' checked=' + data[i].BedStatus + '/></td><td><button type="button" id="delrow" onclick="delete1(' + data[i].BedID + ')" class="btn btn-danger"><span class="fa fa-trash"></span></button></td><td style="display:none">' + obd.WardID + '</td><td style="display:none">' + data[i].RoomID + '</td></tr>');
                     });
                 },
             });
@@ -254,6 +279,7 @@
                                                        oninvalid="this.setCustomValidity('Please Enter Ward Name')"
                                                        oninput="this.setCustomValidity('')">
                                                 <input type="hidden" id="WardID" name="WardID" class="form-control input-sm" />
+                                                <input type="hidden" id="Bedcount" name="Bedcount" class="form-control input-sm" />
                                             </div>
                                             <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                                 <label>Room No.</label>

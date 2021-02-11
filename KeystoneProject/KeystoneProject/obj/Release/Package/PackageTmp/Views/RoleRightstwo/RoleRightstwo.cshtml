@@ -706,7 +706,7 @@
                                             @{
                                                 var ParentModuleID = Convert.ToInt32(Model.GetRoleAndRights.Tables[0].Rows[0]["ParentModuleID"]);
                                                 var ParentModuleName = Model.GetRoleAndRights.Tables[0].Rows[0]["ModuleName"].ToString();
-
+                                                
                                                 DataView dataView = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + ParentModuleID + " ", "", DataViewRowState.CurrentRows);
                                                 int levelid1 = 1;
                                                 int levelid2 = 1;
@@ -720,8 +720,8 @@
                                                     {
                                                         var Level1 = Convert.ToInt32(drRow["ModuleID"]);
                                                         DataView dataView2 = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + drRow["ModuleID"].ToString() + "", "", DataViewRowState.CurrentRows);
-                                                        <div><input type="checkbox" class="checkbox" value="@Level1"/>
-                                                            <a href="#" class="list-group-item text-center" onclick="Level1('@Level1')">
+                                                        <div>
+                                                            <a href="#" class="list-group-item text-center" onclick="Level1('@Level1')"><input type="checkbox" class="frstmodule checkbox @Level1" name="@Level1" value="@Level1" />
                                                                 <input type="hidden" name="Level1" id="Level1" value="@Level1"><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>@drRow["ModuleName"]
                                                             </a>
                                                           
@@ -825,7 +825,7 @@
 
 
 
-
+<input type="hidden" id="beforAfterchk" name="beforAfterchk" />
             </div>
         </form>
     </div>
@@ -834,15 +834,54 @@
 <script>
     var unchk = "";
     var chk1 = "";
+
     $(document).ready(function () {
-       
-        $("#level3").on('click', '.Add1,.Edit1,.Delete1', function () {
+        $('input[name=parentLevel4]').change(function () {
+
+            debugger
+            var parentLevel4 = "";
+            var con = $(this).prop("checked");
+            if (con == false) {
+                $(this).each(function () {
+                    debugger
+                    parentLevel4 += $(this).val();
+                })
+            }
+        })
+        $.ajax({
+            url: '@Url.Action("RoleRightsLevelChk", "RoleRightstwo")',
+            type: "GET",
+            data: { RoleID: $("#RoleID").val() },
+            dataType: "json",
+            success: function (data) {
+                debugger
+                var len = $("#level3 tr").length;
+                var row = 0;
+                $(data).each(function (index, d) {
+                    
+                    $('input[name=' + d.ModuleIDchk + ']').prop("checked", true);
+                    //$('input[name=' + d.ModuleID + ']').prop("checked", true);
+                 //  Level1(d.ModuleID);
+                })
+                //$('.frstmodule').each(function () {
+                //    debugger
+                //   var chk= $(this).prop("checked");
+                //   if(chk)
+                //   {
+                //       Level1($(this).val());
+                //   }
+
+                //})
+
+                }
+        })
+        $("#level3").on('click', '.Add1,.Edit1,.Delete1', '.Print1', function () {
             debugger
              unchk = "";
                chk1 = "";
 
                var chk =$(this).parent().find('input[name="parentLevel4"]').prop("checked");
-                {
+                
                     if (chk == false)
                     {
                         $(this).parent().find('input[name="parentLevel4"]').prop("checked",false);
@@ -851,10 +890,10 @@
                     {
                         $(this).parent().find('input[name="parentLevel4"]').prop("checked",true);
                     }
-                }
+                    unchk1();
              })
             debugger
-            unchk1();
+            
            unchk = unchk.split(',');
             chk1 = chk1.split(',');
         //})
@@ -862,10 +901,12 @@
 
     function unchk1()
     {
-
+        debugger
         //alert(unchk);
+       var beforAfterchk = "";
         $("#level3").parent().find('input[name="parentLevel4"]').each(function () {
-           debugger
+            debugger
+            
            var parentLevel4 = $(this).val();
            var  con= $(this).prop("checked");
 
@@ -875,11 +916,13 @@
                }
                else
                {
-                  unchk == parentLevel4 + ",";
+                  unchk = parentLevel4 + ",";
+                  parentLevel4 + ",";
+                  beforAfterchk+= parentLevel4 + ",";
                }
-
-
         })
+        $("#beforAfterchk").val(beforAfterchk);
+      
     }
     function EditClick(RoleID)
     {
@@ -887,7 +930,9 @@
     }
         function Level1(Level1ModuleID)
         {
+            debugger
 
+            var chkall1 = $('input[name=' + Level1ModuleID + ']').prop("checked");
             debugger
             $.ajax({
                 url: '@Url.Action("RoleRightsLevel2", "RoleRightstwo")', 
@@ -899,21 +944,86 @@
                     $(".m").hide(200);
                     $(data).each(function (index, d) {
                         debugger;
-                        $("#level2").append('<div class="list-group-item text-center"><a href="#" onclick="Level2(\'' + d.ModuleID + '\',\'' + d.ModuleName + '\',\'' + false + '\')"><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>' + d.ModuleName + '<div class="form-check-inline"><label class="form-check-label"></a><input type="checkbox" onclick="checkedmodule(this)" value=' + d.ModuleID + "-" + d.ModuleName + ' name= '+ d.ModuleID +'  class="form-check-input"></label></div></div>');
+                        $("#level2").append('<div class="list-group-item text-center"><a href="#" onclick="Level2(\'' + d.ModuleID + '\',\'' + d.ModuleName + '\',\'' + false + '\')" ><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>' + d.ModuleName + '<div class="form-check-inline"><label class="form-check-label"></a><input type="checkbox" onclick="checkedmodule(this)" value=' + d.ModuleID + "-" + d.ModuleName + ' name= ' + d.ModuleID + '  class="' + Level1ModuleID + ' form-check-input"></label></div></div>');
                         // Level2(d.ModuleID);
+
+                        if(chkall1==true)
+                        {
+                           // $('input[name=' + d.ModuleID + ']').prop("checked", true);
+                            //Level2(d.ModuleID, d.ModuleName, false);
+
+                        }
+                        else
+                        {
+                            //$('.checked' + Level1ModuleID).prop("checked", false);
+                            //$('.checkedEdit' + Level1ModuleID).prop("checked", false);
+                            //$('.checkedDelete' + Level1ModuleID).prop("checked", false);
+                            //$('.checkedPrint' + Level1ModuleID).prop("checked", false);
+                            //$('input[name=' + d.ModuleID + ']').prop("checked", false);
+                           // Level2(d.ModuleID, d.ModuleName, false);
+                        }
+                    })
+
+                    // Before Checked Edit 
+
+
+                    $.ajax({
+                        url: '@Url.Action("RoleRightsLevelChk", "RoleRightstwo")',
+                        type: "GET",
+                        data: { RoleID: $("#RoleID").val() },
+                        dataType: "json",
+                        success: function (data) {
+                            debugger
+                            //var len = $("#level3 tr").length;
+                            //var row = 0;
+                            $(data).each(function (index, d) {
+                                debugger
+                               
+                                $('input[name=' + d.ModuleID + ']').prop("checked", true);
+                                //  Level1(d.ModuleID);
+                            })
+                            //$('.frstmodule').each(function () {
+                            //    debugger
+                            //   var chk= $(this).prop("checked");
+                            //   if(chk)
+                            //   {
+                            //       Level1($(this).val());
+                            //   }
+
+                            //})
+
+                        }
                     })
                 }
             })
-
+            
         }
     function checkedmodule(value) {
         debugger
+       
         //  var value=$(this).val();
         var moduleID = value.value.split('-')[0];
         var moduleName = value.value.split('-')[1];
-        Level2(moduleID, moduleName, value.checked);
+        var chkall1 = $('input[name=' + moduleID + ']').prop("checked");
+    //    Level2(moduleID, moduleName, value.checked);
         debugger
-       
+        if (chkall1 == true) {
+            $('.checked' + moduleID).prop("checked", true);
+            $('.checkedEdit' + moduleID).prop("checked", true);
+            $('.checkedDelete' + moduleID).prop("checked", true);
+            $('.checkedPrint' + moduleID).prop("checked", true);
+           // $('input[name=' + d.ModuleID + ']').prop("checked", true);
+
+        }
+        else {
+            $('.checked' + moduleID).prop("checked", false);
+            $('.checkedEdit' + moduleID).prop("checked", false);
+            $('.checkedDelete' + moduleID).prop("checked", false);
+            $('.checkedPrint' + moduleID).prop("checked", false);
+            unchk1();
+           // $('input[name=' + d.ModuleID + ']').prop("checked", false);
+            // Level2(d.ModuleID, d.ModuleName, false);
+        }
     }
     var ModuleID = "";
 
@@ -980,7 +1090,8 @@
                                         var we = unchk;
                                         if (d.ModuleID == AddModuleID)
                                         {
-
+                                            debugger
+                                            $("."+d.ModuleID).prop("checked", true);
                                             if (AddRightCode[1] == d.RightCode) {
 
                                                 $(this).find('.Add1').prop("checked", true);
@@ -1033,16 +1144,16 @@
                  chkall = $('input[name=' + Level1ModuleID + ']').prop("checked");
                 if (chkall == true) {
 
-                    $('.checked' + Level1ModuleID).prop("checked", true);
-                    $('.checkedEdit' + Level1ModuleID).prop("checked", true);
-                    $('.checkedDelete' + Level1ModuleID).prop("checked", true);
-                    $('.checkedPrint' + Level1ModuleID).prop("checked", true);
+                    //$('.checked' + Level1ModuleID).prop("checked", true);
+                    //$('.checkedEdit' + Level1ModuleID).prop("checked", true);
+                    //$('.checkedDelete' + Level1ModuleID).prop("checked", true);
+                    //$('.checkedPrint' + Level1ModuleID).prop("checked", true);
                 }
                 else {
-                    $('.checked' + Level1ModuleID).prop("checked", false);
-                    $('.checkedEdit' + Level1ModuleID).prop("checked", false);
-                    $('.checkedDelete' + Level1ModuleID).prop("checked", false);
-                    $('.checkedPrint' + Level1ModuleID).prop("checked", false);
+                    //$('.checked' + Level1ModuleID).prop("checked", false);
+                    //$('.checkedEdit' + Level1ModuleID).prop("checked", false);
+                    //$('.checkedDelete' + Level1ModuleID).prop("checked", false);
+                    //$('.checkedPrint' + Level1ModuleID).prop("checked", false);
 
                 }
             }
@@ -1109,6 +1220,7 @@
                     $(this).prop("checked", false);
                 })
             }
+            unchk1();
         })
 
       
@@ -1132,6 +1244,7 @@
                     $(this).prop("checked", false);
                 })
             }
+            unchk1();
         })
         //------------------------------------------
 
@@ -1150,6 +1263,7 @@
                     $(this).prop("checked", false);
                 })
             }
+            unchk1();
         })
         //-----------Print
 
@@ -1170,6 +1284,7 @@
                     $(this).prop("checked", false);
                 })
             }
+            unchk1();
         })
     })
 </script>

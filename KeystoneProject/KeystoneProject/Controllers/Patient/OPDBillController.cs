@@ -21,6 +21,7 @@ namespace KeystoneProject.Controllers.Patient
         private SqlConnection con;
 
         List<OPDBill> searchList = new List<OPDBill>();
+
         private void Connect()
         {
             string Constring = ConfigurationManager.ConnectionStrings["Mycon"].ToString();
@@ -363,8 +364,7 @@ namespace KeystoneProject.Controllers.Patient
             {
                 del = "Record Deleted Successfully";
             }
-
-            return Json(del);
+                return Json(del);
         }      
 
         string rpt = "";
@@ -384,6 +384,7 @@ namespace KeystoneProject.Controllers.Patient
         }
         public JsonResult OldBillNo_IndexChange(int BillNO, OPDBill obj)
         {
+            List<OPDBill> searchlist = new List<OPDBill>();
             HospitlLocationID();
             string Mode = "Add";
             if (BillNO > 0)
@@ -393,131 +394,180 @@ namespace KeystoneProject.Controllers.Patient
                     dsPatientBills.Reset();
                     dsPatientBills = _OPDBill.GetPatientBills(BillNO, HospitalID, LocationID);
 
-                    if (dsPatientBills.Tables.Count > 0)
+                    for (int i = 0; i < dsPatientBills.Tables[0].Rows.Count; i++)
                     {
-                        obj.ForAuthorization = "0";
-                        if (dsPatientBills.Tables[0].Rows.Count > 0)
+                      if (dsPatientBills.Tables.Count > 0)
                         {
-                            string ForAuthorization = dsPatientBills.Tables[0].Rows[0]["ForAuthorization"].ToString();
-                            if (ForAuthorization == "1")
+                            obj.ForAuthorization = "0";
+                            if (dsPatientBills.Tables[0].Rows.Count > 0)
                             {
+
+                                   DataTable dt1 = new DataTable();
+
+                                
+                                string ForAuthorization = dsPatientBills.Tables[0].Rows[0]["ForAuthorization"].ToString();
+
+                                if (ForAuthorization == "1")
+                                {
+                                    Connect();
+                                    DataSet ds = new DataSet();
+                                    DataTable dt = new DataTable();
+
+
+                                    SqlCommand cmd1 = new SqlCommand("GetPatientBillsForAuthorization", con);
+                                    cmd1.CommandType = CommandType.StoredProcedure;
+                                    cmd1.Parameters.Add(new SqlParameter("@HospitalID", HospitalID));
+                                    cmd1.Parameters.Add(new SqlParameter("@LocationID", LocationID));
+                                    cmd1.Parameters.Add(new SqlParameter("@BillNo", Convert.ToInt32(BillNO)));
+                                    //cmd.Parameters.Add(new SqlParameter("@BillNo", 56));
+                                    SqlDataAdapter sd1 = new SqlDataAdapter();
+                                    sd1.SelectCommand = cmd1;
+
+                                    dsPatientBills.Reset();
+                                    con.Open();
+                                    sd1.Fill(dsPatientBills);
+
+                                    //sd1.Fill(dt);
+
+                                    // obj.ForAuthorization = ForAuthorization.ToString();
+                                    }
                                 Connect();
-                                DataSet ds = new DataSet();
-                                DataTable dt = new DataTable();
-                                SqlCommand cmd1 = new SqlCommand("GetPatientBillsForAuthorization", con);
-                                cmd1.CommandType = CommandType.StoredProcedure;
-                                cmd1.Parameters.Add(new SqlParameter("@HospitalID", HospitalID));
-                                cmd1.Parameters.Add(new SqlParameter("@LocationID", LocationID));
-                                cmd1.Parameters.Add(new SqlParameter("@BillNo", Convert.ToInt32(BillNO)));
+                                SqlCommand cmd2 = new SqlCommand();
+                                if (ForAuthorization == "0" || ForAuthorization == "" || ForAuthorization == null)
+                                {
+                                    cmd2 = new SqlCommand("GetPatientBillsDetails", con);
+                                }
+                                else
+                                {
+                                    if (ForAuthorization == "1")
+                                    {
+                                        cmd2 = new SqlCommand("GetPatientBillsDetailsAurthorise", con);
+                                    }
+
+                                }
+
+                                cmd2.CommandType = CommandType.StoredProcedure;
+                                cmd2.Parameters.Add(new SqlParameter("@HospitalID", HospitalID));
+                                cmd2.Parameters.Add(new SqlParameter("@LocationID", LocationID));
+                                cmd2.Parameters.Add(new SqlParameter("@BillNo", Convert.ToInt32(BillNO)));
                                 //cmd.Parameters.Add(new SqlParameter("@BillNo", 56));
-                                SqlDataAdapter sd1 = new SqlDataAdapter();
-                                sd1.SelectCommand = cmd1;
-                               
-                               
-                                con.Open();
-                                sd1.Fill(ds);
-                               
-                                sd1.Fill(dt);
+                                SqlDataAdapter sd2 = new SqlDataAdapter();
+                                sd2.SelectCommand = cmd2;
+                                DataSet ds1 = new DataSet();
 
-                                obj.ForAuthorization = ForAuthorization.ToString();
+
+                                sd2.Fill(ds1);
+
+                                //sd2.Fill(dt1);
                             }
-                        }
+                          
                             obj.PaymentType = dsPatientBills.Tables[0].Rows[0]["PaymentType"].ToString();
-                        switch (obj.PaymentType)
-                        {
-                            case "Cheque":
-                                obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
-                                obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
-                                obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
-                                obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
-                                break;
+                            switch (obj.PaymentType)
+                            {
+                                case "Cheque":
+                                    obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
+                                    obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
+                                    obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
+                                    obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
+                                    break;
 
-                            case "Credit Card":
-                                obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
-                                obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
-                                obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
-                                obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
-                                break;
+                                case "Credit Card":
+                                    obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
+                                    obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
+                                    obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
+                                    obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
+                                    break;
 
-                            case "Debit Card":
-                                obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
-                                obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
-                                obj.Date = Convert.ToDateTime( dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
-                                obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
-                                break;
+                                case "Debit Card":
+                                    obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
+                                    obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
+                                    obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
+                                    obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
+                                    break;
 
 
-                            case "E-Money":
-                                obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
-                                obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
-                                obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
-                                obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
-                                break;
+                                case "E-Money":
+                                    obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
+                                    obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
+                                    obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
+                                    obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
+                                    break;
 
-                            case "EFT":
-                                obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
-                                obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
-                                obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
-                                obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
-                                break;
+                                case "EFT":
+                                    obj.Number = dsPatientBills.Tables[0].Rows[0]["Number"].ToString();
+                                    obj.Name = dsPatientBills.Tables[0].Rows[0]["Name"].ToString();
+                                    obj.Date = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
+                                    obj.Remarks = dsPatientBills.Tables[0].Rows[0]["Remarks"].ToString();
+                                    break;
 
-                            default:
-                                obj.Number = "Cash";
-                                obj.Name = "Cash";
-                                obj.Date = System.DateTime.Now.ToString("yyyy-MM-dd");
-                                obj.Remarks = "Cash";
-                                break;
+                                default:
+                                    obj.Number = "Cash";
+                                    obj.Name = "Cash";
+                                    obj.Date = System.DateTime.Now.ToString("yyyy-MM-dd");
+                                    obj.Remarks = "Cash";
+                                    break;
+                              }
+                            
+
                         }
 
-                    }
-                    if (dsPatientBills.Tables[0].Rows.Count > 0)
-                    {
-                        obj.BillNoPrint= dsPatientBills.Tables[0].Rows[0]["PrintBillNo"].ToString();
-                        obj.BillDate = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["BillDate"]).ToString("yyyy-MM-dd");
-                        obj.Time = Convert.ToDateTime(dsPatientBills.Tables[0].Rows[0]["BillDate"]).ToString("hh:mm");
-                        obj.grosstotal = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["GrossAmount"]);
-                        obj.TaxPercent = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["TaxPercent"]);
-                        obj.SerTaxAmount = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["TaxAmount"]);
-                        obj.TotalAmount = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["TotalAmount"]);
-                        obj.DiscountPercent = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["DiscountPercent"]);
-                        obj.DiscountAmount = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["DiscountAmount"]);
-                        obj.DiscountReason = dsPatientBills.Tables[0].Rows[0]["DiscountReason"].ToString();
-                        //if (disID != "0")
-                        //{
-                        //    DataSet ds = _OPDBill.GetDiscountReasonID(Convert.ToString(disID));
-                        //    if (ds.Tables[0].Rows.Count > 0)
-                        //    {
-                        //        obj.DiscountReason = ds.Tables[0].Rows[0]["DiscountReason"].ToString();
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    obj.DiscountReason = dsPatientBills.Tables[0].Rows[0]["DiscountReason"].ToString();
-                        //}
+                        DataRow dr = dsPatientBills.Tables[0].Rows[i];
+
+                        string DateTimestr = Convert.ToString(dr["BillDate"]);
+                        DateTime DateTime = Convert.ToDateTime(DateTimestr);
+
                         if (dsPatientBills.Tables[0].Rows.Count > 0)
                         {
-                            if (dsPatientBills.Tables[0].Rows[0]["PreBalanceAmount"].ToString() != null && dsPatientBills.Tables[0].Rows[0]["PreBalanceAmount"].ToString().Trim() != "")
-                            {
-                                obj.PreBalance = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["PreBalanceAmount"]);
+                            obj.ForAuthorization = dsPatientBills.Tables[0].Rows[0]["ForAuthorization"].ToString();
+                            obj.BillNoPrint = Convert.ToString(dr["PrintBillNo"]);
+                            obj.BillDate = DateTime.ToString("yyyy-MM-dd");
+                            obj.Time = DateTime.ToString("hh:mm");
+                            obj.grosstotal = Convert.ToDecimal(dr["GrossAmount"]);
+                            obj.TaxPercent = Convert.ToDecimal(dr["TaxPercent"]);
+                            obj.SerTaxAmount = Convert.ToDecimal(dr["TaxAmount"]);
+                            obj.TotalAmount = Convert.ToDecimal(dr["TotalAmount"]);
+                            obj.DiscountPercent = Convert.ToDecimal(dr["DiscountPercent"]);
+                            obj.DiscountAmount = Convert.ToDecimal(dr["DiscountAmount"]);
+                            obj.DiscountReason = dr["DiscountReason"].ToString();
 
-                                if (Convert.ToDecimal(PreBalance) > 0)
-                                    obj.PreBalance = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["PreBalanceAmount"]);
-                            }
-                            else
+                           
+                            //if (disID != "0")
+                            //{
+                            //    DataSet ds = _OPDBill.GetDiscountReasonID(Convert.ToString(disID));
+                            //    if (ds.Tables[0].Rows.Count > 0)
+                            //    {
+                            //        obj.DiscountReason = ds.Tables[0].Rows[0]["DiscountReason"].ToString();
+                            //    }
+                            //}
+                            //else
+                            //{
+                            //    obj.DiscountReason = dsPatientBills.Tables[0].Rows[0]["DiscountReason"].ToString();
+                            //}
+                            if (dsPatientBills.Tables[0].Rows.Count > 0)
                             {
-                                obj.PreBalance = Convert.ToDecimal("0.00");
+                                if (dsPatientBills.Tables[0].Rows[0]["PreBalanceAmount"].ToString() != null && dsPatientBills.Tables[0].Rows[0]["PreBalanceAmount"].ToString().Trim() != "")
+                                {
+                                    obj.PreBalance = Convert.ToDecimal(dr["PreBalanceAmount"]);
+
+                                    if (Convert.ToDecimal(PreBalance) > 0)
+                                        obj.PreBalance = Convert.ToDecimal(dr["PreBalanceAmount"]);
+                                }
+                                else
+                                {
+                                    obj.PreBalance = Convert.ToDecimal("0.00");
+                                }
                             }
                         }
+                        obj.NetPayableAmount = Convert.ToDecimal(dr["NetPayableAmount"]);
+                        obj.PaidAmount = Convert.ToDecimal(dr["PaidAmount"]);
+                        obj.BalanceAmount = Convert.ToDecimal(dr["BalanceAmount"]);
+                        obj.BillNo = BillNO;
+
                     }
-                    obj.NetPayableAmount = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["NetPayableAmount"]);
-                    obj.PaidAmount = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["PaidAmount"]);
-                    obj.BalanceAmount = Convert.ToDecimal(dsPatientBills.Tables[0].Rows[0]["BalanceAmount"]);
-                    obj.BillNo = BillNO;
-                  
                 }
 
             }
-            List<OPDBill> searchlist = new List<OPDBill>();
+           
             searchlist.Add(obj);
             return new JsonResult { Data = searchlist, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }

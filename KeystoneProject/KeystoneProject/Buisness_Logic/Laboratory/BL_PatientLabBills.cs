@@ -769,566 +769,1136 @@ namespace KeystoneProject.Buisness_Logic.Laboratory
             Connect();
             try
             {
-                List<string> PatientLabDetail = new List<string>();
-
-                #region Patient
-                string regNO = GetNextPatientRegNO(obPatient).Tables[0].Rows[0]["PatientRegNo"].ToString();
-                if (obPatient.PatientRegNo == regNO)
+                int BillNo = 0;
+                if (obPatient.BillNo == "0")
                 {
-                    SqlCommand cmd = new SqlCommand("IUPatient", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@HospitalID", HospitalID);
-                    cmd.Parameters.AddWithValue("@LocationID", LocationID);
-                    cmd.Parameters.AddWithValue("@PatientRegNO", 0);
-                    cmd.Parameters["@PatientRegNO"].Direction = ParameterDirection.Output;
 
-                    if (obPatient.PatientType == "")
+                    List<string> PatientLabDetail = new List<string>();
+
+                    #region Patient
+                    string regNO = GetNextPatientRegNO(obPatient).Tables[0].Rows[0]["PatientRegNo"].ToString();
+                    if (obPatient.PatientRegNo == regNO)
                     {
-                        cmd.Parameters.AddWithValue("@PatientType", "OPD");
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@PatientType", obPatient.PatientType);
-                    }
-                    cmd.Parameters.AddWithValue("@PatientName", obPatient.PatientName);
-                    cmd.Parameters.AddWithValue("@PFPatientName", obPatient.PrefixName);
+                        SqlCommand cmd = new SqlCommand("IUPatient", con);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@HospitalID", HospitalID);
+                        cmd.Parameters.AddWithValue("@LocationID", LocationID);
+                        cmd.Parameters.AddWithValue("@PatientRegNO", 0);
+                        cmd.Parameters["@PatientRegNO"].Direction = ParameterDirection.Output;
 
-                    cmd.Parameters.AddWithValue("@PFirstName", obPatient.PatientName);
-                    cmd.Parameters.AddWithValue("@PMiddleName", "");
-                    cmd.Parameters.AddWithValue("@PLastName", "");
-                    cmd.Parameters.AddWithValue("@ReferenceCode", 0);
-                    cmd.Parameters.AddWithValue("@PFGuardianName", "");
-                    cmd.Parameters.AddWithValue("@GuardianName", obPatient.GuardianName);
-
-                    cmd.Parameters.AddWithValue("@Gender", obPatient.Gender);
-                    cmd.Parameters.AddWithValue("@Age", obPatient.Age);
-                    cmd.Parameters.AddWithValue("@AgeType", "Years");
-                    cmd.Parameters.AddWithValue("@DateOfBirth", Convert.ToDateTime(obPatient.DateOfBirth));
-                    cmd.Parameters.AddWithValue("@Height", "");
-                    cmd.Parameters.AddWithValue("@BloodGroup", "");
-                    cmd.Parameters.AddWithValue("@BloodPressure", "");
-                    cmd.Parameters.AddWithValue("@Source", "");
-                    cmd.Parameters.AddWithValue("@Address", obPatient.Address);
-                    cmd.Parameters.AddWithValue("@PanCardNo", "");
-                    cmd.Parameters.AddWithValue("AadhaarNo", "");
-                    cmd.Parameters.AddWithValue("@CityID", obPatient.CityID);
-                    cmd.Parameters.AddWithValue("@PinCode", obPatient.PinCode);
-                    cmd.Parameters.AddWithValue("@StateID", obPatient.StateID);
-                    cmd.Parameters.AddWithValue("@Photo", "");
-                    cmd.Parameters.AddWithValue("@CountryID", obPatient.CountryID);
-                    cmd.Parameters.AddWithValue("@PhoneNo", obPatient.PhoneNo);
-                    cmd.Parameters.AddWithValue("@MobileNo", obPatient.MobileNo);
-                    cmd.Parameters.AddWithValue("@EmailID", "");
-                    cmd.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
-                    cmd.Parameters.AddWithValue("@PatientCancel", "");
-                    cmd.Parameters.AddWithValue("@PatientCancelReason", "");
-                    cmd.Parameters.AddWithValue("@CreationID", UserID);
-                    cmd.Parameters.AddWithValue("@Mode", "Add");
-                    con.Close();
-                    con.Open();
-                    cmd.ExecuteNonQuery().ToString();
-                    obPatient.PatientRegNo = Convert.ToInt32(cmd.Parameters["@PatientRegNO"].Value).ToString();
-                    con.Close();
-
-                #endregion
-
-                    #region PatientOPD
-
-                    SqlCommand cmdPatientOPDDetails = new SqlCommand("IUPatientOPDDetails", con);
-                    cmdPatientOPDDetails.CommandType = CommandType.StoredProcedure;
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@HospitalID", HospitalID);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@LocationID", LocationID);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@PatientOPDNO", 0);
-                    cmdPatientOPDDetails.Parameters["@PatientOPDNO"].Direction = ParameterDirection.Output;
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@PatientRegNO", obPatient.PatientRegNo);
-
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@PatientRegistrationDate", DateTime.Now);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@DepartmentID", 0);
-
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@PatientType", obPatient.PatientType);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@TPA_ID", obPatient.OrganizationID);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@DoctorID", obPatient.ConsultantDrID);
-
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@ReferredByDoctorID", obPatient.ReferredByDoctorID);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@Weight", "");
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@BloodPressure", "");
-
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@Reason", "");
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@RegistrationCharges", "");
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@ConsultionCharges", "");
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@DiscountInPer", 0.00);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@DiscountInRS", 0.00);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@TotalAmount", 0.00);
-
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@DiscountReason", obPatient.DiscountReason);
-                    //cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remarks);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@CreationID", UserID);
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
-
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@PaymentType", obPatient.PaymentType);
-
-                    switch (obPatient.PaymentType)
-                    {
-                        case "Cheque":
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
-                            break;
-                        case "Debit Card":
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
-                            break;
-                        case "Credit Card":
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
-                            break;
-                        case "E-Money":
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
-                            break;
-                        case "EFT":
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
-                            break;
-                        default:
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Number", "");
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Name", "");
-                            cmdPatientOPDDetails.Parameters.Add(new SqlParameter("@Date", DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"), "dd/MM/yyyy hh:mm:ss", null)));
-                            cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", "");
-                            break;
-                    }
-
-
-
-                    cmdPatientOPDDetails.Parameters.AddWithValue("@Mode", "Add");
-                    //con.Close();
-                    con.Open();
-                    int IUPatientOPDDetails = cmdPatientOPDDetails.ExecuteNonQuery();
-                    obPatient.PatientOPDNO = Convert.ToInt32(cmdPatientOPDDetails.Parameters["@PatientOPDNO"].Value).ToString();
-
-                    if (obPatient.OPDIPDID == "")
-                    {
-                        obPatient.OPDIPDID = obPatient.PatientOPDNO;
-
-                    }
-                    con.Close();
-                }
-                    #endregion
-
-                #region PatientBill
-                if (obPatient.PatientRegNo != "")
-                {
-                    SqlCommand CmdPatientBill = new SqlCommand("IUPatientBills", con);
-                    CmdPatientBill.CommandType = CommandType.StoredProcedure;
-                    CmdPatientBill.Parameters.AddWithValue("@HospitalID", HospitalID);
-                    CmdPatientBill.Parameters.AddWithValue("@LocationID", LocationID);
-                    CmdPatientBill.Parameters.AddWithValue("@BillNo", 0);
-                    CmdPatientBill.Parameters["@BillNo"].Direction = ParameterDirection.Output;
-                    CmdPatientBill.Parameters.AddWithValue("@PatientRegNO", obPatient.PatientRegNo);
-
-                    string Dates = Convert.ToDateTime(obPatient.BillDate).ToString("dd-MM-yyyy hh:mm:ss");
-                    //string Time=Convert.ToDateTime(obPatient.BillDatetime).ToString("hh:mm:ss");
-                    CmdPatientBill.Parameters.AddWithValue("@BillDate", Convert.ToDateTime(Dates));
-                    //CmdPatientBill.Parameters.AddWithValue("@BillDate", obPatient.BillDate);
-                    CmdPatientBill.Parameters.AddWithValue("@OPDIPDID ", obPatient.OPDIPDID);
-                    if (obPatient.PatientType == "OPD")
-                    {
-                        CmdPatientBill.Parameters.AddWithValue("@BillType", "OPDLabBills");
-                        obPatient.BillType = "OPDLabBills";
-
-                    }
-                    else
-                    {
-                        CmdPatientBill.Parameters.AddWithValue("@BillType", "IPDLabBills");
-                        obPatient.BillType = "IPDLabBills";
-
-                    }
-
-                    CmdPatientBill.Parameters.AddWithValue("@GrossAmount  ", obPatient.GrossAmount);
-                    CmdPatientBill.Parameters.AddWithValue("@TaxPercent ", obPatient.ServiceTax);
-                    CmdPatientBill.Parameters.AddWithValue("@TaxAmount", obPatient.TaxAmount);
-                    CmdPatientBill.Parameters.AddWithValue("@Commisson ", "");
-                    CmdPatientBill.Parameters.AddWithValue("@ReffCommission ", "");
-                    CmdPatientBill.Parameters.AddWithValue("@TotalAmount", obPatient.TotalAmount);
-                    CmdPatientBill.Parameters.AddWithValue("@DiscountPercent", obPatient.Discount);
-                    CmdPatientBill.Parameters.AddWithValue("@DiscountAmount ", obPatient.DiscountAmount);
-                    CmdPatientBill.Parameters.AddWithValue("@DiscountReason", obPatient.DiscountReason);
-                    CmdPatientBill.Parameters.AddWithValue("@NetPayableAmount", obPatient.NetPayableAmount);
-                    CmdPatientBill.Parameters.AddWithValue("@BalanceAmount  ", obPatient.BalanceAmount);
-                    CmdPatientBill.Parameters.AddWithValue("@PreBalanceAmount", obPatient.PreBalanceAmount);
-                    CmdPatientBill.Parameters.AddWithValue("@IsPaid", obPatient.IsPaid);
-                    CmdPatientBill.Parameters.AddWithValue("@PaidAmount ", obPatient.PaidAmount);
-                    CmdPatientBill.Parameters.AddWithValue("@DipositAmount", obPatient.Deposit);
-
-
-                    CmdPatientBill.Parameters.AddWithValue("@SancationAmount", "");
-                    CmdPatientBill.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
-                    CmdPatientBill.Parameters.AddWithValue("@CreationID", UserID);
-                    CmdPatientBill.Parameters.AddWithValue("@PaymentType", obPatient.PaymentType);
-                    switch (obPatient.PaymentType)
-                    {
-                        case "Cheque":
-                            CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
-                            CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
-                            CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
-                            CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
-                            break;
-                        case "Debit Card":
-                            CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
-                            CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
-                            CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
-                            CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
-                            break;
-                        case "Credit Card":
-                            CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
-                            CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
-                            CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
-                            CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
-                            break;
-                        case "E-Money":
-                            CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
-                            CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
-                            CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
-                            CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
-                            break;
-                        case "EFT":
-                            CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
-                            CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
-                            CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
-                            CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
-                            break;
-                        default:
-                            CmdPatientBill.Parameters.AddWithValue("@Number", "");
-                            CmdPatientBill.Parameters.AddWithValue("@Name", "");
-                            CmdPatientBill.Parameters.Add(new SqlParameter("@Date", DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"), "dd/MM/yyyy hh:mm:ss", null)));
-                            CmdPatientBill.Parameters.AddWithValue("@Remarks", "");
-                            break;
-                    }
-
-
-
-
-                    CmdPatientBill.Parameters.AddWithValue("@Mode", "Add");
-                    //con.Close();
-                    con.Open();
-                    int IUPatientBill = CmdPatientBill.ExecuteNonQuery();
-                    obPatient.BillNo = Convert.ToInt32(CmdPatientBill.Parameters["@BillNo"].Value).ToString();
-                    con.Close();
-                }
-                #endregion
-
-                #region PatienBillsDetails
-
-                if (Convert.ToInt32(obPatient.BillNo) > 0)
-                {
-                    string[] TestID = obPatient.TestID.Split(',');
-                    string[] Testname = obPatient.TestName.Split(',');
-                    string[] Rate = obPatient.Rate.Split(',');
-                    string[] Qty = obPatient.Qty.Split(',');
-                    string[] DisSerType = obPatient.DiscountServiceType.Split(',');
-                    string[] DisServAmt = obPatient.Discount_Service.Split(',');
-                    string[] Servicetype = obPatient.ServiceType.Split(',');
-
-
-
-
-                    for (int row = 0; row < TestID.Length; row++)
-                    {
-                        decimal Total = Convert.ToDecimal(Qty[row]) * Convert.ToDecimal(Rate[row]);
-                        decimal totalAmt = 0;
-                        if (DisSerType[row] == "%")
+                        if (obPatient.PatientType == "")
                         {
-                            totalAmt = ((Total * Convert.ToDecimal(DisServAmt[row])) / 100);
-
-                        }
-                        if (DisSerType[0] == "Rs")
-                        {
-                            totalAmt = Total - Convert.ToDecimal(DisServAmt[row]);
-                        }
-                        SqlCommand CmdPatienBillsDetails = new SqlCommand("IUPatientBillsDetails", con);
-                        CmdPatienBillsDetails.CommandType = CommandType.StoredProcedure;
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@HospitalID", HospitalID);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@LocationID", LocationID);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@BillNo", obPatient.BillNo);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@ServiceID", TestID[row]);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@ServiceName", Testname[row]);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@UnitID", "");
-
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@Rate", Rate[row]);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@Quantity", Qty[row]);
-
-
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@TotalAmount", totalAmt);
-
-
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@Discount", obPatient.Discount);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@Commisson", "");
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@ReffCommission", "");
-                        if (obPatient.PatientType == "OPD")
-                        {
-                            CmdPatienBillsDetails.Parameters.AddWithValue("@ServiceType", Servicetype[row]);
+                            cmd.Parameters.AddWithValue("@PatientType", "OPD");
                         }
                         else
                         {
-                            CmdPatienBillsDetails.Parameters.AddWithValue("@ServiceType", Servicetype[row]);
-
+                            cmd.Parameters.AddWithValue("@PatientType", obPatient.PatientType);
                         }
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@ChargesType", "General");
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@DoctorCharges", "");
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@Discount_Service", DisServAmt[row]);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@DiscountServiceType", DisSerType[row]);
+                        cmd.Parameters.AddWithValue("@PatientName", obPatient.PatientName);
+                        cmd.Parameters.AddWithValue("@PFPatientName", obPatient.PrefixName);
 
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@HideInBilling", "");
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@DoctorID", obPatient.ConsultantDrID);
+                        cmd.Parameters.AddWithValue("@PFirstName", obPatient.PatientName);
+                        cmd.Parameters.AddWithValue("@PMiddleName", "");
+                        cmd.Parameters.AddWithValue("@PLastName", "");
+                        cmd.Parameters.AddWithValue("@ReferenceCode", 0);
+                        cmd.Parameters.AddWithValue("@PFGuardianName", "");
+                        cmd.Parameters.AddWithValue("@GuardianName", obPatient.GuardianName);
 
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@CreationID", UserID);
-                        CmdPatienBillsDetails.Parameters.AddWithValue("@Mode", "Add");
+                        cmd.Parameters.AddWithValue("@Gender", obPatient.Gender);
+                        cmd.Parameters.AddWithValue("@Age", obPatient.Age);
+                        cmd.Parameters.AddWithValue("@AgeType", "Years");
+                        cmd.Parameters.AddWithValue("@DateOfBirth", Convert.ToDateTime(obPatient.DateOfBirth));
+                        cmd.Parameters.AddWithValue("@Height", "");
+                        cmd.Parameters.AddWithValue("@BloodGroup", "");
+                        cmd.Parameters.AddWithValue("@BloodPressure", "");
+                        cmd.Parameters.AddWithValue("@Source", "");
+                        cmd.Parameters.AddWithValue("@Address", obPatient.Address);
+                        cmd.Parameters.AddWithValue("@PanCardNo", "");
+                        cmd.Parameters.AddWithValue("AadhaarNo", "");
+                        cmd.Parameters.AddWithValue("@CityID", obPatient.CityID);
+                        cmd.Parameters.AddWithValue("@PinCode", obPatient.PinCode);
+                        cmd.Parameters.AddWithValue("@StateID", obPatient.StateID);
+                        cmd.Parameters.AddWithValue("@Photo", "");
+                        cmd.Parameters.AddWithValue("@CountryID", obPatient.CountryID);
+                        cmd.Parameters.AddWithValue("@PhoneNo", obPatient.PhoneNo);
+                        cmd.Parameters.AddWithValue("@MobileNo", obPatient.MobileNo);
+                        cmd.Parameters.AddWithValue("@EmailID", "");
+                        cmd.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
+                        cmd.Parameters.AddWithValue("@PatientCancel", "");
+                        cmd.Parameters.AddWithValue("@PatientCancelReason", "");
+                        cmd.Parameters.AddWithValue("@CreationID", UserID);
+                        cmd.Parameters.AddWithValue("@Mode", "Add");
                         con.Close();
                         con.Open();
-                        int IUPatientBillsDetails = CmdPatienBillsDetails.ExecuteNonQuery();
-                        //     objc.ProfileID = Convert.ToInt32(CmdPatienBillsDetails.Parameters["@ProfileID"].Value);
+                        cmd.ExecuteNonQuery().ToString();
+                        obPatient.PatientRegNo = Convert.ToInt32(cmd.Parameters["@PatientRegNO"].Value).ToString();
                         con.Close();
-                    }
-                }
-                #endregion
 
-                #region PatientLab
+                        #endregion
 
-                SqlCommand cmdPatientLab = new SqlCommand("IUPatientLab", con);
-                cmdPatientLab.CommandType = CommandType.StoredProcedure;
-                cmdPatientLab.Parameters.AddWithValue("@HospitalID", HospitalID);
-                cmdPatientLab.Parameters.AddWithValue("@LocationID", LocationID);
-                cmdPatientLab.Parameters.AddWithValue("@LabNo", 0);
-                cmdPatientLab.Parameters["@LabNo"].Direction = ParameterDirection.Output;
-                cmdPatientLab.Parameters.AddWithValue("@PatientRegNo", obPatient.PatientRegNo);
-                cmdPatientLab.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
-                cmdPatientLab.Parameters.AddWithValue("@OPDIPDID", obPatient.OPDIPDID);
+                        #region PatientOPD
 
-                if (obPatient.PatientType == "OPD")
-                {
-                    cmdPatientLab.Parameters.AddWithValue("@LabType", "OPDLab");
+                        SqlCommand cmdPatientOPDDetails = new SqlCommand("IUPatientOPDDetails", con);
+                        cmdPatientOPDDetails.CommandType = CommandType.StoredProcedure;
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@HospitalID", HospitalID);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@LocationID", LocationID);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@PatientOPDNO", 0);
+                        cmdPatientOPDDetails.Parameters["@PatientOPDNO"].Direction = ParameterDirection.Output;
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@PatientRegNO", obPatient.PatientRegNo);
 
-                }
-                else
-                {
-                    cmdPatientLab.Parameters.AddWithValue("@LabType", "IPDLab");
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@PatientRegistrationDate", DateTime.Now);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@DepartmentID", 0);
 
-                }
-                cmdPatientLab.Parameters.AddWithValue("@BillNo", obPatient.BillNo);
-                cmdPatientLab.Parameters.AddWithValue("@CreationID", UserID);
-                cmdPatientLab.Parameters.AddWithValue("@Mode", "Add");
-                //     con.Close();
-                con.Open();
-                int IUPatientLab = cmdPatientLab.ExecuteNonQuery();
-                obPatient.LabNo = Convert.ToInt32(cmdPatientLab.Parameters["@LabNo"].Value);
-                #endregion
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@PatientType", obPatient.PatientType);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@TPA_ID", obPatient.OrganizationID);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@DoctorID", obPatient.ConsultantDrID);
 
-                #region PatientLabDetails
-                if (obPatient.LabNo > 0)
-                {
-                    string[] TestID = obPatient.TestID.Split(',');
-                    string[] Testname = obPatient.TestName.Split(',');
-                    string[] Rate = obPatient.Rate.Split(',');
-                    string[] Qty = obPatient.Qty.Split(',');
-                    string[] Date = obPatient.ReportingDate.Split(',');
-                    string[] Outid = obPatient.OutSourceID.Split(',');
-                    string[] OutLabName = obPatient.LabName.Split(',');
-                    string[] samplecoll = obPatient.samplecollection.Split(',');
-                    for (int row = 0; row < TestID.Length; row++)
-                    {
-                        SqlCommand cmdPatientLabDetails = new SqlCommand("IUPatientLabDetails", con);
-                        cmdPatientLabDetails.CommandType = CommandType.StoredProcedure;
-                        cmdPatientLabDetails.Parameters.AddWithValue("@HospitalID", HospitalID);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@LocationID", LocationID);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@PatientLabDetailID", 0);
-                        cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Direction = ParameterDirection.Output;
-                        //cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Direction = ParameterDirection.Output;
-                        //string  BillNo = Convert.ToInt32(cmd.Parameters["@ProvisionalBillNo"].Value);
-                        //  int PatientLabDetailID = (int)cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Value;
-                        cmdPatientLabDetails.Parameters.AddWithValue("@LabNo", obPatient.LabNo);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@OutSourceID", Outid[row]);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@OutSourceLabName", OutLabName[row]);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@ReportingDate", Convert.ToDateTime(Date[row]));
-                        cmdPatientLabDetails.Parameters.AddWithValue("@ProfileID", "");
-                        cmdPatientLabDetails.Parameters.AddWithValue("@TestID", TestID[row]);
-                       
-                            cmdPatientLabDetails.Parameters.AddWithValue("@TestStatus", "SAMPLECOLLECTION");
-                       
-                           
-                        
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@ReferredByDoctorID", obPatient.ReferredByDoctorID);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@Weight", "");
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@BloodPressure", "");
 
-                        cmdPatientLabDetails.Parameters.AddWithValue("@SampleCollectionID", obPatient.SampleCollectionBoyID);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@CollectionCentre", obPatient.CollectionCentreName);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@TPAWiseName", obPatient.OrganizationName);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@SamleCollectionDate", System.DateTime.Now);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@AuthorizedID ", 0);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@AuthorizedDate", System.DateTime.Now);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@CompleteBy", 0);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@CompleteDate", System.DateTime.Now);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@PrintID ", 0);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@PrintDate ", System.DateTime.Now);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@CreationID", UserID);
-                        cmdPatientLabDetails.Parameters.AddWithValue("@Mode", "Add");
-                        con.Close();
-                        con.Open();
-                        //  int IUPatientLab = cmdPatientLab.ExecuteNonQuery();
-                        // obPatient.LabNo = Convert.ToInt32(cmdPatientLab.Parameters["@LabNo"].Value);
-                        int IUPatientLabDetails = cmdPatientLabDetails.ExecuteNonQuery();
-                        obPatient.PatientLabDetailID = Convert.ToInt32(cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Value.ToString());
-                        PatientLabDetail.Add(obPatient.PatientLabDetailID.ToString());
-                        con.Close();
-                    }
-                }
-                #endregion
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@Reason", "");
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@RegistrationCharges", "");
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@ConsultionCharges", "");
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@DiscountInPer", 0.00);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@DiscountInRS", 0.00);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@TotalAmount", 0.00);
 
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@DiscountReason", obPatient.DiscountReason);
+                        //cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remarks);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@CreationID", UserID);
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
 
-                #region Parameter
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@PaymentType", obPatient.PaymentType);
 
-                string[] TestID1 = obPatient.TestID.Split(',');
-                string[] Testname1 = obPatient.TestName.Split(',');
-                string[] Rate1 = obPatient.Rate.Split(',');
-                string[] Qty1 = obPatient.Qty.Split(',');
-                // string[] PatientLabDetailID1 = (obPatient.PatientLabDetailID);
-                DataSet ds = new DataSet();
-                int TestID2 = 0;
-                int PatientLabDetailID = 0;
-                for (int row = 0; row < TestID1.Length; row++)
-                {
-
-
-                    TestID2 = Convert.ToInt32(TestID1[row].ToString());
-
-                    BL_PatientLabBills obj = new BL_PatientLabBills();
-                    ds = GetPatientLabForPatientLabWithParameter(HospitalID, LocationID, TestID2);
-
-                    PatientLabDetailID = Convert.ToInt32(PatientLabDetail[row]);
-
-                    // if ((Days > Convert.ToInt32(drTest["DaysFrom"].ToString()) && Days < Convert.ToInt32(drTest["DaysTo"].ToString())) ||( Days < Convert.ToInt32(drTest["DaysTo"].ToString())))
-                    foreach (DataRow drParameter in ds.Tables[1].Rows)
-                    {
-                        //DataView dview = dsLlantas.Tables[0].DefaultView;
-                        //dview.Sort = "Fecha desc";
-                        string a = drParameter["ParameterID"].ToString();
-                        int days = Decimal.ToInt32(Convert.ToDecimal(obPatient.TotalDay));
-                        //  string R = obPatient.TotalDay;
-                        if (Convert.ToInt32(drParameter["ParameterID"]) == 17)
+                        switch (obPatient.PaymentType)
                         {
+                            case "Cheque":
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
+                                break;
+                            case "Debit Card":
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
+                                break;
+                            case "Credit Card":
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
+                                break;
+                            case "E-Money":
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
+                                break;
+                            case "EFT":
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Number", obPatient.Number);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Name", obPatient.Name);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Date", obPatient.PaymentDate);
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", obPatient.Remark);
+                                break;
+                            default:
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Number", "");
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Name", "");
+                                cmdPatientOPDDetails.Parameters.Add(new SqlParameter("@Date", DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"), "dd/MM/yyyy hh:mm:ss", null)));
+                                cmdPatientOPDDetails.Parameters.AddWithValue("@Remark", "");
+                                break;
+                        }
+
+
+
+                        cmdPatientOPDDetails.Parameters.AddWithValue("@Mode", "Add");
+                        //con.Close();
+                        con.Open();
+                        int IUPatientOPDDetails = cmdPatientOPDDetails.ExecuteNonQuery();
+                        obPatient.PatientOPDNO = Convert.ToInt32(cmdPatientOPDDetails.Parameters["@PatientOPDNO"].Value).ToString();
+
+                        if (obPatient.OPDIPDID == "")
+                        {
+                            obPatient.OPDIPDID = obPatient.PatientOPDNO;
 
                         }
-                        DataView dvTest = new DataView(ds.Tables[0], "ParameterID = " + drParameter["ParameterID"].ToString() + " ", "", DataViewRowState.CurrentRows);
+                        con.Close();
+                    }
+                    #endregion
 
-                        DataSet dsOnlyParameter = new DataSet();
-                        DataTable dt = new DataTable();
-                        dt = dvTest.ToTable();
-                        dsOnlyParameter.Tables.Add(dt);
+                    #region PatientBill
+                    if (obPatient.PatientRegNo != "")
+                    {
+                        SqlCommand CmdPatientBill = new SqlCommand("IUPatientBills", con);
+                        CmdPatientBill.CommandType = CommandType.StoredProcedure;
+                        CmdPatientBill.Parameters.AddWithValue("@HospitalID", HospitalID);
+                        CmdPatientBill.Parameters.AddWithValue("@LocationID", LocationID);
+                        CmdPatientBill.Parameters.AddWithValue("@BillNo", 0);
+                        CmdPatientBill.Parameters["@BillNo"].Direction = ParameterDirection.Output;
+                        CmdPatientBill.Parameters.AddWithValue("@PatientRegNO", obPatient.PatientRegNo);
 
-                        //DataView dv = new DataView(dsOnlyParameter.Tables[0], " (DaysFrom <= " + Days + " and DaysTo >=" + Days + " and Gender ='" + Gender + "')or  DaysTo <=" + Days + " and Gender ='" + Gender + "'and ParameterID = " + drParameter["ParameterID"].ToString() + "  ", "", DataViewRowState.CurrentRows);
-                        // dsOnlyParameter.Tables[0].Rows[0]["DaysTo"] = "50000";
-                        // dsOnlyParameter.Tables[0].Rows[1]["DaysTo"] = "50000";
-                        DataView dv = new DataView(dsOnlyParameter.Tables[0], " (DaysFrom <= " + days + " and DaysTo >=" + days + " and Gender ='" + obPatient.Gender + "')", "", DataViewRowState.CurrentRows);
-
-                        // DataView dv = new DataView(dsOnlyParameter.Tables[0], " (DaysFrom <= " + Convert.ToInt32( days) + " and DaysTo >=" +  Convert.ToInt32(days) + " and Gender ='" + obPatient.Gender + "')", "", DataViewRowState.CurrentRows);
-
-                        SqlCommand cmdParamiter = new SqlCommand("IUPatientLabWithParameter", con);
-                        cmdParamiter.CommandType = CommandType.StoredProcedure;
-                        if (dv.Count != 0)
+                        string Dates = Convert.ToDateTime(obPatient.BillDate).ToString("dd-MM-yyyy hh:mm:ss");
+                        //string Time=Convert.ToDateTime(obPatient.BillDatetime).ToString("hh:mm:ss");
+                        CmdPatientBill.Parameters.AddWithValue("@BillDate", Convert.ToDateTime(Dates));
+                        //CmdPatientBill.Parameters.AddWithValue("@BillDate", obPatient.BillDate);
+                        CmdPatientBill.Parameters.AddWithValue("@OPDIPDID ", obPatient.OPDIPDID);
+                        if (obPatient.PatientType == "OPD")
                         {
+                            CmdPatientBill.Parameters.AddWithValue("@BillType", "OPDLabBills");
+                            obPatient.BillType = "OPDLabBills";
 
-                            if ((obPatient.Gender.Trim() == dv[0]["Gender"].ToString().Trim()))
+                        }
+                        else
+                        {
+                            CmdPatientBill.Parameters.AddWithValue("@BillType", "IPDLabBills");
+                            obPatient.BillType = "IPDLabBills";
+
+                        }
+
+                        CmdPatientBill.Parameters.AddWithValue("@GrossAmount  ", obPatient.GrossAmount);
+                        CmdPatientBill.Parameters.AddWithValue("@TaxPercent ", obPatient.ServiceTax);
+                        CmdPatientBill.Parameters.AddWithValue("@TaxAmount", obPatient.TaxAmount);
+                        CmdPatientBill.Parameters.AddWithValue("@Commisson ", "");
+                        CmdPatientBill.Parameters.AddWithValue("@ReffCommission ", "");
+                        CmdPatientBill.Parameters.AddWithValue("@TotalAmount", obPatient.TotalAmount);
+                        CmdPatientBill.Parameters.AddWithValue("@DiscountPercent", obPatient.Discount);
+                        CmdPatientBill.Parameters.AddWithValue("@DiscountAmount ", obPatient.DiscountAmount);
+                        CmdPatientBill.Parameters.AddWithValue("@DiscountReason", obPatient.DiscountReason);
+                        CmdPatientBill.Parameters.AddWithValue("@NetPayableAmount", obPatient.NetPayableAmount);
+                        CmdPatientBill.Parameters.AddWithValue("@BalanceAmount  ", obPatient.BalanceAmount);
+                        CmdPatientBill.Parameters.AddWithValue("@PreBalanceAmount", obPatient.PreBalanceAmount);
+                        CmdPatientBill.Parameters.AddWithValue("@IsPaid", obPatient.IsPaid);
+                        CmdPatientBill.Parameters.AddWithValue("@PaidAmount ", obPatient.PaidAmount);
+                        CmdPatientBill.Parameters.AddWithValue("@DipositAmount", obPatient.Deposit);
+
+
+                        CmdPatientBill.Parameters.AddWithValue("@SancationAmount", "");
+                        CmdPatientBill.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
+                        CmdPatientBill.Parameters.AddWithValue("@CreationID", UserID);
+                        CmdPatientBill.Parameters.AddWithValue("@PaymentType", obPatient.PaymentType);
+                        switch (obPatient.PaymentType)
+                        {
+                            case "Cheque":
+                                CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
+                                CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
+                                CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
+                                CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
+                                break;
+                            case "Debit Card":
+                                CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
+                                CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
+                                CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
+                                CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
+                                break;
+                            case "Credit Card":
+                                CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
+                                CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
+                                CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
+                                CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
+                                break;
+                            case "E-Money":
+                                CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
+                                CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
+                                CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
+                                CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
+                                break;
+                            case "EFT":
+                                CmdPatientBill.Parameters.AddWithValue("@Number", obPatient.Number);
+                                CmdPatientBill.Parameters.AddWithValue("@Name", obPatient.Name);
+                                CmdPatientBill.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
+                                CmdPatientBill.Parameters.AddWithValue("@Remarks", obPatient.Remark);
+                                break;
+                            default:
+                                CmdPatientBill.Parameters.AddWithValue("@Number", "");
+                                CmdPatientBill.Parameters.AddWithValue("@Name", "");
+                                CmdPatientBill.Parameters.Add(new SqlParameter("@Date", DateTime.ParseExact(DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"), "dd/MM/yyyy hh:mm:ss", null)));
+                                CmdPatientBill.Parameters.AddWithValue("@Remarks", "");
+                                break;
+                        }
+
+
+
+
+                        CmdPatientBill.Parameters.AddWithValue("@Mode", "Add");
+                        //con.Close();
+                        con.Open();
+                        int IUPatientBill = CmdPatientBill.ExecuteNonQuery();
+                        obPatient.BillNo = Convert.ToInt32(CmdPatientBill.Parameters["@BillNo"].Value).ToString();
+                        con.Close();
+                    }
+                    #endregion
+
+                    #region PatienBillsDetails
+
+                    if (Convert.ToInt32(obPatient.BillNo) > 0)
+                    {
+                        string[] TestID = obPatient.TestID.Split(',');
+                        string[] Testname = obPatient.TestName.Split(',');
+                        string[] Rate = obPatient.Rate.Split(',');
+                        string[] Qty = obPatient.Qty.Split(',');
+                        string[] DisSerType = obPatient.DiscountServiceType.Split(',');
+                        string[] DisServAmt = obPatient.Discount_Service.Split(',');
+                        string[] Servicetype = obPatient.ServiceType.Split(',');
+
+
+
+
+                        for (int row = 0; row < TestID.Length; row++)
+                        {
+                            decimal Total = Convert.ToDecimal(Qty[row]) * Convert.ToDecimal(Rate[row]);
+                            decimal totalAmt = 0;
+                            if (DisSerType[row] == "%")
                             {
-                                //  DataRow drW = dsPatientLabWithParameter.Tables[0].NewRow();
+                                totalAmt = ((Total * Convert.ToDecimal(DisServAmt[row])) / 100);
+
+                            }
+                            if (DisSerType[0] == "Rs")
+                            {
+                                totalAmt = Total - Convert.ToDecimal(DisServAmt[row]);
+                            }
+                            SqlCommand CmdPatienBillsDetails = new SqlCommand("IUPatientBillsDetails", con);
+                            CmdPatienBillsDetails.CommandType = CommandType.StoredProcedure;
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@HospitalID", HospitalID);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@LocationID", LocationID);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@BillNo", obPatient.BillNo);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@ServiceID", TestID[row]);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@ServiceName", Testname[row]);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@UnitID", "");
+
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@Rate", Rate[row]);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@Quantity", Qty[row]);
 
 
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@TotalAmount", totalAmt);
+
+
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@Discount", obPatient.Discount);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@Commisson", "");
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@ReffCommission", "");
+                            if (obPatient.PatientType == "OPD")
+                            {
+                                CmdPatienBillsDetails.Parameters.AddWithValue("@ServiceType", Servicetype[row]);
+                            }
+                            else
+                            {
+                                CmdPatienBillsDetails.Parameters.AddWithValue("@ServiceType", Servicetype[row]);
+
+                            }
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@ChargesType", "General");
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@DoctorCharges", "");
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@Discount_Service", DisServAmt[row]);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@DiscountServiceType", DisSerType[row]);
+
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@HideInBilling", "");
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@DoctorID", obPatient.ConsultantDrID);
+
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@CreationID", UserID);
+                            CmdPatienBillsDetails.Parameters.AddWithValue("@Mode", "Add");
+                            con.Close();
+                            con.Open();
+                            int IUPatientBillsDetails = CmdPatienBillsDetails.ExecuteNonQuery();
+                            //     objc.ProfileID = Convert.ToInt32(CmdPatienBillsDetails.Parameters["@ProfileID"].Value);
+                            con.Close();
+                        }
+                    }
+                    #endregion
+
+                    #region PatientLab
+
+                    SqlCommand cmdPatientLab = new SqlCommand("IUPatientLab", con);
+                    cmdPatientLab.CommandType = CommandType.StoredProcedure;
+                    cmdPatientLab.Parameters.AddWithValue("@HospitalID", HospitalID);
+                    cmdPatientLab.Parameters.AddWithValue("@LocationID", LocationID);
+                    cmdPatientLab.Parameters.AddWithValue("@LabNo", 0);
+                    cmdPatientLab.Parameters["@LabNo"].Direction = ParameterDirection.Output;
+                    cmdPatientLab.Parameters.AddWithValue("@PatientRegNo", obPatient.PatientRegNo);
+                    cmdPatientLab.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
+                    cmdPatientLab.Parameters.AddWithValue("@OPDIPDID", obPatient.OPDIPDID);
+
+                    if (obPatient.PatientType == "OPD")
+                    {
+                        cmdPatientLab.Parameters.AddWithValue("@LabType", "OPDLab");
+
+                    }
+                    else
+                    {
+                        cmdPatientLab.Parameters.AddWithValue("@LabType", "IPDLab");
+
+                    }
+                    cmdPatientLab.Parameters.AddWithValue("@BillNo", obPatient.BillNo);
+                    cmdPatientLab.Parameters.AddWithValue("@CreationID", UserID);
+                    cmdPatientLab.Parameters.AddWithValue("@Mode", "Add");
+                    //     con.Close();
+                    con.Open();
+                    int IUPatientLab = cmdPatientLab.ExecuteNonQuery();
+                    obPatient.LabNo = Convert.ToInt32(cmdPatientLab.Parameters["@LabNo"].Value);
+                    #endregion
+
+                    #region PatientLabDetails
+                    if (obPatient.LabNo > 0)
+                    {
+                        string[] TestID = obPatient.TestID.Split(',');
+                        string[] Testname = obPatient.TestName.Split(',');
+                        string[] Rate = obPatient.Rate.Split(',');
+                        string[] Qty = obPatient.Qty.Split(',');
+                        string[] Date = obPatient.ReportingDate.Split(',');
+                        string[] Outid = obPatient.OutSourceID.Split(',');
+                        string[] OutLabName = obPatient.LabName.Split(',');
+                        string[] samplecoll = obPatient.samplecollection.Split(',');
+                        for (int row = 0; row < TestID.Length; row++)
+                        {
+                            SqlCommand cmdPatientLabDetails = new SqlCommand("IUPatientLabDetails", con);
+                            cmdPatientLabDetails.CommandType = CommandType.StoredProcedure;
+                            cmdPatientLabDetails.Parameters.AddWithValue("@HospitalID", HospitalID);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@LocationID", LocationID);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@PatientLabDetailID", 0);
+                            cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Direction = ParameterDirection.Output;
+                            //cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Direction = ParameterDirection.Output;
+                            //string  BillNo = Convert.ToInt32(cmd.Parameters["@ProvisionalBillNo"].Value);
+                            //  int PatientLabDetailID = (int)cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Value;
+                            cmdPatientLabDetails.Parameters.AddWithValue("@LabNo", obPatient.LabNo);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@OutSourceID", Outid[row]);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@OutSourceLabName", OutLabName[row]);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@ReportingDate", Convert.ToDateTime(Date[row]));
+                            cmdPatientLabDetails.Parameters.AddWithValue("@ProfileID", "");
+                            cmdPatientLabDetails.Parameters.AddWithValue("@TestID", TestID[row]);
+
+                            cmdPatientLabDetails.Parameters.AddWithValue("@TestStatus", "SAMPLECOLLECTION");
+
+
+
+
+                            cmdPatientLabDetails.Parameters.AddWithValue("@SampleCollectionID", obPatient.SampleCollectionBoyID);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@CollectionCentre", obPatient.CollectionCentreName);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@TPAWiseName", obPatient.OrganizationName);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@SamleCollectionDate", System.DateTime.Now);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@AuthorizedID ", 0);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@AuthorizedDate", System.DateTime.Now);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@CompleteBy", 0);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@CompleteDate", System.DateTime.Now);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@PrintID ", 0);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@PrintDate ", System.DateTime.Now);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@CreationID", UserID);
+                            cmdPatientLabDetails.Parameters.AddWithValue("@Mode", "Add");
+                            con.Close();
+                            con.Open();
+                            //  int IUPatientLab = cmdPatientLab.ExecuteNonQuery();
+                            // obPatient.LabNo = Convert.ToInt32(cmdPatientLab.Parameters["@LabNo"].Value);
+                            int IUPatientLabDetails = cmdPatientLabDetails.ExecuteNonQuery();
+                            obPatient.PatientLabDetailID = Convert.ToInt32(cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Value.ToString());
+                            PatientLabDetail.Add(obPatient.PatientLabDetailID.ToString());
+                            con.Close();
+                        }
+                    }
+                    #endregion
+
+
+                    #region Parameter
+
+                    string[] TestID1 = obPatient.TestID.Split(',');
+                    string[] Testname1 = obPatient.TestName.Split(',');
+                    string[] Rate1 = obPatient.Rate.Split(',');
+                    string[] Qty1 = obPatient.Qty.Split(',');
+                    // string[] PatientLabDetailID1 = (obPatient.PatientLabDetailID);
+                    DataSet ds = new DataSet();
+                    int TestID2 = 0;
+                    int PatientLabDetailID = 0;
+                    for (int row = 0; row < TestID1.Length; row++)
+                    {
+
+
+                        TestID2 = Convert.ToInt32(TestID1[row].ToString());
+
+                        BL_PatientLabBills obj = new BL_PatientLabBills();
+                        ds = GetPatientLabForPatientLabWithParameter(HospitalID, LocationID, TestID2);
+
+                        PatientLabDetailID = Convert.ToInt32(PatientLabDetail[row]);
+
+                        // if ((Days > Convert.ToInt32(drTest["DaysFrom"].ToString()) && Days < Convert.ToInt32(drTest["DaysTo"].ToString())) ||( Days < Convert.ToInt32(drTest["DaysTo"].ToString())))
+                        foreach (DataRow drParameter in ds.Tables[1].Rows)
+                        {
+                            //DataView dview = dsLlantas.Tables[0].DefaultView;
+                            //dview.Sort = "Fecha desc";
+                            string a = drParameter["ParameterID"].ToString();
+                            int days = Decimal.ToInt32(Convert.ToDecimal(obPatient.TotalDay));
+                            //  string R = obPatient.TotalDay;
+                            if (Convert.ToInt32(drParameter["ParameterID"]) == 17)
+                            {
+
+                            }
+                            DataView dvTest = new DataView(ds.Tables[0], "ParameterID = " + drParameter["ParameterID"].ToString() + " ", "", DataViewRowState.CurrentRows);
+
+                            DataSet dsOnlyParameter = new DataSet();
+                            DataTable dt = new DataTable();
+                            dt = dvTest.ToTable();
+                            dsOnlyParameter.Tables.Add(dt);
+
+                            //DataView dv = new DataView(dsOnlyParameter.Tables[0], " (DaysFrom <= " + Days + " and DaysTo >=" + Days + " and Gender ='" + Gender + "')or  DaysTo <=" + Days + " and Gender ='" + Gender + "'and ParameterID = " + drParameter["ParameterID"].ToString() + "  ", "", DataViewRowState.CurrentRows);
+                            // dsOnlyParameter.Tables[0].Rows[0]["DaysTo"] = "50000";
+                            // dsOnlyParameter.Tables[0].Rows[1]["DaysTo"] = "50000";
+                            DataView dv = new DataView(dsOnlyParameter.Tables[0], " (DaysFrom <= " + days + " and DaysTo >=" + days + " and Gender ='" + obPatient.Gender + "')", "", DataViewRowState.CurrentRows);
+
+                            // DataView dv = new DataView(dsOnlyParameter.Tables[0], " (DaysFrom <= " + Convert.ToInt32( days) + " and DaysTo >=" +  Convert.ToInt32(days) + " and Gender ='" + obPatient.Gender + "')", "", DataViewRowState.CurrentRows);
+
+                            SqlCommand cmdParamiter = new SqlCommand("IUPatientLabWithParameter", con);
+                            cmdParamiter.CommandType = CommandType.StoredProcedure;
+                            if (dv.Count != 0)
+                            {
+
+                                if ((obPatient.Gender.Trim() == dv[0]["Gender"].ToString().Trim()))
+                                {
+                                    //  DataRow drW = dsPatientLabWithParameter.Tables[0].NewRow();
+
+
+                                    cmdParamiter.Parameters.AddWithValue("@HospitalID", HospitalID);
+                                    cmdParamiter.Parameters.AddWithValue("@LocationID", LocationID);
+                                    cmdParamiter.Parameters.AddWithValue("@LabNo", obPatient.LabNo);
+
+                                    cmdParamiter.Parameters.AddWithValue("@PatientLabParameterID", 0);
+                                    // cmdParamiter.Parameters["@PatientLabParameterID"].Direction = ParameterDirection.Output;
+                                    // PatientLabDetailID = (int)cmdParamiter.Parameters["@PatientLabParameterID"].Value;
+                                    cmdParamiter.Parameters.AddWithValue("@PatientLabDetailID", PatientLabDetailID);
+                                    cmdParamiter.Parameters.AddWithValue("@TestID", TestID2);
+                                    cmdParamiter.Parameters.AddWithValue("@ParameterID", dv[0]["ParameterID"].ToString());
+                                    cmdParamiter.Parameters.AddWithValue("@NormalRangeID", dv[0]["NormalRangeID"].ToString());
+                                    cmdParamiter.Parameters.AddWithValue("@ResultValue", 0);
+                                    cmdParamiter.Parameters.AddWithValue("@Status", 0);
+                                    cmdParamiter.Parameters.AddWithValue("@NLH", 0);
+                                    cmdParamiter.Parameters.AddWithValue("@ConvLow", dv[0]["ConvLow"].ToString());
+                                    cmdParamiter.Parameters.AddWithValue("@ConvHigh", dv[0]["ConvHigh"].ToString());
+                                    cmdParamiter.Parameters.AddWithValue("@Remark", 0);
+                                    cmdParamiter.Parameters.AddWithValue("@CompleteBy", "");
+                                    cmdParamiter.Parameters.AddWithValue("@CreationID", UserID);
+                                    cmdParamiter.Parameters.AddWithValue("@Mode", "Add");
+                                    //dsPatientLabWithParameter.Tables[0].Rows.Add(drW);
+                                }
+                            }
+                            else
+                            {
+                                // string a = drParameter["ParameterID"].ToString();
+                                // DataRow drW = dsPatientLabWithParameter.Tables[0].NewRow();
                                 cmdParamiter.Parameters.AddWithValue("@HospitalID", HospitalID);
                                 cmdParamiter.Parameters.AddWithValue("@LocationID", LocationID);
-                                cmdParamiter.Parameters.AddWithValue("@LabNo", obPatient.LabNo);
-
                                 cmdParamiter.Parameters.AddWithValue("@PatientLabParameterID", 0);
-                                // cmdParamiter.Parameters["@PatientLabParameterID"].Direction = ParameterDirection.Output;
+                                //cmdParamiter.Parameters["@PatientLabParameterID"].Direction = ParameterDirection.Output;
                                 // PatientLabDetailID = (int)cmdParamiter.Parameters["@PatientLabParameterID"].Value;
                                 cmdParamiter.Parameters.AddWithValue("@PatientLabDetailID", PatientLabDetailID);
+                                cmdParamiter.Parameters.AddWithValue("@LabNo", obPatient.LabNo);
+                                // cmdParamiter.Parameters.AddWithValue("@PatientLabDetailID", 0);
                                 cmdParamiter.Parameters.AddWithValue("@TestID", TestID2);
-                                cmdParamiter.Parameters.AddWithValue("@ParameterID", dv[0]["ParameterID"].ToString());
-                                cmdParamiter.Parameters.AddWithValue("@NormalRangeID", dv[0]["NormalRangeID"].ToString());
+                                cmdParamiter.Parameters.AddWithValue("@ParameterID", drParameter["ParameterID"].ToString());
+                                cmdParamiter.Parameters.AddWithValue("@NormalRangeID", 0);
                                 cmdParamiter.Parameters.AddWithValue("@ResultValue", 0);
                                 cmdParamiter.Parameters.AddWithValue("@Status", 0);
-                                cmdParamiter.Parameters.AddWithValue("@NLH", 0);
-                                cmdParamiter.Parameters.AddWithValue("@ConvLow", dv[0]["ConvLow"].ToString());
-                                cmdParamiter.Parameters.AddWithValue("@ConvHigh", dv[0]["ConvHigh"].ToString());
+                                cmdParamiter.Parameters.AddWithValue("@NLH", "");
+                                cmdParamiter.Parameters.AddWithValue("@ConvLow", "");
+                                cmdParamiter.Parameters.AddWithValue("@ConvHigh", "");
                                 cmdParamiter.Parameters.AddWithValue("@Remark", 0);
                                 cmdParamiter.Parameters.AddWithValue("@CompleteBy", "");
                                 cmdParamiter.Parameters.AddWithValue("@CreationID", UserID);
                                 cmdParamiter.Parameters.AddWithValue("@Mode", "Add");
-                                //dsPatientLabWithParameter.Tables[0].Rows.Add(drW);
+                                // dsPatientLabWithParameter.Tables[0].Rows.Add(drW);
                             }
-                        }
-                        else
-                        {
-                            // string a = drParameter["ParameterID"].ToString();
-                            // DataRow drW = dsPatientLabWithParameter.Tables[0].NewRow();
-                            cmdParamiter.Parameters.AddWithValue("@HospitalID", HospitalID);
-                            cmdParamiter.Parameters.AddWithValue("@LocationID", LocationID);
-                            cmdParamiter.Parameters.AddWithValue("@PatientLabParameterID", 0);
-                            //cmdParamiter.Parameters["@PatientLabParameterID"].Direction = ParameterDirection.Output;
-                            // PatientLabDetailID = (int)cmdParamiter.Parameters["@PatientLabParameterID"].Value;
-                            cmdParamiter.Parameters.AddWithValue("@PatientLabDetailID", PatientLabDetailID);
-                            cmdParamiter.Parameters.AddWithValue("@LabNo", obPatient.LabNo);
-                            // cmdParamiter.Parameters.AddWithValue("@PatientLabDetailID", 0);
-                            cmdParamiter.Parameters.AddWithValue("@TestID", TestID2);
-                            cmdParamiter.Parameters.AddWithValue("@ParameterID", drParameter["ParameterID"].ToString());
-                            cmdParamiter.Parameters.AddWithValue("@NormalRangeID", 0);
-                            cmdParamiter.Parameters.AddWithValue("@ResultValue", 0);
-                            cmdParamiter.Parameters.AddWithValue("@Status", 0);
-                            cmdParamiter.Parameters.AddWithValue("@NLH", "");
-                            cmdParamiter.Parameters.AddWithValue("@ConvLow", "");
-                            cmdParamiter.Parameters.AddWithValue("@ConvHigh", "");
-                            cmdParamiter.Parameters.AddWithValue("@Remark", 0);
-                            cmdParamiter.Parameters.AddWithValue("@CompleteBy", "");
-                            cmdParamiter.Parameters.AddWithValue("@CreationID", UserID);
-                            cmdParamiter.Parameters.AddWithValue("@Mode", "Add");
-                            // dsPatientLabWithParameter.Tables[0].Rows.Add(drW);
-                        }
 
-                        con.Open();
+                            con.Open();
 
-                        cmdParamiter.ExecuteNonQuery();
-                        con.Close();
+                            cmdParamiter.ExecuteNonQuery();
+                            con.Close();
+                        }
                     }
+
+
+                    /*******************************/
+
+                    //SqlCommand cmdpmt = new SqlCommand("RptPatientLabBills", con);
+                    //cmdpmt.CommandType = CommandType.StoredProcedure;
+                    //cmdpmt.Parameters.AddWithValue("@HospitalID", HospitalID);
+                    //cmdpmt.Parameters.AddWithValue("@LocationID", LocationID);
+                    //cmdpmt.Parameters.AddWithValue("@BillNO", obPatient.BillNo);
+                    //cmdpmt.Parameters.AddWithValue("@BillType", obPatient.BillType);
+                    //HttpContext.Current.Session["HospitalID"] = HospitalID;
+                    //HttpContext.Current.Session["LocationID"] = LocationID;
+                    //HttpContext.Current.Session["PatientLabBillNO"] = obPatient.BillNo;
+                    //HttpContext.Current.Session["PatientLabBillType"] = obPatient.BillType;
+
+
+                    //SqlDataAdapter da = new SqlDataAdapter(cmdpmt);
+                    //DataSet dspmt = new DataSet();
+                    ////  con.Open();
+                    //da.Fill(dspmt);s
+
+                    /********************************/
+
+                    //  obPatient.RptPatientLabBill = dspmt;
+                    obPatient.mybool = true;
                 }
 
+                else
+                {
+                //    con.Close();
+                //    #region ForAuthorization
+                //    int ForAuthorization = 0;
+                //    // Aurthorise
+                //    KeystoneProject.Buisness_Logic.Master.BL_MasterSetting obj4 = new Buisness_Logic.Master.BL_MasterSetting();
+                //    DataSet dsMasterSetting = new DataSet();
+                //    dsMasterSetting = obj4.GetMasterSetting();
+                //    KeystoneProject.Buisness_Logic.Hospital.BL_Users user = new Buisness_Logic.Hospital.BL_Users();
+                //    DataSet dsAuthorizationRights = new DataSet();
+                //    // List<Users> Search = new List<Users>();
+                //    dsAuthorizationRights = user.GetUsers(UserID);
 
-                /*******************************/
+                //    con.Open();
 
-                //SqlCommand cmdpmt = new SqlCommand("RptPatientLabBills", con);
-                //cmdpmt.CommandType = CommandType.StoredProcedure;
-                //cmdpmt.Parameters.AddWithValue("@HospitalID", HospitalID);
-                //cmdpmt.Parameters.AddWithValue("@LocationID", LocationID);
-                //cmdpmt.Parameters.AddWithValue("@BillNO", obPatient.BillNo);
-                //cmdpmt.Parameters.AddWithValue("@BillType", obPatient.BillType);
-                //HttpContext.Current.Session["HospitalID"] = HospitalID;
-                //HttpContext.Current.Session["LocationID"] = LocationID;
-                //HttpContext.Current.Session["PatientLabBillNO"] = obPatient.BillNo;
-                //HttpContext.Current.Session["PatientLabBillType"] = obPatient.BillType;
+                //    if (dsAuthorizationRights.Tables[0].Rows.Count > 0)
+                //    {
+                //        string chkAurthoriseUserWise = dsAuthorizationRights.Tables[0].Rows[0]["AuthorizationRights"].ToString();
+                //        if (chkAurthoriseUserWise == "True")
+                //        {
+                //            dsMasterSetting.Tables[0].Rows[0]["ForAuthorization"] = false;
+                //            obPatient.ForAuthorization = "0";
+                //        }
+                //    }
+                //    if (Convert.ToBoolean(dsMasterSetting.Tables[0].Rows[0]["ForAuthorization"]) == true)
+                //    {
+                //        obPatient.ForAuthorization = "1";
+
+                //        SqlCommand cmdIUForAuthorization = new SqlCommand("IUForAuthorization", con);
+                //        cmdIUForAuthorization.CommandType = CommandType.StoredProcedure;
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@LocationID", LocationID);
+                //        // cmdIUForAuthorization.Parameters.AddWithValue("@AuthorizationID", 0);
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@UserID", UserID);
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@AuthorationReason", obPatient.txtinput);
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@BillNo", obPatient.BillNo);
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@BillType", "LabBills");
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@Date", DateTime.Now);
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@PatientRegNO", obPatient.PatientRegNo);
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@CreationID", UserID);
+                //        cmdIUForAuthorization.Parameters.AddWithValue("@Mode", "Add");
+
+                //        cmdIUForAuthorization.ExecuteNonQuery();
 
 
-                //SqlDataAdapter da = new SqlDataAdapter(cmdpmt);
-                //DataSet dspmt = new DataSet();
-                ////  con.Open();
-                //da.Fill(dspmt);s
 
-                /********************************/
+                //    }
+                //    #endregion
+                //    //end
+                //    BillNo = Convert.ToInt32(obPatient.BillNo);
+                //    #region BillsModify
+                //    KeystoneProject.Buisness_Logic.Laboratory.BL_PatientLabBills BillModifyDetails = new KeystoneProject.Buisness_Logic.Laboratory.BL_PatientLabBills();
 
-                //  obPatient.RptPatientLabBill = dspmt;
-                obPatient.mybool = true;
+                //    // test.Business_Logic.Laboratory.BL_PatientLabBills BillModifyDetails = new Laboratory.BL_PatientLabBills();
+                //    DataSet dsPatientOldBills = new DataSet();
+
+                //    dsPatientOldBills = BillModifyDetails.GetPatientOldLabBills(Convert.ToInt32(HospitalID), Convert.ToInt32(LocationID), Convert.ToInt32(obPatient.BillNo));
+                //    foreach (DataRow dr in dsPatientOldBills.Tables[0].Rows)
+                //    {
+                //        SqlCommand cmdBillModify = new SqlCommand("IUPatientBillsModify", con);
+                //        cmdBillModify.CommandType = CommandType.StoredProcedure;
+                //        cmdBillModify.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //        cmdBillModify.Parameters.AddWithValue("@LocationID", LocationID);
+                //        cmdBillModify.Parameters.AddWithValue("@BillNo", dr["BillNo"]);
+                //        cmdBillModify.Parameters.AddWithValue("@PatientRegNO", dr["PatientRegNO"]);
+                //        cmdBillModify.Parameters.AddWithValue("@OPDIPDID", dr["OPDIPDID"]);
+                //        cmdBillModify.Parameters.AddWithValue("@BillType", dr["BillType"]);
+                //        cmdBillModify.Parameters.AddWithValue("@GrossAmount", dr["GrossAmount"]);
+                //        cmdBillModify.Parameters.AddWithValue("@TaxPercent", dr["TaxPercent"]);
+                //        cmdBillModify.Parameters.AddWithValue("@ReffCommission", "0.00");
+                //        cmdBillModify.Parameters.AddWithValue("@Commisson", "0.00");
+                //        cmdBillModify.Parameters.AddWithValue("@TotalAmount", dr["TotalAmount"]);
+                //        cmdBillModify.Parameters.AddWithValue("@DiscountPercent", "");
+                //        cmdBillModify.Parameters.AddWithValue("@DiscountAmount", dr["DiscountAmount"]);
+                //        cmdBillModify.Parameters.AddWithValue("@NetPayableAmount", dr["NetPayableAmount"]);
+                //        cmdBillModify.Parameters.AddWithValue("@BalanceAmount", dr["BalanceAmount"]);
+                //        cmdBillModify.Parameters.AddWithValue("@PreBalanceAmount", dr["PreBalanceAmount"]);
+                //        cmdBillModify.Parameters.AddWithValue("@IsPaid", dr["IsPaid"]);
+                //        cmdBillModify.Parameters.AddWithValue("@PaidAmount", dr["PaidAmount"]);
+                //        cmdBillModify.Parameters.AddWithValue("@TaxAmount", dr["TaxAmount"]);
+                //        cmdBillModify.Parameters.AddWithValue("@DipositAmount", "0.00");
+                //        cmdBillModify.Parameters.AddWithValue("@PrintBillNo", dr["PrintBillNo"]);
+                //        cmdBillModify.Parameters.AddWithValue("@FinancialYearID", dr["FinancialYearID"]);
+                //        cmdBillModify.Parameters.AddWithValue("@BillDate", dr["BillDate"]);
+                //        cmdBillModify.Parameters.AddWithValue("@ForAuthorization", obPatient.ForAuthorization);
+                //        // cmdBillModify.Parameters.AddWithValue(" @DipositAmount", "0.00");
+                //        cmdBillModify.Parameters.AddWithValue("@IsBillMade", "false");
+                //        cmdBillModify.Parameters.AddWithValue("@CreationID", UserID);
+                //        cmdBillModify.Parameters.AddWithValue("@Mode", "Add");
+                //        //   con.Close();
+                //        // con.Open();
+
+                //        int IUPatientBillsModify = cmdBillModify.ExecuteNonQuery();
+
+                //    }
+                //    //con.Close();
+
+                //    #endregion
+
+                //    #region BillsDetailsModify
+
+                //    //BL_PatientLabBills BillModifyDetails = new BL_PatientLabBills();
+                //    DataSet dsPatientBllDetails = new DataSet();
+                //    dsPatientBllDetails = BillModifyDetails.GetPatientLabOLdBillsDetails(HospitalID, LocationID, Convert.ToInt32(obPatient.BillNo));
+                //    SqlCommand updateauth = new SqlCommand("update PatientBillsDetailsModify set RowStatus = 2 where BillNo = '" + obPatient.BillNo + "' and RowStatus = 0", con);
+                //    int cha = updateauth.ExecuteNonQuery();
+                //    foreach (DataRow dr1 in dsPatientBllDetails.Tables[0].Rows)
+                //    {
+
+                //        SqlCommand cmdBillModifyDetail = new SqlCommand("IUPatientBillsDetailsModify", con);
+                //        cmdBillModifyDetail.CommandType = CommandType.StoredProcedure;
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@LocationID", LocationID);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@BillModifyID", 0);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@ServiceID", dr1["ServiceID"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@ServiceName", dr1["ServiceName"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@BillNo", dr1["BillNo"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@UnitID ", dr1["UnitID"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@ChargesType", dr1["ChargesType"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@Rate", dr1["Rate"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@Quantity", dr1["Quantity"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@Discount", dr1["Discount"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@ReffCommission", "0.00");
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@Commisson", "0.00");
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@ServiceType", dr1["ServiceType"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@TotalAmount", dr1["TotalAmount"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@HideInBilling", dr1["HideInBilling"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@DoctorID", dr1["DoctorID"]);
+
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@DoctorCharges", dr1["DoctorCharges"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@Discount_Service", dr1["Discount_Service"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@DiscountServiceType", dr1["DiscountServiceType"]);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@ForAuthorization", 1);
+
+
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@CreationID", UserID);
+                //        cmdBillModifyDetail.Parameters.AddWithValue("@Mode", "Add");
+
+                //        int IUPatientBillsModifyDetail = cmdBillModifyDetail.ExecuteNonQuery();
+
+
+                //    }
+
+                //    #endregion
+                //    //-------------------------------------------------------------
+
+                //    SqlCommand cmd = new SqlCommand("[IUPatientBillsOPD]", con);
+                //    cmd.CommandType = CommandType.StoredProcedure;
+                //    cmd.Parameters.AddWithValue("@PatientRegNO", obPatient.PatientRegNo);
+                //    cmd.Parameters.AddWithValue("@OPDIPDID", obPatient.PatientOPDNO);
+                //    cmd.Parameters.AddWithValue("@BillDate", Convert.ToDateTime(obPatient.BillDate));
+                //    cmd.Parameters.AddWithValue("@BillType", "OPDLabBills");
+                //    cmd.Parameters.AddWithValue("@GrossAmount", obPatient.GrossAmount);
+                //    cmd.Parameters.AddWithValue("@TaxAmount", obPatient.ServiceTax);
+                //    cmd.Parameters.AddWithValue("@Commisson", 0);
+                //    cmd.Parameters.AddWithValue("@ReffCommission", 0);
+                //    cmd.Parameters.AddWithValue("@TaxPercent", obPatient.TaxPercent);
+                //    cmd.Parameters.AddWithValue("@TotalAmount", obPatient.TotalAmount);
+                //    cmd.Parameters.AddWithValue("@DiscountPercent", obPatient.Discount);
+                //    cmd.Parameters.AddWithValue("@DiscountAmount", obPatient.DiscountAmount);
+                //    cmd.Parameters.AddWithValue("@DiscountReason", obPatient.DiscountReason);
+                //    cmd.Parameters.AddWithValue("@NetPayableAmount", obPatient.NetPayableAmount);
+                //    cmd.Parameters.AddWithValue("@BalanceAmount", obPatient.BalanceAmount);
+                //    cmd.Parameters.AddWithValue("@PreBalanceAmount", obPatient.PreBalanceAmount);
+                //    decimal BAmt = Convert.ToDecimal(obPatient.BalanceAmount);
+                //    if (BAmt <= 0) // ucPatientOPDBills1.txtBalAmount.Text.Trim()) <= 0)
+                //    {
+                //        cmd.Parameters.AddWithValue("@IsPaid", 0);
+                //    }
+                //    else
+                //    {
+                //        cmd.Parameters.AddWithValue("@IsPaid", 1);
+
+                //    }
+                //    cmd.Parameters.AddWithValue("@PaidAmount", obPatient.PaidAmount);
+                //    cmd.Parameters.AddWithValue("@DipositAmount", "0.00");
+                //    cmd.Parameters.AddWithValue("@IsBillMade", 0);
+                //    cmd.Parameters.AddWithValue("@PaymentType", obPatient.PaymentType);
+                //    cmd.Parameters.AddWithValue("@Number", obPatient.Number);
+                //    cmd.Parameters.AddWithValue("@Name", obPatient.Name);
+                //    cmd.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
+                //    cmd.Parameters.AddWithValue("@Remarks", obPatient.Remarks);
+                //    cmd.Parameters.AddWithValue("@SancationAmount", 0);
+                //    cmd.Parameters.AddWithValue("@CreationID", UserID);
+                //    cmd.Parameters.AddWithValue("@Mode", "Edit");
+                //    cmd.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //    cmd.Parameters.AddWithValue("@LocationID", LocationID);
+                //    cmd.Parameters.AddWithValue("@BillNo", obPatient.BillNo);
+                //    cmd.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
+                //    int i = cmd.ExecuteNonQuery();
+
+                //    BillNo = Convert.ToInt32(cmd.Parameters["@BillNo"].Value);
+                //    SqlCommand update = new SqlCommand("update PatientBillsDetails set RowStatus = 2 where BillNo = '" + BillNo + "' and RowStatus=0", con);
+                //    update.ExecuteNonQuery();
+
+                //    #region IUPatientBillsOPD _PatientBill
+
+                //    SqlCommand cmdPatientBills = new SqlCommand("IUPatientBills", con);
+                //    cmdPatientBills.CommandType = CommandType.StoredProcedure;
+                //    cmdPatientBills.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //    cmdPatientBills.Parameters.AddWithValue("@LocationID", LocationID);
+                //    cmdPatientBills.Parameters.AddWithValue("@BillNo", BillNo);
+                //    //cmdPatientBills.Parameters["@BillNo"].Direction = ParameterDirection.Output;
+                //    cmdPatientBills.Parameters.AddWithValue("@BillDate", Convert.ToDateTime(obPatient.BillDate));
+                //    cmdPatientBills.Parameters.AddWithValue("@PatientRegNO", obPatient.PatientRegNo);
+                //    cmdPatientBills.Parameters.AddWithValue("@OPDIPDID", obPatient.PatientOPDNO);
+                //    cmdPatientBills.Parameters.AddWithValue("@BillType", "OPDBill");
+                //    cmdPatientBills.Parameters.AddWithValue("@GrossAmount", obPatient.GrossAmount);
+                //    cmdPatientBills.Parameters.AddWithValue("@TaxPercent", obPatient.TaxPercent);
+                //    cmdPatientBills.Parameters.AddWithValue("@TaxAmount", obPatient.TaxAmount);
+                //    cmdPatientBills.Parameters.AddWithValue("@Commisson", 0);
+                //    cmdPatientBills.Parameters.AddWithValue("@ReffCommission",0);
+                //    cmdPatientBills.Parameters.AddWithValue("@TotalAmount", obPatient.TotalAmount);
+                //    cmdPatientBills.Parameters.AddWithValue("@DiscountPercent", obPatient.Discount);
+                //    cmdPatientBills.Parameters.AddWithValue("@DiscountAmount", obPatient.DiscountAmount);
+                //    cmdPatientBills.Parameters.AddWithValue("@DiscountReason", obPatient.DiscountReason);
+                //    cmdPatientBills.Parameters.AddWithValue("@NetPayableAmount", obPatient.NetPayableAmount);
+                //    cmdPatientBills.Parameters.AddWithValue("@BalanceAmount", obPatient.BalanceAmount);
+                //    cmdPatientBills.Parameters.AddWithValue("@PreBalanceAmount", obPatient.PreBalanceAmount);
+                //    //cmd.Parameters.AddWithValue("@BalanceAmount", obj.BalanceAmount);
+                //    decimal BAmt1 = Convert.ToDecimal(obPatient.BalanceAmount);
+                //    if (BAmt1 <= 0)
+                //    {
+                //        cmdPatientBills.Parameters.AddWithValue("@IsPaid", 0);
+                //    }
+                //    else
+                //    {
+                //        cmdPatientBills.Parameters.AddWithValue("@IsPaid", 1);
+
+                //    }
+                //    cmdPatientBills.Parameters.AddWithValue("@PaidAmount", obPatient.PaidAmount);
+                //    cmdPatientBills.Parameters.AddWithValue("@DipositAmount", "0.00");
+                //    // cmd.Parameters.AddWithValue("@IsBillMade", 0);
+                //    cmdPatientBills.Parameters.AddWithValue("@PaymentType", obPatient.PaymentType);
+                //    cmdPatientBills.Parameters.AddWithValue("@Number", obPatient.Number);
+                //    cmdPatientBills.Parameters.AddWithValue("@Name", obPatient.Name);
+                //    cmdPatientBills.Parameters.AddWithValue("@Date", Convert.ToDateTime(obPatient.PaymentDate));
+                //    cmdPatientBills.Parameters.AddWithValue("@Remarks", obPatient.Remarks);
+                //    cmdPatientBills.Parameters.AddWithValue("@SancationAmount",0);
+                //    cmdPatientBills.Parameters.AddWithValue("@FinancialYearID", obPatient.FinancialYearID);
+                //    cmdPatientBills.Parameters.AddWithValue("@CreationID", UserID);
+                //    cmdPatientBills.Parameters.AddWithValue("@ForAuthorization", obPatient.ForAuthorization);
+                //    cmdPatientBills.Parameters.AddWithValue("@Mode", "Edit");
+                //    i = cmdPatientBills.ExecuteNonQuery();
+
+                //    #endregion
+
+
+
+
+
+                //    if (i > 0)
+                //    {
+                //        for (int j = 0; j < obPatient.TestName.Length; j++)
+                //        {
+                //            SqlCommand cmd1 = new SqlCommand("[IUPatientBillsDetails]", con);
+                //            cmd1.CommandType = CommandType.StoredProcedure;
+                //            cmd1.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //            cmd1.Parameters.AddWithValue("@LocationID", LocationID);
+                //            cmd1.Parameters.AddWithValue("@BillNo", BillNo);
+                //            cmd1.Parameters.AddWithValue("@ServiceID", obPatient.TestID[j]);
+                //            cmd1.Parameters.AddWithValue("@Servicename", obPatient.TestName[j]);
+                //            cmd1.Parameters.AddWithValue("@UnitID", "");
+                //            cmd1.Parameters.AddWithValue("@ChargesType", obPatient.ChargesType);
+                //            cmd1.Parameters.AddWithValue("@Rate", obPatient.Rate[j]);
+                //            cmd1.Parameters.AddWithValue("@Quantity", obPatient.Qty[j]);
+                //            cmd1.Parameters.AddWithValue("@Discount", obj.Services[j].sevicedisAmt);
+                //            cmd1.Parameters.AddWithValue("@Commisson", obj.Commisson);
+                //            cmd1.Parameters.AddWithValue("@ReffCommission", obj.ReffCommission);
+                //            cmd1.Parameters.AddWithValue("@ServiceType", obj.Services[j].ServiceType);
+                //            cmd1.Parameters.AddWithValue("@DoctorCharges", "");
+                //            cmd1.Parameters.AddWithValue("@TotalAmount", obj.Services[j].Total);
+                //            cmd1.Parameters.AddWithValue("@HideInBilling", "Yes");
+                //            cmd1.Parameters.AddWithValue("@DoctorID", obj.Services[j].DoctorID);
+                //            cmd1.Parameters.AddWithValue("@CreationID", UserID);
+                //            cmd1.Parameters.AddWithValue("@Discount_Service", obj.Services[j].Discount_Service);
+                //            cmd1.Parameters.AddWithValue("@DiscountServiceType", obj.Services[j].DiscountServiceType);
+                //            cmd1.Parameters.AddWithValue("@ForAuthorization", obj.Services[j].Authorization);
+
+                //            cmd1.Parameters.AddWithValue("@Mode", "Add");
+                //            int BillsDetails = cmd1.ExecuteNonQuery();
+
+                //            if (obj.Services[j].ServiceType == "OPDLabBills")
+                //            {
+                //                ServiceType = obj.Services[j].ServiceType;
+                //            }
+
+
+                //        }
+                //    }
+
+
+
+
+                //    #region PatientLab
+
+                //    DataSet dsLabDetail = new DataSet();
+                //    DataSet dsLab = new DataSet();
+
+                //    KeystoneProject.Buisness_Logic.Laboratory.BL_PatientLabBills BL_Lab = new KeystoneProject.Buisness_Logic.Laboratory.BL_PatientLabBills();
+
+
+                //    dsLab = BL_Lab.GetPatientLab(HospitalID, LocationID, BillNo);
+                //    dsLabDetail = BL_Lab.GetPatientLabDetails(HospitalID, LocationID, BillNo);
+                //    int LabNo = 0;
+
+                //    if (ServiceType == "OPDLabBills")
+                //    {
+                //        if (dsLab.Tables[0].Rows.Count > 0)
+                //        {
+
+                //            foreach (DataRow dr in dsLab.Tables[0].Rows)
+                //            {
+
+                //                SqlCommand cmdPatientLab = new SqlCommand("IUPatientLab", con);
+                //                cmdPatientLab.CommandType = CommandType.StoredProcedure;
+                //                cmdPatientLab.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //                cmdPatientLab.Parameters.AddWithValue("@LocationID", LocationID);
+                //                cmdPatientLab.Parameters.AddWithValue("@LabNo", dr["LabNo"]);
+                //                //  cmdPatientLab.Parameters["@LabNo"].Direction = ParameterDirection.Output;
+                //                cmdPatientLab.Parameters.AddWithValue("@PatientRegNo", obj.PatientRegNO);
+                //                cmdPatientLab.Parameters.AddWithValue("@OPDIPDID", dr["OPDIPDID"]);
+                //                cmdPatientLab.Parameters.AddWithValue("@LabType", dr["LabType"]);
+                //                cmdPatientLab.Parameters.AddWithValue("@BillNo", dr["BillNo"]);
+                //                cmdPatientLab.Parameters.AddWithValue("@CreationID", UserID);
+                //                cmdPatientLab.Parameters.AddWithValue("@Mode", "Edit");
+                //                //     con.Close();
+                //                int IUPatientLab = cmdPatientLab.ExecuteNonQuery();
+                //                LabNo = Convert.ToInt32(cmdPatientLab.Parameters["@LabNo"].Value);
+                //            }
+                //        }
+                //        else
+                //        {
+                //            SqlCommand cmdPatientLab = new SqlCommand("IUPatientLab", con);
+                //            cmdPatientLab.CommandType = CommandType.StoredProcedure;
+                //            cmdPatientLab.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //            cmdPatientLab.Parameters.AddWithValue("@LocationID", LocationID);
+                //            cmdPatientLab.Parameters.AddWithValue("@LabNo", 0);
+                //            cmdPatientLab.Parameters["@LabNo"].Direction = ParameterDirection.Output;
+                //            cmdPatientLab.Parameters.AddWithValue("@PatientRegNo", obj.PatientRegNO);
+                //            cmdPatientLab.Parameters.AddWithValue("@OPDIPDID", obj.PrintOPDNo);
+
+                //            cmdPatientLab.Parameters.AddWithValue("@LabType", "OPDLab");
+
+                //            cmdPatientLab.Parameters.AddWithValue("@BillNo", BillNo);
+                //            cmdPatientLab.Parameters.AddWithValue("@CreationID", UserID);
+                //            cmdPatientLab.Parameters.AddWithValue("@Mode", "Add");
+                //            //     con.Close();
+
+                //            int IUPatientLab = cmdPatientLab.ExecuteNonQuery();
+                //            LabNo = Convert.ToInt32(cmdPatientLab.Parameters["@LabNo"].Value);
+                //        }
+
+
+
+                //        #endregion
+
+
+
+                //        #region LabDetail
+
+
+                //        int row = 0;
+                //        for (int j = 0; j < obj.Services.Length; j++)
+                //        {
+                //            // DataSet ds = GetTest("%");
+                //            //  DataView dv1 = new DataView(ds.Tables[0], " ServiceID = " + obj.Services[j].SvcID + " ", "", DataViewRowState.CurrentRows);
+
+
+                //            SqlCommand cmdPatientLabDetails = new SqlCommand("IUPatientLabDetails", con);
+                //            cmdPatientLabDetails.CommandType = CommandType.StoredProcedure;
+                //            cmdPatientLabDetails.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //            cmdPatientLabDetails.Parameters.AddWithValue("@LocationID", LocationID);
+
+                //            if (obj.Services[j].ServiceType == "OPDLabBills")
+                //            {
+                //                if (obj.Services[j].Mode == "Add")
+                //                {
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@PatientLabDetailID", 0);
+                //                    cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Direction = ParameterDirection.Output;
+                //                    //string  BillNo = Convert.ToInt32(cmd.Parameters["@ProvisionalBillNo"].Value);
+                //                    PatientLabDetailID = (int)cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Value;
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@LabNo", LabNo);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@ProfileID", "");
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@TestID", obj.Services[j].SvcID);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@TestStatus", "SAMPLECOLLECTION");
+
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@SampleCollectionID", 0);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@SamleCollectionDate", System.DateTime.Now);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@AuthorizedID ", 0);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@AuthorizedDate", System.DateTime.Now);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@CompleteBy", 0);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@CompleteDate", System.DateTime.Now);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@PrintID ", 0);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@PrintDate ", System.DateTime.Now);
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@CreationID", UserID);
+
+                //                    cmdPatientLabDetails.Parameters.AddWithValue("@Mode", "Add");
+
+                //                }
+                //                else
+                //                {
+                //                    if (obj.Services[j].ServiceType == "OPDLabBills")
+                //                    {
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@PatientLabDetailID", dsLabDetail.Tables[0].Rows[row]["PatientLabDetailID"].ToString());
+                //                        //cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Direction = ParameterDirection.Output;
+                //                        //string  BillNo = Convert.ToInt32(cmd.Parameters["@ProvisionalBillNo"].Value);
+                //                        //      PatientLabDetailID = (int)cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Value;
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@LabNo", LabNo);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@ProfileID", "");
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@TestID", obj.Services[j].SvcID);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@TestStatus", "SAMPLECOLLECTION");
+
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@SampleCollectionID", 0);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@SamleCollectionDate", System.DateTime.Now);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@AuthorizedID ", 0);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@AuthorizedDate", System.DateTime.Now);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@CompleteBy", 0);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@CompleteDate", System.DateTime.Now);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@PrintID ", 0);
+
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@PrintDate ", System.DateTime.Now);
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@CreationID", UserID);
+
+                //                        cmdPatientLabDetails.Parameters.AddWithValue("@Mode", "Edit");
+                //                        row++;
+                //                    }
+                //                }
+                //                int IUPatientLabDetails = cmdPatientLabDetails.ExecuteNonQuery();
+                //                PatientLabDetailID = Convert.ToInt32(cmdPatientLabDetails.Parameters["@PatientLabDetailID"].Value.ToString());
+                //                //   PatientLabDetail.Add(obPatient.PatientLabDetailID.ToString());
+
+                //                #endregion
+
+
+                //                #region IUPatientLabWithParameter
+                //                if (obj.Services[j].Mode == "Add")
+                //                {
+                //                    KeystoneProject.Buisness_Logic.Laboratory.BL_PatientLabBills objlabParamiter = new KeystoneProject.Buisness_Logic.Laboratory.BL_PatientLabBills();
+
+                //                    DataSet ds = new DataSet();
+                //                    int TestID2 = 0;
+                //                    TestID2 = Convert.ToInt32(obj.Services[j].SvcID);
+
+                //                    ds = objlabParamiter.GetPatientLabForPatientLabWithParameter(HospitalID, LocationID, TestID2);
+
+                //                    foreach (DataRow drParameter in ds.Tables[1].Rows)
+                //                    {
+
+                //                        DataView dvTest = new DataView(ds.Tables[0], "ParameterID = " + drParameter["ParameterID"].ToString() + " ", "", DataViewRowState.CurrentRows);
+
+                //                        DataSet dsOnlyParameter = new DataSet();
+                //                        DataTable dt = new DataTable();
+                //                        dt = dvTest.ToTable();
+                //                        dsOnlyParameter.Tables.Add(dt);
+
+
+                //                        DataView dv = new DataView(dsOnlyParameter.Tables[0], " (DaysFrom <= " + obj.TotalDay + " and DaysTo >=" + obj.TotalDay + " and Gender ='" + obj.Gender + "')", "", DataViewRowState.CurrentRows);
+                //                        SqlCommand cmdParamiter = new SqlCommand("IUPatientLabWithParameter", con);
+                //                        cmdParamiter.CommandType = CommandType.StoredProcedure;
+                //                        if (dv.Count != 0)
+                //                        {
+
+                //                            if ((obj.Gender.Trim() == dv[0]["Gender"].ToString().Trim()))
+                //                            {
+                //                                //  DataRow drW = dsPatientLabWithParameter.Tables[0].NewRow();
+
+
+                //                                cmdParamiter.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //                                cmdParamiter.Parameters.AddWithValue("@LocationID", LocationID);
+                //                                cmdParamiter.Parameters.AddWithValue("@LabNo", LabNo);
+
+                //                                cmdParamiter.Parameters.AddWithValue("@PatientLabParameterID", 0);
+                //                                // cmdParamiter.Parameters["@PatientLabParameterID"].Direction = ParameterDirection.Output;
+                //                                //  int PatientLabDetailID = (int)cmdParamiter.Parameters["@PatientLabParameterID"].Value;
+                //                                cmdParamiter.Parameters.AddWithValue("@PatientLabDetailID", PatientLabDetailID);
+                //                                cmdParamiter.Parameters.AddWithValue("@TestID", TestID2);
+                //                                cmdParamiter.Parameters.AddWithValue("@ParameterID", dv[0]["ParameterID"].ToString());
+                //                                cmdParamiter.Parameters.AddWithValue("@NormalRangeID", dv[0]["NormalRangeID"].ToString());
+                //                                cmdParamiter.Parameters.AddWithValue("@ResultValue", 0);
+                //                                cmdParamiter.Parameters.AddWithValue("@Status", 0);
+                //                                cmdParamiter.Parameters.AddWithValue("@NLH", 0);
+                //                                cmdParamiter.Parameters.AddWithValue("@ConvLow", dv[0]["ConvLow"].ToString());
+                //                                cmdParamiter.Parameters.AddWithValue("@ConvHigh", dv[0]["ConvHigh"].ToString());
+                //                                cmdParamiter.Parameters.AddWithValue("@Remark", 0);
+                //                                cmdParamiter.Parameters.AddWithValue("@CompleteBy", "");
+                //                                cmdParamiter.Parameters.AddWithValue("@CreationID", UserID);
+                //                                cmdParamiter.Parameters.AddWithValue("@Mode", "Add");
+                //                                //dsPatientLabWithParameter.Tables[0].Rows.Add(drW);
+                //                            }
+                //                        }
+                //                        else
+                //                        {
+                //                            // DataRow drW = dsPatientLabWithParameter.Tables[0].NewRow();
+                //                            cmdParamiter.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //                            cmdParamiter.Parameters.AddWithValue("@LocationID", LocationID);
+                //                            cmdParamiter.Parameters.AddWithValue("@PatientLabParameterID", 0);
+                //                            //cmdParamiter.Parameters["@PatientLabParameterID"].Direction = ParameterDirection.Output;
+                //                            // int PatientLabDetailID = (int)cmdParamiter.Parameters["@PatientLabParameterID"].Value;
+                //                            cmdParamiter.Parameters.AddWithValue("@PatientLabDetailID", PatientLabDetailID);
+                //                            cmdParamiter.Parameters.AddWithValue("@LabNo", LabNo);
+                //                            // cmdParamiter.Parameters.AddWithValue("@PatientLabDetailID", 0);
+                //                            cmdParamiter.Parameters.AddWithValue("@TestID", TestID2);
+                //                            cmdParamiter.Parameters.AddWithValue("@ParameterID", drParameter["ParameterID"].ToString());
+                //                            cmdParamiter.Parameters.AddWithValue("@NormalRangeID", 0);
+                //                            cmdParamiter.Parameters.AddWithValue("@ResultValue", 0);
+                //                            cmdParamiter.Parameters.AddWithValue("@Status", 0);
+                //                            cmdParamiter.Parameters.AddWithValue("@NLH", "");
+                //                            cmdParamiter.Parameters.AddWithValue("@ConvLow", "");
+                //                            cmdParamiter.Parameters.AddWithValue("@ConvHigh", "");
+                //                            cmdParamiter.Parameters.AddWithValue("@Remark", 0);
+                //                            cmdParamiter.Parameters.AddWithValue("@CompleteBy", "");
+                //                            cmdParamiter.Parameters.AddWithValue("@CreationID", UserID);
+                //                            cmdParamiter.Parameters.AddWithValue("@Mode", "Add");
+                //                            // dsPatientLabWithParameter.Tables[0].Rows.Add(drW);
+                //                        }
+
+                //                        cmdParamiter.ExecuteNonQuery();
+
+                //                    }
+                //                }
+
+                //                #endregion
+
+
+
+                //            }
+                //        }
+                //    }
+                //    else
+                //    {
+
+                //        if (dsLab.Tables[0].Rows.Count > 0)
+                //        {
+                //            foreach (DataRow dr in dsLab.Tables[0].Rows)
+                //            {
+
+                //                SqlCommand cmdPatientLab = new SqlCommand("IUPatientLab", con);
+                //                cmdPatientLab.CommandType = CommandType.StoredProcedure;
+                //                cmdPatientLab.Parameters.AddWithValue("@HospitalID", HospitalID);
+                //                cmdPatientLab.Parameters.AddWithValue("@LocationID", LocationID);
+                //                cmdPatientLab.Parameters.AddWithValue("@LabNo", dr["LabNo"]);
+                //                //  cmdPatientLab.Parameters["@LabNo"].Direction = ParameterDirection.Output;
+                //                cmdPatientLab.Parameters.AddWithValue("@PatientRegNo", obj.PatientRegNO);
+                //                cmdPatientLab.Parameters.AddWithValue("@OPDIPDID", dr["OPDIPDID"]);
+                //                cmdPatientLab.Parameters.AddWithValue("@LabType", dr["LabType"]);
+                //                cmdPatientLab.Parameters.AddWithValue("@BillNo", dr["BillNo"]);
+                //                cmdPatientLab.Parameters.AddWithValue("@CreationID", UserID);
+                //                cmdPatientLab.Parameters.AddWithValue("@Mode", "Edit");
+                //                //     con.Close();
+
+                //                int IUPatientLab = cmdPatientLab.ExecuteNonQuery();
+                //                LabNo = Convert.ToInt32(cmdPatientLab.Parameters["@LabNo"].Value);
+
+                //            }
+                //        }
+
+                //    }
+
+
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -1338,7 +1908,8 @@ namespace KeystoneProject.Buisness_Logic.Laboratory
             HttpContext.Current.Session["LabBillNo"] = obPatient.BillNo;
             HttpContext.Current.Session["LabBillType"] = obPatient.BillType;
             return obPatient;
-                #endregion
+            #endregion
+             
         }
 
         #endregion

@@ -828,6 +828,38 @@
 
 </script>
 
+<script>
+
+    $(document).ready(function () {
+        //$("#myModal").show();
+    })
+    var loadfile15 = function (event, name) {
+        debugger
+
+
+        var file15 = event.target.files[0];
+        if (name == "Pharmacy") {
+            document.getElementById('img15').src = window.URL.createObjectURL(event.target.files[0]);
+            // alert(window.URL.createObjectURL(event.target.files[0]));
+        }
+    var data1 = new FormData();
+        data1.append("ImageFile11", file15);
+        $.ajax({
+            url: '@Url.Action("Pharmacy", "HospitalLocation")',
+            type: "POST",
+            data: data1,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                debugger
+                $("#Pharmacy").val(data);
+                alert(data);
+            }
+        });
+
+    }
+</script>
+
 @if (TempData["Msg"] != null)
 {
     <script type="text/javascript">
@@ -1104,6 +1136,11 @@
                                                 </a>
                                             </li>
                                             <li class="nav-item">
+                                                <a class="nav-link" id="pharmacyLogo-tab" data-toggle="pill" href="#pharmacyLogo" role="tab" aria-controls="pharmacyLogo" aria-selected="false">
+                                                    <i class="fa fa-file-text-o"></i> Pharmacy Logo
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
                                                 <a class="nav-link" id="admissionCard-tab" data-toggle="pill" href="#admissionCard" role="tab" aria-controls="admissionCard" aria-selected="false">
                                                     <i class="fa fa-id-card-o"></i> Admission Card
                                                 </a>
@@ -1371,6 +1408,35 @@
                                                                     <input type="file" id="file6" name="file6" onchange="loadfile6(event, 'ReportHeader')" aria-label="File browser example" class="custom-file-input">
                                                                     <label class="custom-file-label" for="customFile">Upload</label>
                                                                     <input type="hidden" name="ReportHeader" id="ReportHeader" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Pharmacy Logo-->
+                                            <div class="tab-pane fade" id="pharmacyLogo" role="tabpanel" aria-labelledby="pharmacyLogo-tab">
+                                                <div class="row">
+                                                    <!-- Logo -->
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"></div>
+                                                            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                                                <label>Logo</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12" style="border: 1px solid;">
+                                                                <img src="http://keystonehms.com/img/keystone-logo.png" id="img15" class="img-fluid" style="display: block; margin: auto; max-height: 100px;">
+                                                            </div>
+                                                            <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
+                                                                <input type="text" id="pharmacText" name="pharmacText" class="form-control" placeholder="Pharmacy Text">
+                                                            </div>
+                                                            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                                                <div class="custom-file">
+                                                                    <input type="file" id="file15" name="file15" onchange="loadfile15(event, 'Pharmacy')" aria-label="File browser example" class="custom-file-input">
+                                                                    <label class="custom-file-label" for="customFile">Upload</label>
+                                                                    <input type="hidden" name="Pharmacy" id="Pharmacy" />
                                                                 </div>
                                                             </div>
                                                         </div>

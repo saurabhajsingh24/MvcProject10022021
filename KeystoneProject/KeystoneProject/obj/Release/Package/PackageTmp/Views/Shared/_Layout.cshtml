@@ -324,7 +324,7 @@
                 url: '@Url.Action("HideModuls", "UserRights")',
                 type: "GET",
                 success: function (data) {
-                   
+                    $('.role').hide();
                     if (data!= "All")
                         {
                         for (var a = 0; a < data.length; a++) {
@@ -345,11 +345,11 @@
                             //else {
                             //    $('#btndelete').prop("disabled", true);
                             //}
-                                                    
+                            //alert(data[a].ModuleName.trim());
                             $('.role').each(function ()
 
                             {
-
+                             
                                 if (data[a].ModuleName == "OPD Registration" || data[a].ModuleName == "IPD Admission") {
                                     debugger
                                     //alert(data[a].ModuleName);
@@ -357,7 +357,13 @@
                                     data[a].ModuleName = data[a].ModuleName.replace(data[a].ModuleName, "Patient Registration");
                                 }
                                 //  var aa = data[a].ModuleName;
-                                if (data[a].ModuleName == $(this).text().trim()) {
+                                if (data[a].LeafModuleName.trim() == $(this).text().trim()) {
+                                    $(this).show();
+                                }
+                                if (data[a].ModuleName.trim() == $(this).text().trim()) {
+                                    $(this).show();
+                                }
+                                if (data[a].SubModuleName.trim() == $(this).text().trim()) {
                                     $(this).show();
                                 }
                             })

@@ -1984,9 +1984,10 @@
                 traditional: true,
                 contentType: 'application/json',
                 success: function (data) {
-                    debugger  
+                    debugger
                     $('#patientPrintIPDNo').val(data);
                     debugger;
+                    $('#patientPrintIPDNo').change();
                     var $dropdownoldbill = $("#old_bill_no_id");
                     $dropdownoldbill.val("");
                     PatientDetailFillData();
@@ -2155,31 +2156,6 @@
         }*@
 
     }
-
-    function CheckDischargePatient(PatientRegNO, PatientIPDNO) {
-        debugger
-        var chek;
-        $.ajax({
-
-            url: '@Url.Action("CheckDischargePatient", "IPDBill")',
-            type: "GET",
-            data: { PatientRegNO: PatientRegNO, PatientIPDNO: PatientIPDNO },
-            dataType: "json",
-            success: function (data) {
-                debugger;
-                if (data == false) {
-                    alert("IPD Patient Already Discharge.");
-                    chek= false;
-                }
-                if (data == true) {
-                    chek= true;
-                }
-            },
-
-        });
-        return chek;
-    }
-
     var flagfinal = "";
     function PatientDetailFillData() {
         debugger
@@ -2197,22 +2173,18 @@
             error: function (data) {
             }
         });
-
-
-
        // $("#fin_year_id").val(fin_year_id);
         //  document.getElementById("payment_type").value = 'CASH';
-
         var aaa = $("#patient_reg_no_id").val();
-        alert(aaa);
-
         // var changedText = $(this).val();
         var selValue2 = $('input[name=RadioChargee]:checked').val();
-
+        if ($("#patient_reg_no_id").val() == "")
+        {
+           // $("#patient_reg_no_id").val(0)
+        }
         RadioCharge = $('input[name=RadioCharge]:checked').val();
         var UserData = { RegNo: $("#patient_reg_no_id").val(), RB: selValue2, IPDNo: $("#patient_ipd_no_id").val() };
 
-        //var flagfinal = "";
         $.ajax({
             url: '@Url.Action("GetPatientDetailByReg", "IPDBill")',
             dataType: "json",
@@ -2246,7 +2218,11 @@
                 $("#patient_ipd_no_id").val(data[0].PatientIPDNO);
                 $("#patient_ipd_no_id").val(data[0].PatientIPDNO);
                 $("#patientPrintIPDNo").val(data[0].PrintIPDNO);
-               // $("patient_ipd_no_txt").val(data[0].GuardianName);
+
+
+
+
+                // $("patient_ipd_no_txt").val(data[0].GuardianName);
                 $("#GuardianName").val(data[0].GuardianName);
                 $("#DoctorID").val(data[0].DoctorPrintName);
                 $("#Doctor").val(data[0].ConsultantDrID);
@@ -2261,10 +2237,6 @@
                 $("#ReferredByDoctorID").val(data[0].ReferredByDoctorID);
                 $("#BedNo").val(data[0].BedName);
                 $("#bed_no_hid").val(data[0].BedID);
-                debugger
-                var check = CheckDischargePatient(data[0].PatientRegNO, data[0].PatientIPDNO);
-                
-
                 debugger
 
                 ///////////   --      Fill Packege Reg No
@@ -2972,7 +2944,24 @@
                   //  var r = document.getElementById("rate").value = rate.trim();
 
                 debugger
-              
+                if (flagfinal == "true" && $("#old_bill_no_id").val() == "-1") {
+                    alert("Final Bill Already Generated Select Old Bill No");
+                    $("#ServiceID").val("0");
+                    $("#servicename1").val("");
+                    $("#servicename").val("");
+                    $("#ServiceGroupID").val("0");
+                    $("#ServiceGroupName").val("");
+                    $("#rate").val("");
+                    $("#DoctorPrintNameID").val("0");
+                    $("#DoctorPrintName").val("");
+                    $("#quantity").val("1");
+                    $("#ServiceCode").val("");
+                    $("#Unit").val("");
+                    $("#UnitID").val("");
+                    service_name_hid = "";
+                    return false;
+
+                }
                 var svcnm = servicename;
                 var service_name_hid = ServiceID;
                // var service_group = GrpID;
@@ -3360,7 +3349,7 @@
         debugger
 
         debugger
-        if (chk == "True") {
+        if (chk == true) {
             var con = confirm("Send For Authorization Confirmation");
             if (con) {
                 var person = prompt("Reason For Authorization");
@@ -3414,11 +3403,10 @@
                         // alert(data[0]);
                         $('.Edit').prop('title', '');
                         if (data[0] == "True") {
-                            chk = false;
-                            $('.Edit').prop("disabled", true);
-                            alert("Previous Amount Not Authorized..");
-                            $('.Edit').prop('title', 'Previous Amount Not Authorized');
-
+                            chk = true;
+                         //   $('.Edit').prop("disabled", true);
+                          //  alert("Previous Amount Not Authorized..");
+                            // $('.Edit').prop('title', 'Previous Amount Not Authorized');
                         }
                         if (data[1] == "True") {
                             chk = false;
@@ -4248,7 +4236,16 @@
                 contentType: 'application/json',
                 success: function (data) {
                     //$("#fin_year_id").text(data[0].FinancialYear);
-
+                    if (data[0].ForAuthorization == "1") {
+                        $('.Edit').prop("disabled", true);
+                        alert("Previous Amount Not Authorized..");
+                        $('.Edit').prop('title', 'Previous Amount Not Authorized');
+                    }
+                    else
+                    {
+                        $('.Edit').prop("disabled", false);
+                        $('.Edit').prop('title', 'Save');
+                    }
                     //var btnval = $("#btnSubmitid").val();
                     debugger
                     $("#btnSubmitid").val("Modify");
@@ -4830,7 +4827,7 @@
                                 if (search == "Done") {
                                     alert("Transfer Balance Done..");
                                     BalancetranferPre();
-                                    $("#patientPrintIPDNo").change();
+                                    //$("#patientPrintIPDNo").change();
                                     
                                 }
                                 else {
@@ -6078,8 +6075,7 @@
                                                         <label>Admit D/T</label>
                                                     </div>
                                                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 cpb-10">
-                                                        <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" max="9999-12-31" id="AdmitDate" name="AdmitDate" class="form-control">
-                                                        
+                                                        <input type="date" value="" max="9999-12-31" id="AdmitDate" name="AdmitDate" class="form-control">
                                                     </div>
                                                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                                         <input type="time" value="now" name="AdmitTime" id="AdmitTime" class="form-control">
@@ -6140,7 +6136,7 @@
                                                         <label>Guardian Name</label>
                                                     </div>
                                                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                                                        <input type="text" id="GuardianName" name="GuardianName" class="form-control" readonly>
+                                                        <input type="text" id="GuardianName" name="GuardianName" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>

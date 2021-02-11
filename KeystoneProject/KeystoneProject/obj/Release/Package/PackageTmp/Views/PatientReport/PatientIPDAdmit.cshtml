@@ -285,6 +285,7 @@
                     for (var i = 0; i < data.length; i++) {
                         $("#patientIPDAdmitTableId").append('<tr><td>' + data[i].RegNo + '</td><td>' + data[i].OPDNo + '</td><td>' + data[i].Patient + '</td><td>' + data[i].Address + '</td><td>' + data[i].DoctorName + '</td></tr>');
                     };
+                    $('#patientIPDAdmitTableId').dataTable().fnDestroy();
                     $('.ex-btn').css('display', 'inline-flex');
                     $('#patientIPDAdmitTableId').DataTable({
                         "fixedHeader": true,
@@ -423,7 +424,7 @@
                             </div>
                             <div class="btn-group dropdown-split-warning">
                                 <button type="button" id="submit" name="submit" class="btn btn-app">
-                                    <i class="fa fa-search"></i>Search
+                                    <i class="fa fa-search"></i>View
                                 </button>
                             </div>
                             <div class="btn-group dropdown-split-warning ex-btn" style="display: none;">
@@ -438,7 +439,7 @@
                                 <thead style="background-color: #bddff7;">
                                     <tr>
                                         <th>UHID No.</th>
-                                        <th>OPD No.</th>
+                                        <th>IPD No.</th>
                                         <th>Patient Name</th>
                                         <th>Address</th>
                                         <th>Consultant Doctor / Department Name / Referred Doctor</th>

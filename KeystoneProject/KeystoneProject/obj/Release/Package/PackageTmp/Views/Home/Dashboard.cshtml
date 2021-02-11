@@ -747,7 +747,7 @@
     //    //Date range picker
     //    $('#fromTo').daterangepicker()
     //})
-
+    var datachart = "";
     $(function () {
         /* ChartJS
          * -------
@@ -769,6 +769,7 @@
             dataType: "Json",
             data: { datefrom: fromdate, dateto: todate },
             success: function (data) {
+                datachart = data;
                 debugger
                 var Month = "";
                 var OPDCollection = "";
@@ -887,14 +888,14 @@
                     data: barChartData,
                     options: barChartOptions
                 })
-            }
-        })
+           
 
 
         //-------------
         //- PIE CHART -
         //-------------
         // Get context with jQuery - using jQuery's .get() method.
+                //alert(JSON.stringify(data));
         var pieChartCanvas = $('#pieChart');
         var donutData = {
             labels: [
@@ -906,7 +907,8 @@
             ],
             datasets: [
               {
-                  data: [700, 500, 400, 600, 300],
+                
+                  data: [data[0].OPDCollection,data[0].IPDCollection,data[0].Income,data[0].Expence],
                   backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
               }
             ]
@@ -923,7 +925,8 @@
             data: pieData,
             options: pieOptions
         });
-
+            }
+        })
         $.ajax({
             url: '@Url.Action("DashBordPatientOPDNew", "Home")',
             type: "GET",
@@ -978,9 +981,7 @@
         })
     })
 
-</script>
 
-<script>
 
     function FillDate() {
         debugger
@@ -1139,7 +1140,9 @@
         //-------------
         //- PIE CHART -
         //-------------
-        // Get context with jQuery - using jQuery's .get() method.
+            // Get context with jQuery - using jQuery's .get() method.
+          
+              debugger
         var pieChartCanvas = $('#pieChart');
         var donutData = {
             labels: [
@@ -1150,8 +1153,8 @@
                 'Deposites',
             ],
             datasets: [
-              {
-                  data: [700, 500, 400, 600, 300],
+              { 
+                  data: datachart,
                   backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
               }
             ]
@@ -1168,7 +1171,7 @@
             data: pieData,
             options: pieOptions
         });
-
+               
         $.ajax({
             url: '@Url.Action("DashBordPatientOPDNew", "Home")',
             type: "GET",
@@ -1225,5 +1228,221 @@
     })
 </script>
 
+
+@*<script>
+
+    $(function () {
+     
+        var barChartCanvas = $('#pieChart').get(0).getContext('2d')
+
+        var fromdate = $("#fromDate").val();
+
+        var todate = $("#toDate").val();
+
+        $.ajax({
+            url: '@Url.Action("FromDate_Todate", "Home")',
+            type: "GET",
+            dataType: "Json",
+            data: { datefrom: fromdate, dateto: todate },
+            success: function (data) {
+                debugger
+                var Month = "";
+                var OPDCollection = "";
+                var IPDCollection = "";
+                var Month = "";
+                var INCOME = "";
+                var EXPENCE = "";
+                for (var i = 0; i < data.length; i++)
+                {
+                    Month += data[i].Month + ",";
+                    if (data[i].OPDCollection!= "") {
+                        OPDCollection += data[i].OPDCollection + ",";
+                    }
+                    else
+                    {
+                        OPDCollection += "0" + ",";
+                    }
+                    if (data[i].IPDCollection!= "") {
+                        IPDCollection += data[i].IPDCollection + ",";
+                    }
+                    else {
+                        IPDCollection += "0" + ",";
+                    }
+                    if (data[i].Income!= "") {
+                        INCOME += data[i].Income + ",";
+                    }
+                    else
+                    {
+                        INCOME += "0" + ",";
+                    }
+                    if (data[i].Expence != "") {
+                        EXPENCE+= data[i].Expence + ",";
+                    }
+                    else
+                    {
+                        EXPENCE += "0" + ",";
+                    }
+                }
+                debugger
+                Month = Month.split(',');
+                var barChartData = {
+                    labels: Month,
+                    datasets: [
+                      {
+                          label: 'OPD Collection',
+                          backgroundColor: '#f56954',
+                          borderColor: '#f56954',
+                          pointRadius: false,
+                          pointColor: '#3b8bba',
+                          pointStrokeColor: '#f56954',
+                          pointHighlightFill: '#fff',
+                          pointHighlightStroke: '#f56954',
+                          data: OPDCollection.split(','),
+                      },
+                      {
+                          label: 'IPD Collection',
+                          backgroundColor: '#00a65a',
+                          borderColor: '#00a65a',
+                          pointRadius: false,
+                          pointColor: '#f56954',
+                          pointStrokeColor: '#00a65a',
+                          pointHighlightFill: '#fff',
+                          pointHighlightStroke: '#00a65a',
+                          data: IPDCollection.split(','),
+                      },
+                      {
+                          label: 'Total. Income',
+                          backgroundColor: '#f39c12',
+                          borderColor: '#f39c12',
+                          pointRadius: false,
+                          pointColor: '#f56954',
+                          pointStrokeColor: '#f39c12',
+                          pointHighlightFill: '#fff',
+                          pointHighlightStroke: '#f39c12',
+                          data: INCOME.split(','),
+                      },
+                      {
+                          label: 'Total Expences',
+                          backgroundColor: '#00c0ef',
+                          borderColor: '#00c0ef',
+                          pointRadius: false,
+                          pointColor: '#00c0ef',
+                          pointStrokeColor: '#00c0ef',
+                          pointHighlightFill: '#fff',
+                          pointHighlightStroke: '#00c0ef',
+                          data: EXPENCE.split(','),
+                      },
+                      {
+                          label: 'Other Income',
+                          backgroundColor: '#d2d6de',
+                          borderColor: '#d2d6de',
+                          pointRadius: false,
+                          pointColor: '#d2d6de',
+                          pointStrokeColor: '#d2d6de',
+                          pointHighlightFill: '#fff',
+                          pointHighlightStroke: '#d2d6de',
+                          data: EXPENCE.split(','),
+                      },
+                    ]
+                }
+
+                var barChartData = jQuery.extend(true, {}, barChartData)
+                var temp0 = barChartData.datasets[0]
+                var temp1 = barChartData.datasets[1]
+                barChartData.datasets[0] = temp1
+                barChartData.datasets[1] = temp0
+
+                var barChartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    datasetFill: false
+                }
+
+                var barChart = new Chart(barChartCanvas, {
+                    type: 'bar',
+                    data: barChartData,
+                    options: barChartOptions
+                })
+            }
+        })
+
+        var pieChartCanvas = $('#pieChart');
+        var donutData = {
+            labels: [
+                'OPD Income',
+                'IPD Income',
+                'Other Income',
+                'Expences',
+                'Deposites',
+            ],
+            datasets: [
+              {
+                  data: [700, 500, 400, 600, 300],
+                  backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
+              }
+            ]
+        };
+        var pieData = donutData;
+        var pieOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        };
+        var pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });
+
+        $.ajax({
+            url: '@Url.Action("DashBordPatientOPDNew", "Home")',
+            type: "GET",
+            dataType: "Json",
+          //  data: { BillNo: $(this).val() },
+            success: function (data) {
+                debugger
+                $("#IPDCollection").text(data.IPDCollection);
+                $("#OPDCollection").text(data.OPDCollection);
+
+                $("#OPDRegistration").text(data.OPDRegNew);
+                $("#IPDAdmission").text(data.IPDRegNew);
+                $("#Appoiment").text(data.AppoimentNew);
+                $("#Discharge").text(data.IPDDischargeNew);
+                $("#BedStatus").text(data.BedStatus);
+                var TotalPer = parseInt(data.BedStatusOccupied) * 100 / parseInt(data.BedStatus);
+                $("#BedStatusOccupied").text(parseInt(TotalPer) + "%");
+
+            }
+        })
+        var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+        var donutData = {
+            labels: [
+                'Chrome',
+                'IE',
+                'FireFox',
+                'Safari',
+                'Opera',
+                'Navigator',
+            ],
+            datasets: [
+              {
+                  data: [700, 500, 400, 600, 300, 100],
+                  backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+              }
+            ]
+        }
+        var donutOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var donutChart = new Chart(donutChartCanvas, {
+            type: 'doughnut',
+            data: donutData,
+            options: donutOptions
+        })
+    })
+
+</script>*@
 
 

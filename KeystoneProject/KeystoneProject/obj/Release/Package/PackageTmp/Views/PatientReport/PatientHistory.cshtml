@@ -185,6 +185,11 @@
         });
     })
     $(document).ready(function () {
+        var totalBill = "";
+      
+        var totalPaid = "";
+        var totaldiscount = "";
+        var totalbal = "";
         $("#submit").click(function () {
             debugger
             $.ajax({
@@ -194,20 +199,59 @@
                 data: { Financiar: $("#Financiar").val(), RegNo: $("#RegNo").val(), Patient: $("#Patient").val(), PatientType: $("#PatientType").val() },
                 success: function (data) {
                     debugger
-                    $("#patientHistoryTableId tbody tr").remove();
+                    var RegNo = 1
+                   $("#patientHistoryTableId tbody tr").remove();
+
+                  
                     for (var i = 0; i < data.length; i++) {
+                        debugger
+                        RegNo++;
                         $("#patientHistoryTableId").append('<tr><td>' + data[i].RegNo + '</td><td>' + data[i].OPDNo + '</td><td>' + data[i].PatientType + '</td><td>' + data[i].PatientName + '</td><td>' + data[i].Address + '</td><td>' + data[i].Mobile + '</td><td>' + data[i].AddmissionDate + '</td><td>' + data[i].DischargeDate + '</td><td>' + data[i].DoctorName + '</td><td>' + data[i].RefferdDoctor + '</td><td>' + data[i].FinanceYear + '</td><td>' + data[i].BillAmount + '</td><td>' + data[i].Discount + '</td><td>' + data[i].PaidAmount + '</td><td>' + data[i].BalanceAmount + '</td></tr>');
-                    };
+
+                        $("#billAmount").val(0);
+                        $("#discount").val(0);
+                        $("#paidAmount").val(0);
+                        $("#BalanceAmount").val(0);
+                        $("#billAmount").val(data[i].BillAmount1);
+                        $("#discount").val(data[i].Discount1)
+                        $("#paidAmount").val(data[i].PaidAmount1)
+                        $("#BalanceAmount").val(data[i].BalanceAmount1)
+                      
+                       
+                    }
+                    totalBill = data[0].BillAmount1;
+                    totalPaid = data[0].PaidAmount1;
+                    totaldiscount = data[0].Discount1;
+                    totalbal = data[0].BalanceAmount1;
+                    alert(totalBill + totalPaid + totaldiscount + totalbal);
+
+                    if (totalBill > 0 ) {
+                        debugger
+                        alert(totalBill + totalPaid + totaldiscount + totalbal);
+
+                        $("#patientHistoryTableId").append('<tr><td></td><td>hggu</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Totol</td><td>' + totalBill + '</td><td>' + totaldiscount + '</td><td>' + totalPaid + '</td><td>' + totalbal + '</td></tr>');
+                    }
+                
+                    $('#patientHistoryTableId').dataTable().fnDestroy();
                     $('.ex-btn').css('display', 'inline-flex');
                     $('#patientHistoryTableId').DataTable({
                         "fixedHeader": true,
                         "paging": true,
-                        "lengthChange": true,
+                        "lengthChange": false,
                         "searching": true,
-                        "ordering": true,
-                        "info": true,
-                        "autoWidth": true,
+                        "ordering": false,
+                        "info": false,
+                        "autoWidth": false,
                         "responsive": false,
+
+                        //"fixedHeader": false,
+                        //"paging": true,
+                        //"lengthChange": false,
+                        //"searching": true,
+                        //"ordering": false,
+                        //"info": false,
+                        //"autoWidth": false,
+                        //"responsive": false,
                     });
                     var buttons = new $.fn.dataTable.Buttons($('#patientHistoryTableId').DataTable(), {
                         buttons: [
@@ -321,7 +365,7 @@
                             </div>
                             <div class="btn-group dropdown-split-warning">
                                 <button type="button" id="submit" name="submit" class="btn btn-app">
-                                    <i class="fa fa-search"></i>Search
+                                    <i class="fa fa-search"></i>View
                                 </button>
                             </div>
                             <div class="btn-group dropdown-split-warning ex-btn" style="display: none;">
@@ -331,7 +375,7 @@
                     </div>
 
                     <div class="row">
-                        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 table-responsive">
                             <table id="patientHistoryTableId" class="table table-bordered hover display dataTable table-hover" role="grid" style="width: 100%">
                                 <thead style="background-color: #bddff7;">
                                     <tr>
@@ -354,6 +398,48 @@
                                 </thead>
                                 <tbody class="scrollbar"></tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="card-body">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <!-- Bill Amount-->
+                                <div class="form-group col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Bill Amt.</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <input type="text" name="billAmount" id="billAmount" class="form-control" placeholder="Bill Amount">
+                                    </div>
+                                </div>
+                                <!-- Discount -->
+                                <div class="form-group col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Discount</label>
+                                    </div>
+                                    <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+                                        <input type="text" name="discount" id="discount" class="form-control" placeholder="Discount">
+                                    </div>
+                                </div>
+                                <!-- Paid Amount -->
+                                <div class="form-group col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Paid Amt.</label>
+                                    </div>
+                                    <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+                                        <input type="text" name="paidAmount" id="paidAmount" class="form-control" placeholder="Paid Amount">
+                                    </div>
+                                </div>
+                                <!-- Balance Amount -->
+                                <div class="form-group col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Bal Amt.</label>
+                                    </div>
+                                    <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+                                        <input type="text" name="BalanceAmount" id="BalanceAmount" class="form-control" placeholder="Balance Amount">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
