@@ -71,6 +71,68 @@ namespace KeystoneProject.Buisness_Logic.Patient
             return PatientImageManagerList;
 
         }
+        public string GetPrintNo_ToRegNo(string PrintRegNO)
+        {
+            DataSet ds = new DataSet();
+            Connect();
+            SqlCommand cmd = new SqlCommand("select * from Patient where  Patient.PrintRegNO=" + PrintRegNO + " and  HospitalID=" + HospitalID + " and LocationID=" + LocationID + " and RowStatus=0 ", con);//Your data query goes here for searching the data
+            // Note: @filter parameter must be there.
+            SqlDataAdapter ad = new SqlDataAdapter();
+            ad.SelectCommand = cmd;
+            con.Open();
+            ad.Fill(ds);
+            string RegNo = "";
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                RegNo = ds.Tables[0].Rows[0]["PatientRegNO"].ToString();
+            }
+            return RegNo;
+        }
+
+        public DataSet GetIPDPatient(string GetIPDPatient, string outside)
+        {
+            Connect();
+            if(outside==null)
+            {
+                outside ="%";
+            }
+            if (outside == "IPD")
+            {
+                SqlCommand cmd = new SqlCommand("GetPatientDischarge", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@HospitalID", HospitalID);
+                cmd.Parameters.AddWithValue("@LocationID", LocationID);
+                DataSet ds = new DataSet();
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                return ds;
+            }
+            if (outside == "%")
+            {
+                SqlCommand cmd = new SqlCommand("select PatientRegNo, PatientName ,Address, MobileNo,PrintRegNO from patient where PatientName like ''+@GetIPDPatient+'%'  and RowStatus=0 and HospitalID =" + HospitalID + " and LocationID =" + LocationID + "", con);
+                cmd.Parameters.AddWithValue("@GetIPDPatient", GetIPDPatient);
+                DataSet ds = new DataSet();
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                return ds;
+            }
+            else
+            {
+                SqlCommand cmd = new SqlCommand("select PatientRegNo, PatientName ,Address, MobileNo,PrintRegNO from patient where PatientName like ''+@GetIPDPatient+'%'  and PatientType ='OPD' and RowStatus=0 and HospitalID =" + HospitalID + " and LocationID =" + LocationID + "", con);
+                cmd.Parameters.AddWithValue("@GetIPDPatient", GetIPDPatient);
+                DataSet ds = new DataSet();
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                return ds;
+            }
+
+
+
+
+        }
 
         public bool Save(PatientImageManager obj)
         {
@@ -85,7 +147,7 @@ namespace KeystoneProject.Buisness_Logic.Patient
 
                 //string[] Paper = obj.Paper.Split(',');
                 string[] Papername = obj.PaperPath.Split(',');
-
+                string[] CasepapID = obj.CasePaperID.Split(',');
                 for (int i = 0; i < Papername.Length; i++)
                 {
 
@@ -94,10 +156,18 @@ namespace KeystoneProject.Buisness_Logic.Patient
 
                     cmPatientMRD.Parameters.AddWithValue("@HospitalID", HospitalID);
                     cmPatientMRD.Parameters.AddWithValue("@LocationID", LocationID);
-                    cmPatientMRD.Parameters.AddWithValue("@CasePaperID", 0);
-                    cmPatientMRD.Parameters["@CasePaperID"].Direction = ParameterDirection.Output;
-
-
+                    if(CasepapID[i] == "0" || CasepapID[i] == null)
+                    {
+                        cmPatientMRD.Parameters.AddWithValue("@CasePaperID", 0);
+                        cmPatientMRD.Parameters["@CasePaperID"].Direction = ParameterDirection.Output;
+                        cmPatientMRD.Parameters.AddWithValue("@Mode", "Add");
+                    }
+                    else
+                    {
+                        cmPatientMRD.Parameters.AddWithValue("@CasePaperID", CasepapID[i]);
+                        cmPatientMRD.Parameters.AddWithValue("@Mode", "Edit");
+                    }
+                   
                     cmPatientMRD.Parameters.AddWithValue("@PatientRegNO", obj.PatientRegNo);
                     cmPatientMRD.Parameters.AddWithValue("@OPDIPDID", obj.OPDIPDID);
                     //cmPatientMRD.Parameters.AddWithValue("@PatientIPDNO", obj.OPDIPDID);
@@ -131,7 +201,7 @@ namespace KeystoneProject.Buisness_Logic.Patient
 
                     }
 
-                    cmPatientMRD.Parameters.AddWithValue("@Mode", "Add");
+                  
                     con.Open();
                     cmPatientMRD.ExecuteNonQuery();
                     con.Close();
