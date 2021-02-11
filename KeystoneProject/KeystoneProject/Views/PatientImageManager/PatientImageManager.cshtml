@@ -488,7 +488,24 @@
 <script>
     var Path = "";
     $(document).ready(function () {
-       
+        $('#PrintRegNo').change(function () {
+            debugger
+            var printReg = $(this).val();
+
+            $.ajax({
+                url: '@Url.Action("GetPrintNo_ToRegNo", "PatientImageManager")',
+                dataType: "json",
+                type: 'GET',
+                data: { PrintRegNo: $("#PrintRegNo").val() },
+
+                success: function (data) {
+                    debugger
+
+                    $('#PrintRegNo').val(printReg)
+                    $("#PatientRegNo").val(printReg)
+                }
+            })
+        })
         var chik = "";
         $("#chkall").click(function () {
 
@@ -602,7 +619,7 @@
            
 
             }
-            alert($("#PatientRegNo").val());
+          //  alert($("#PatientRegNo").val());
          var chk=     document.getElementById("chkall").checked;
         
              $.ajax({
@@ -625,7 +642,8 @@
         
 
     });
-
+    
+   
     function FillData() {
         PatientRegNo = $("#PatientRegNo").val();
         $.ajax({
@@ -941,11 +959,12 @@
 
                                                 <div class="col-lg-5 padding0">
                                                     <div class="col-lg-5 " style="padding-right:0px">
-                                                        <label>Patient Reg. No.</label>
+                                                        <label>UHID No.</label>
 
                                                     </div>
                                                     <div class="col-lg-7 ">
-                                                        <input type="text" id="PatientRegNo" name="PatientRegNo" class="form-control">
+                                                        <input type="text" id="PrintRegNo" name="PrintRegNo" class="form-control" />
+                                                        <input type="hidden" id="PatientRegNo" name="PatientRegNo" class="form-control">
                                                     </div>
                                                 </div>
 
@@ -965,7 +984,7 @@
                                             <div class="col-lg-12 padding0 rowmargintop">
                                                 <div class="col-lg-5 padding0">
                                                     <div class="col-lg-5">
-                                                        <label>Patient OPD/IPD No.</label>
+                                                        <label>OPD/IPD No.</label>
 
                                                     </div>
                                                     <div class="col-lg-7">

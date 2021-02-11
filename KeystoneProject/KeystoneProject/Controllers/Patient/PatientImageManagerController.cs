@@ -70,7 +70,13 @@ namespace KeystoneProject.Controllers.Patient
             }
             return View();
         }
+        public JsonResult GetPrintNo_ToRegNo(string PrintRegNo)
+        {
+            BL_PatientImageManager BL_Reg = new BL_PatientImageManager();
+            string RegNo = BL_Reg.GetPrintNo_ToRegNo(PrintRegNo);
+            return new JsonResult { Data = RegNo, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
 
+        }
         public JsonResult BindNamebyRegNo(string PatientRegNo)
             {
             HospitalLocationID();

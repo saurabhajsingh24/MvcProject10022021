@@ -71,6 +71,23 @@ namespace KeystoneProject.Buisness_Logic.Patient
             return PatientImageManagerList;
 
         }
+        public string GetPrintNo_ToRegNo(string PrintRegNO)
+        {
+            DataSet ds = new DataSet();
+            Connect();
+            SqlCommand cmd = new SqlCommand("select*from Patient where  Patient.PrintRegNO=" + PrintRegNO + " and  HospitalID=" + HospitalID + " and LocationID=" + LocationID + " and RowStatus=0 ", con);//Your data query goes here for searching the data
+            // Note: @filter parameter must be there.
+            SqlDataAdapter ad = new SqlDataAdapter();
+            ad.SelectCommand = cmd;
+            con.Open();
+            ad.Fill(ds);
+            string RegNo = "";
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                RegNo = ds.Tables[0].Rows[0]["PatientRegNO"].ToString();
+            }
+            return RegNo;
+        }
 
         public bool Save(PatientImageManager obj)
         {
