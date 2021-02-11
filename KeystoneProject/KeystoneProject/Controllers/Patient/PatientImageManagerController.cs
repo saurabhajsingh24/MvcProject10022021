@@ -54,7 +54,7 @@ namespace KeystoneProject.Controllers.Patient
             obj.Gender = Request.Form["Gender"];
             obj.ConsultantDr = Request.Form["DoctorName"];
             obj.ReferredByDoctor = Request.Form["DoctorName"];
-            
+            obj.CasePaperID = Request.Form["CasePaperID"].ToString();
 
             //obj.PaperPath = Request.Form["Paper"].ToString();
             obj.Paper = Request.Form["path"].ToString();
@@ -77,6 +77,30 @@ namespace KeystoneProject.Controllers.Patient
             return new JsonResult { Data = RegNo, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
 
         }
+
+        public JsonResult GetIPDPatient(string prefix, string outside)
+        {
+            BL_PatientImageManager BL_Reg = new BL_PatientImageManager();
+            //  BL_Patient_IPDBill _IPDBill = new BL_Patient_IPDBill();
+            DataSet ds = BL_Reg.GetIPDPatient(prefix, outside);
+            List<PatientOPDBill> searchList = new List<PatientOPDBill>();
+            // if (outside == false)
+            //  {
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                searchList.Add(new PatientOPDBill
+                {
+                    patientregNo = (dr["PatientRegNO"].ToString()),
+                    patientname = dr["PatientName"].ToString(),
+                    address = (dr["Address"].ToString()),
+                    contactno = dr["MobileNo"].ToString(),
+                    PrintRegNO = dr["PrintRegNO"].ToString()
+                });
+            }
+            //}
+            return new JsonResult { Data = searchList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
         public JsonResult BindNamebyRegNo(string PatientRegNo)
             {
             HospitalLocationID();

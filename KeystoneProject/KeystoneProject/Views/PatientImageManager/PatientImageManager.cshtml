@@ -498,32 +498,49 @@
                 type: 'GET',
                 data: { PrintRegNo: $("#PrintRegNo").val() },
 
-                success: function (data) {
+                success: function (data)
+                {
+                   // alert(data);
                     debugger
 
-                    $('#PrintRegNo').val(printReg)
-                    $("#PatientRegNo").val(printReg)
+                  //  $('#PrintRegNo').val(printReg)
+                    $("#PatientRegNo").val(data);
+                  //  alert($("#PatientRegNo").val());
+                    FillData();
                 }
             })
         })
+
+        $("#PatientName").click(function () {
+
+            //  $("#patientNameTable").show();
+            $('#patientNameTable').slideDown();
+            $("#patientdataclose").show();
+            var type = $("input[name='colorRadio']").val();
+            PatientDetail(type);
+        })
+
         var chik = "";
         $("#chkall").click(function () {
 
             debugger
              chik = $(this).val();
             chik= document.getElementById("chkall").checked;
-            var row = $("#example td").closest("tr").length;
-            
-            if (chik == true) {
+            var row = $("#example tbody tr").length;
+            debugger
+            if (chik == true)
+            {
 
-                for (var a = 1; a < row; a++) {
+                for (var a = 0; a < row; a++)
+                {
                     document.getElementById("example").tBodies[0].rows[a].cells[0].children[0].checked = true;               
                 }
          
             }
             else
             {
-                   for (var a = 1; a < row; a++) {
+                for (var a = 0; a < row; a++)
+                {
                     document.getElementById("example").tBodies[0].rows[a].cells[0].children[0].checked = false;
 
 
@@ -562,20 +579,12 @@
                         $("#pathshow").text(d.replace('/MRDFiles/', ''));
                         $("#txtScan").val(d);
                         document.getElementById("img").src = d;
-                        //for (var i = 0; i < d.length; i++) {
-                        //    var SrNo = i + 1;
-                   //     $("#example").append('<tr><td>' + d + '</td><td>')
-                        // alert("scanning done");
+                       
                           
-                        $("#example").append('<tr><td><input type="checkbox" name="check" id="check" ><input type="hidden"  name="CasePaperID"  id="CasePaperID" style="display:none" value="' + 0 + '"></td><td>' + $("#PatientRegNo").val() + '</td><td>' + $("#OPDIPDNo").val() + '</td><td>' + $("#PatientType").val() + '</td><td>'+d.replace('/MRDFiles/', '')+' <input type="hidden"  value=' + d + ' name="PaperPath"></td><td> <a href="@Url.Action("DownLoadFile", "PatientImageManager")?CasePaperID=' + $("#CasePaperID").val(0) + '"><i>Download</i></a><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
+                        $("#example tbody").append('<tr><td><input type="checkbox" name="check" id="check" ><input type="hidden"  name="CasePaperID"   style="display:none" value="' + 0 + '"></td><td style="display:none">' + $("#PatientRegNo").val() + '</td><td>' + $("#OPDIPDNo").val() + '</td><td>' + d.replace('/MRDFiles/', '') + ' <input type="hidden"  value=' + d + ' name="PaperPath"></td><td> <a href="@Url.Action("DownLoadFile", "PatientImageManager")?CasePaperID=' + $("#CasePaperID").val(0) + '"><i>Download</i></a></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
 
-                      //  $("#example").append('<tr><td><input type="checkbox" name="check" id="check" ></td><td> <input type="hidden"  name="CasePaperID"  id="CasePaperID" style="display:none" value="' + search[i].CasePaperID + '">' + search[i].PatientRegNo + '</td><td>' + search[i].OPDIPDID + '</td><td>' + search[i].PatientType + '</td><td><input type="hidden" name="PaperPath" ' + search[i].PaperPath + '>' + search[i].PaperName + '</td><td> <a href="@Url.Action("DownLoadFile", "PatientImageManager")?CasePaperID=' + search[i].CasePaperID + '"><i>Download</i></a> <a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
-
-                   //     $("#example1").append('<tr><td>' + d + '</td></tr>')
-                        //$(data).each(function (index, d) {
-                        //    $("#example").append($(" <tr><tr>+ d.Scan + " + d.Scan + ));
-                        //    //$("#PatientType1").val("PatientType");
-                        //}
+                     
+                 
                     },
                 });
 
@@ -592,16 +601,16 @@
 
 
         // table click
-        $("#example").delegate('td', 'click', function () {
-            debugger
-            Path = "";
-            var row = parseInt($(this).parent().index());
+        //$("#example").delegate('td', 'click', function () {
+        //    debugger
+        //    Path = "";
+        //    var row = parseInt($(this).parent().index());
 
-            Path+= document.getElementById('example').tBodies[0].rows[row].cells[8].innerHTML;
-            alert(Path)
+        //    Path+= document.getElementById('example').tBodies[0].rows[row].cells[3].innerHTML;
+        //    alert(Path)
 
 
-        })
+        //})
 
 
         //----
@@ -679,23 +688,27 @@
             success: function (search) {
                 debugger;
                 $("#example tbody tr").remove();
-                for (var i = 0; i < search.length; i++) {
-                    $("#example").append('<tr><td><input type="checkbox" name="check" id="check" ></td><td> <input type="hidden"  name="CasePaperID"  id="CasePaperID" style="display:none" value="' + search[i].CasePaperID + '">' + search[i].PatientRegNo + '</td><td>' + search[i].OPDIPDID + '</td><td>' + search[i].PatientType + '</td><td><input type="hidden" value=' + search[i].PaperPath + ' name="PaperPath" >' + search[i].PaperName + '</td><td> <a href="@Url.Action("DownLoadFile", "PatientImageManager")?CasePaperID=' + search[i].CasePaperID + '"><i>Download</i></a> <a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
-               // Path+= search[i][5]+",";
+                for (var i = 0; i < search.length; i++)
+                {
+                    $("#example tbody").append('<tr><td><input type="checkbox" name="check" id="check"><input type="hidden"  name="CasePaperID"  style="display:none" value="' + search[i].CasePaperID + '"><input type="hidden" value="' + search[i].PatientRegNo + '"></td><td>' + search[i].OPDIPDID + '</td><td><input type="hidden" value=' + search[i].PaperPath + ' name="PaperPath" >' + search[i].PaperName.replace('/MRDFiles/', '') + '</td><td> <a href="@Url.Action("DownLoadFile", "PatientImageManager")?CasePaperID=' + search[i].CasePaperID + '"><i>Download</i></a></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
+                   // $("#CasePaperID").val() = document.getElementById("example").tBodies[0].rows[rows].cells[0].children[1].value;
+                    // Path+= search[i][5]+",";
                    
                 }
             },
 
         });
         $("#example").on("click", "#delrow", function () {
-            alert("del");
+          //  alert("del");
             debugger
             var rows = $(this).closest('tr').index();
-            CasePaperID = document.getElementById("example").tBodies[0].rows[rows].cells[1].innerHTML;
-            
+            CasePaperID = document.getElementById("example").tBodies[0].rows[rows].cells[0].children[1].value;
+            $(this).closest('tr').remove();
+           // alert(CasePaperID);
                 debugger;
                     var conform = confirm("Do you Want To Delete");
-                    if (conform) {
+                    if (conform) 
+                    {
                         debugger;
                         $.ajax({
                             url: '@Url.Action("Delete", "PatientImageManager")',
@@ -705,7 +718,7 @@
                                 if (data.length > 1) {
                                     alert("Delete Successfully");
 
-                                    location.reload();
+                                    //location.reload();
 
                                 }
                                 else {
@@ -729,6 +742,7 @@
 
 
     $(document).ready(function () {
+        $("#patientdataclose").hide();
         debugger;
         $("#PatientName").autocomplete({
 
@@ -760,7 +774,7 @@
             minLength: 1,
             select: function (event, ui) {
                 debugger
-                $("#PFirstName").val(ui.item.PatientName);
+                $("#PatientName").val(ui.item.PatientName);
                 $("#PatientRegNo").val(ui.item.PatientRegNo);
                 //$("#GuardianName").val(ui.item.GuardianName);
                 //$("#Gender").val(ui.item.Gender);
@@ -777,12 +791,59 @@
 
 
         });
+        $("#patientdataclose").click(function () {
+            $("#patientNameTable").hide();
+            $("#patientdataclose").hide();
+        })
+        $("#FirstName").click(function () {
 
+            //  $("#patientNameTable").show();
+            $('#patientNameTable').slideDown();
+            $("#patientdataclose").show();
+            var type = $("#PatientType").val();
+            PatientDetail(type);
+        })
+      
+
+        $("#patientNameTable").delegate('td', 'click', function () {
+            debugger;
+            var row = $(this).parent().index();
+            var Print = document.getElementById('patientNameTable').tBodies[0].rows[row].cells[0].innerHTML;
+            $("#PrintRegNo").val(Print);
+            $("#PrintRegNo").change();
+            $('#patientNameTable').slideUp();
+
+        });
+
+        $("#PatientName").on("keyup", function () {
+            debugger
+            var value = $(this).val().toLowerCase();
+            $("#patientNameTable tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
 
 
     });
 
+    function PatientDetail(type) {
+        $.ajax({
+            url: '@Url.Action("GetIPDPatient", "PatientImageManager")',
+            contentType: "application/json; charset=utf-8",
+            type: "GET",
+            dataType: "json",
+            data: { prefix: "%", outside: type },
+            success: function (result) {
+                debugger
+                $("#patientNameTable tbody tr").remove();
+                $.each(result, function (i, obj) {
+                    $("#patientNameTable").append('<tr><td>' + obj.PrintRegNO + '</td><td style="display:none">' + obj.patientregNo + '</td><td>' + obj.patientname + '</td><td>' + obj.address + '</td><td>' + obj.contactno + '</td></tr>')
 
+                });
+                debugger
+            }
+        });
+    }
     $(function () {
         $("#PatientRegNo").change(function () {
             debugger
@@ -795,125 +856,47 @@
 
 
     });
+
 </script>
-<script>
- @*$(document).ready(function () {
- $("#btndelete").click(function () {
-            var conform = confirm("Do you Want To Delete");
-            if (conform) {
-                debugger;
-                $.ajax({
-                    url: '@Url.Action("Delete", "PatientImageManager")',
-                    type: 'POST',
-                    data: { PatientRegNo: $("#PatientRegNo").val() },
-                    success: function (data) {
-                    if (data.length > 1) {
-                    alert("Delete Successfully");
-                   
-                                location.reload();
-                 
-                    }
-                    else {
 
-                    }
-
-
-                    }
-
-                    })
-
-                    }
-                    })
-
-    });*@
-    </script>
-
-@*<script type="text/javascript">
-            $(document).ready(function () {
-            $("#btndelete").click(function () {
-
-                alert("Delete");
-
-                debugger
-                var conform = confirm("Do you Want To Delete");
-                if (conform) {
-                    
-                    $.ajax({
-                       
-                        url: '@Url.Action("Delete", "PatientImageManager")',
-                        type: 'POST',
-                        data: { CasePaperID: $("#CasePaperID").val() },
-                        success: function (data) {
-                            debugger
-                            if (data.length > 1) {
-                                alert("Delete Successfully");
-                                location.reload();
-                            }
-                            else {
-
-                            }
-
-
-                        }
-
-                    })
-                    
-
-
-
-                }
-            });
-            });
-</script>*@
-
-
-
+    
 
 <script>
 
     var loadfile = function (event) {
         debugger
 
-        // $.getJSON()
+       
         var file = event.target.files[0];
-        // var file = $("#file1").get(0).files[0];
+       
         alert = ("download");
 
         var data = new FormData();
         data.append("ImageFile", file);
-        // alert(file);
+      
         data.append("PaperName", "SamsungA8");
-        //   var ImageFile = file[0];
+        
 
         $.ajax({
-            //   url: "/PreBalanceAmount/GetPatientForPreBalance",
+           
             url: '@Url.Action("imageuplod", "PatientImageManager")',
             type: "POST",
-         //   dataType: 'json', contentType: 'application/json',
-           // data: { Imag1: ImageFile },
+        
             data:data,
             contentType:false,
             processData:false,
             success: function (d) {
                 debugger
-               // var img = document.getElementById("image")
-
-                //img.src = "C:/inetpub/wwwroot/FC10/MRDFiles/" + data;
-
-
+               
                 $("#file1").val = d.PaperName;
-                //$("#pathshow").text(d.PaperName.replace('/MRDFiles/', ''));
+              
                 $("#txtScan").val(d.PaperName);
-                 document.getElementById("img").src = d[0].PaperName;
+                document.getElementById("img").src = d[0].PaperName;
+               // $("#CasePaperID").val(0);
 
-                        //for (var i = 0; i < d.length; i++) {
-                        //    var SrNo = i + 1;
-                   //     $("#example").append('<tr><td>' + d + '</td><td>')
-                           // alert("scanning done");
-                 $("#example").append('<tr><td><input type="checkbox" name="check" id="check" ><input type="hidden"  name="CasePaperID"  id="CasePaperID" style="display:none" value="' + 0 + '"></td><td>' + $("#PatientRegNo").val() + '</td><td>' + $("#OPDIPDNo").val() + '</td><td>' + $("#PatientType").val() + '</td><td>' + d + '<input type="hidden" value=' + d + ' name="PaperPath" ></td><td> <a href="@Url.Action("DownLoadFile", "PatientImageManager")?CasePaperID=' + $("#CasePaperID").val(0) + '"><i>Download</i></a> <a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
+                $("#example tbody").append('<tr><td><input type="checkbox" name="check" id="check" ><input type="hidden" name="CasePaperID"   value="0"></td><td style="display:none"><input type="hidden" value="' + $("#PatientRegNo").val() + '" ></td><td>' + $("#OPDIPDNo").val() + '</td><td>' + d.replace('/MRDFiles/', '') + '<input type="hidden" value=' + d + ' name="PaperPath" ></td><td> <a href="@Url.Action("DownLoadFile", "PatientImageManager")?CasePaperID=' + $("#CasePaperID").val(0) + '"><i>Download</i></a></td><td><a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
 
-               //  $("#example").append('<tr><td><input type="checkbox" name="check" id="check" ></td><td> <input type="hidden"  name="CasePaperID"  id="CasePaperID" style="display:none" value="' + search[i].CasePaperID + '">' + search[i].PatientRegNo + '</td><td>' + search[i].OPDIPDID + '</td><td>' + search[i].PatientType + '</td><td><input type="hidden" name="PaperPath" ' + search[i].PaperPath + '>' + search[i].PaperName + '</td><td> <a href="@Url.Action("DownLoadFile", "PatientImageManager")?CasePaperID=' + search[i].CasePaperID + '"><i>Download</i></a> <a href="#" class="fa fa-trash-o" aria-hidden="true" id="delrow" class="delrow"></td></tr>');
-
+              
             }
         });
 
@@ -965,6 +948,7 @@
                                                     <div class="col-lg-7 ">
                                                         <input type="text" id="PrintRegNo" name="PrintRegNo" class="form-control" />
                                                         <input type="hidden" id="PatientRegNo" name="PatientRegNo" class="form-control">
+                                                    @*<input type="hidden" id="CasePaperID" name="CasePaperID" class="form-control">*@
                                                     </div>
                                                 </div>
 
@@ -976,7 +960,22 @@
                                                     <div class="col-lg-8">
                                                         <input type="text" id="PatientName" name="PatientName" class="form-control">
                                                     </div>
+                                                    <div class="patientTableDiv table-responsive" style="position: absolute;z-index: 100;max-height: 250px;overflow: scroll;background-color: #ffffff;border: 0;box-shadow: 10px 10px 10px -6px #797979;">
+                                                        <button type="button" id="patientdataclose" name="patientdataclose" value="X" class="">X</button>
+                                                        <table id="patientNameTable" class="table table-bordered display table-hover table-head-fixed" style="width: 100%; display:none;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="background-color: #bddff7;">UHID No.</th>
+                                                                    <th style="display:none">Print Reg No.</th>
+                                                                    <th style="background-color: #bddff7;">Pt.Name</th>
+                                                                    <th style="background-color: #bddff7;">Address</th>
+                                                                    <th style="background-color: #bddff7;">Mobile No.</th>
 
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -1027,33 +1026,14 @@
                                                         <select name="Gender" id="Gender" class="form-control input-sm" readonly>
                                                             <option value="Male">Male</option>
                                                             <option value="Female">Female</option>
-                                                            @*<option value="fiat"></option>
-                                                            <option value="audi"></option>*@
+                                                          
                                                         </select>
 
 
                                                     </div>
 
                                                 </div>
-                                                @*<div class="col-lg-7 padding0 rowmarginbottom">
-                                                <div class="col-lg-4">
-                                                    <label>Gender</label>
-
-                                                </div>
-                                                <select name="Gender" id="Gender" class="form-control input-sm">
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
-                                                    <option value="fiat"></option>
-                                                    <option value="audi"></option>
-                                                </select>
-                                                <div class="col-lg-4">
-                                                    <input type="text" id="Gender" Name="Gender" class="form-control" name="hopitalLocation">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <select class="form-control" name="hopitalLocation"></select>
-
-                                                </div>
-                                            </div>*@
+                                               
                                             </div>
 
 
@@ -1088,7 +1068,7 @@
 
                                                     </div>
                                                     <div class="col-lg-7">
-                                                        <input type="text" id="MobileNo" name="MobileNo" class="form-control" name="hopitalLocation" readonly>
+                                                        <input type="text" id="MobileNo" name="MobileNo" class="form-control"  readonly>
                                                     </div>
                                                 </div>
 
@@ -1156,76 +1136,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="scrollbar">
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Edinburgh</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>India</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Jaipur</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Rajasthan</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Pune</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Edinburgh</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Edinburgh</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Edinburgh</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Edinburgh</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Edinburgh</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Edinburgh</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-                                                <tr>
-                                                    @*<td>1</td>
-                                <td>Edinburgh</td>
-                                <td>Edinburgh</td>*@
-                                                </tr>
-
+                                              
+                                  
                                             </tbody>
 
                                         </table>
@@ -1259,12 +1171,12 @@
 
 
                             </div>
-                            <div class="btn-group dropdown-split-warning">
+                            @*<div class="btn-group dropdown-split-warning">
 
                                 <button type="button" id="btndelete" onclick="Delete(document.getElementById('PatientRegNo').value)" class="btndivcss"><span class="fa fa-trash buttoniconcss"></span>Delete</button>
 
 
-                            </div>
+                            </div>*@
                             <div class="btn-group dropdown-split-warning">
 
                                 <button type="reset" onclick="window.location.reload(true)" class="btndivcss"><span class="fa fa-refresh buttoniconcss"></span>Clear</button>
@@ -1283,30 +1195,29 @@
 
                     </div>
 
-                    <div class="col-md-5">
+                    <div class="row">
 
-                        <div class="panel-primary">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="box-header with-border">
                                 <h3 class="panelheading" style="background: #ffffff;">Patient Details</h3>
                             </div>
 
-                            <div class="panel-body padding0">
+                            <div class="table-responsive">
                                 <!-- /.box-header -->
-                                <table id="example" class="display" style="width:100%">
+                                <table id="example" class="table table-bordered hover display dataTable table-hover">
                                     <thead>
                                         <tr>
                                             <th>chk</th>
-                                           
-                                            <th>PatientRegNO</th>
+
+                                            <th style="display:none">PatientRegNO</th>
                                             <th>OPDIPDID</th>
-                                            <th>PatientType</th>
+                                            @*<th style="display:none">PatientType</th>*@
                                             <th>FileName</th>
-                                            <th> Delete </th>
+                                            <th>Download</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="scrollbar">
-                                 
-                                    </tbody>
+                                    <tbody class="scrollbar"></tbody>
 
                                 </table>
 
