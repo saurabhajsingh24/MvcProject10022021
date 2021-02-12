@@ -282,6 +282,8 @@ namespace KeystoneProject.Buisness_Logic.Hospital
             try
             {
                 SqlCommand cmd = new SqlCommand("GetAllRole", con);
+                cmd.Parameters.AddWithValue("@HospitalID", HospitalID);
+                cmd.Parameters.AddWithValue("@locationID", LocationID);
                 cmd.CommandType = CommandType.StoredProcedure;
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter();

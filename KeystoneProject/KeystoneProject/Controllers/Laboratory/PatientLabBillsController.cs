@@ -1591,9 +1591,9 @@ namespace KeystoneProject.Controllers.Laboratory
 
             return new JsonResult { Data = del, JsonRequestBehavior = JsonRequestBehavior.AllowGet }; ;
         }
-        public ActionResult FillOldBillDetails(int BillNo)
+        public ActionResult FillOldBillDetails(int BillNo, PatientLabBills obj)
         {
-            
+            List<PatientLabBills> searchlist = new List<PatientLabBills>();
             string Mode;
             if (BillNo > 0)
             {
@@ -1603,89 +1603,156 @@ namespace KeystoneProject.Controllers.Laboratory
             DataSet dsPatientLABBills = new DataSet();
             DataSet dsPatientLABBillsDetails = new DataSet();
             List<PatientLabBills> fillList = new List<PatientLabBills>();
-            
+            DataSet ds1 = new DataSet();
+
             dsPatientLABBills.Reset();
             dsPatientLABBillsDetails.Reset();
             dsPatientLABBills = BL_obj.GetPatientOldLabBills(HospitalID, LocationID, BillNo);
 
-            dsPatientLABBillsDetails = BL_obj.GetPatientLabOLdBillsDetails(HospitalID, LocationID, BillNo);
-
-            foreach (DataRow dr in dsPatientLABBillsDetails.Tables[0].Rows)
+            for (int i = 0; i < dsPatientLABBills.Tables[0].Rows.Count; i++)
             {
-
-                PatientLabBills objOLDBill = new PatientLabBills();
-
-                objOLDBill.TestID = dr["ServiceID"].ToString();
-                objOLDBill.samplecollection = dr["TestStatus"].ToString();
-                if (dr["TestStatus"].ToString() == "BILLING")
+                if (dsPatientLABBills.Tables.Count > 0)
                 {
-                    objOLDBill.samplecollection = "0";
-
-                }
-                else
-                {
-                    if (dr["TestStatus"].ToString() == "SAMPLECOLLECTION")
+                    obj.ForAuthorization = "0";
+                    if (dsPatientLABBills.Tables[0].Rows.Count > 0)
                     {
-                        objOLDBill.samplecollection = "1";
 
+                        DataTable dt1 = new DataTable();
+
+                        string ForAuthorization = dsPatientLABBills.Tables[0].Rows[0]["ForAuthorization"].ToString();
+
+                        if (ForAuthorization == "1")
+                        {
+                            Connect();
+                            DataSet ds = new DataSet();
+                            DataTable dt = new DataTable();
+
+
+                            SqlCommand cmd1 = new SqlCommand("GetPatientBillsForAuthorization", con);
+                            cmd1.CommandType = CommandType.StoredProcedure;
+                            cmd1.Parameters.Add(new SqlParameter("@HospitalID", HospitalID));
+                            cmd1.Parameters.Add(new SqlParameter("@LocationID", LocationID));
+                            cmd1.Parameters.Add(new SqlParameter("@BillNo", Convert.ToInt32(BillNo)));
+                            //cmd.Parameters.Add(new SqlParameter("@BillNo", 56));
+                            SqlDataAdapter sd1 = new SqlDataAdapter();
+                            sd1.SelectCommand = cmd1;
+
+                            dsPatientLABBills.Reset();
+                            con.Open();
+                            sd1.Fill(dsPatientLABBills);                            
+                        }
+                        Connect();
+                        SqlCommand cmd2 = new SqlCommand();
+                        if (ForAuthorization == "0" || ForAuthorization == "" || ForAuthorization == null)
+                        {
+                            cmd2 = new SqlCommand("GetPatientLabOLdBillsDetails", con);
+                        }
+                        else
+                        {
+                            if (ForAuthorization == "1")
+                            {
+                                cmd2 = new SqlCommand("GetPatientBillsDetailsAurthorise", con);
+                            }
+
+                        }
+
+                        cmd2.CommandType = CommandType.StoredProcedure;
+                        cmd2.Parameters.Add(new SqlParameter("@HospitalID", HospitalID));
+                        cmd2.Parameters.Add(new SqlParameter("@LocationID", LocationID));
+                        cmd2.Parameters.Add(new SqlParameter("@BillNo", Convert.ToInt32(BillNo)));
+                        //cmd.Parameters.Add(new SqlParameter("@BillNo", 56));
+                        SqlDataAdapter sd2 = new SqlDataAdapter();
+                        sd2.SelectCommand = cmd2;
+                       
+
+                        sd2.Fill(ds1);                      
                     }
                 }
-                objOLDBill.TestName = dr["ServiceName"].ToString();
-                objOLDBill.SampleCollectionBoyID = dr["SampleCollectionID"].ToString();
-                objOLDBill.OrganizationName = dr["TPAWiseName"].ToString();
-                objOLDBill.CollectionCentreName = dr["CollectionCentre"].ToString();
-                objOLDBill.Rate = dr["Rate"].ToString();
-                objOLDBill.Qty = dr["Quantity"].ToString();
-                objOLDBill.Discount_Service = dr["Discount_Service"].ToString();
-                objOLDBill.DiscountServiceType = dr["DiscountServiceType"].ToString();
-                objOLDBill.ServiceTotal = Convert.ToDecimal(dr["TotalAmount"].ToString());
-                if (dr["ReportingDate"].ToString() != "")
+
+                DataRow dr1 = dsPatientLABBills.Tables[0].Rows[i];
+
+                string DateTimestr = Convert.ToString(dr1["BillDate"]);
+                DateTime DateTime = Convert.ToDateTime(DateTimestr);
+
+                foreach (DataRow dr in ds1.Tables[0].Rows)
                 {
-                    objOLDBill.ReportingDate = Convert.ToDateTime(dr["ReportingDate"]).ToString("dd-MM-yyyy");
-                }
-                objOLDBill.OutSourceID = dr["OutSourceID"].ToString();
-                objOLDBill.LabName = dr["OutSourceLabName"].ToString();
-                objOLDBill.ServiceType = dr["ServiceType"].ToString();
-                if (dsPatientLABBills.Tables[0].Rows.Count > 0)
-                {
-                    objOLDBill.BillDate = Convert.ToDateTime(dsPatientLABBills.Tables[0].Rows[0]["BillDate"]).ToString("yyyy-MM-dd");
-                    objOLDBill.BillDatetime = Convert.ToDateTime(dsPatientLABBills.Tables[0].Rows[0]["BillDate"]).ToString("hh:mm:ss");
-                    objOLDBill.GrossAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["GrossAmount"]);
-                    objOLDBill.TaxPercent = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TaxPercent"].ToString());
-                    objOLDBill.TaxAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TaxAmount"].ToString());
-                    objOLDBill.TotalAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TotalAmount"].ToString());
 
-
-                    objOLDBill.Discount = dsPatientLABBills.Tables[0].Rows[0]["DiscountAmount"].ToString();
-                    
-                    objOLDBill.Name = dsPatientLABBills.Tables[0].Rows[0]["Name"].ToString();
-                    objOLDBill.PaymentType = dsPatientLABBills.Tables[0].Rows[0]["PaymentType"].ToString();
-                    objOLDBill.PaymentDate = Convert.ToDateTime(dsPatientLABBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
-                  
-
-                    objOLDBill.Remark = dsPatientLABBills.Tables[0].Rows[0]["Remarks"].ToString();
-                    objOLDBill.Number = dsPatientLABBills.Tables[0].Rows[0]["Number"].ToString();
-
-
-                    if (dsPatientLABBills.Tables[0].Rows[0]["PreBalanceAmount"].ToString() == "")
+                    obj.TestID = dr["ServiceID"].ToString();
+                    obj.samplecollection = dr["TestStatus"].ToString();
+                    if (dr["TestStatus"].ToString() == "BILLING")
                     {
-                        //ucPatientLabBills1.txtPreBalance.Text = "0.00";
+                        obj.samplecollection = "0";
+
                     }
                     else
                     {
-                        objOLDBill.PreBalanceAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["PreBalanceAmount"].ToString());
-                    }
-                    objOLDBill.NetPayableAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["NetPayableAmount"].ToString());
-                    objOLDBill.PaidAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["PaidAmount"].ToString());
-                    objOLDBill.BalanceAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["BalanceAmount"].ToString());
-                    objOLDBill.DiscountReason = dsPatientLABBills.Tables[0].Rows[0]["DiscountReason"].ToString();
-                    objOLDBill.TaxAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TaxAmount"].ToString());
-                    objOLDBill.TaxPercent = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TaxPercent"].ToString());
-                }
-                fillList.Add(objOLDBill);
+                        if (dr["TestStatus"].ToString() == "SAMPLECOLLECTION")
+                        {
+                            obj.samplecollection = "1";
 
+                        }
+                    }
+                    obj.TestName = dr["ServiceName"].ToString();
+                    obj.SampleCollectionBoyID = dr["SampleCollectionID"].ToString();
+                    obj.OrganizationName = dr["TPAWiseName"].ToString();
+                    obj.CollectionCentreName = dr["CollectionCentre"].ToString();
+                    obj.Rate = dr["Rate"].ToString();
+                    obj.Qty = dr["Quantity"].ToString();
+                    obj.Discount_Service = dr["Discount_Service"].ToString();
+                    obj.DiscountServiceType = dr["DiscountServiceType"].ToString();
+                    obj.ServiceTotal = Convert.ToDecimal(dr["TotalAmount"].ToString());
+                    if (dr["ReportingDate"].ToString() != "")
+                    {
+                        obj.ReportingDate = Convert.ToDateTime(dr["ReportingDate"]).ToString("dd-MM-yyyy");
+                    }
+                    obj.OutSourceID = dr["OutSourceID"].ToString();
+                    obj.LabName = dr["OutSourceLabName"].ToString();
+                    obj.ServiceType = dr["ServiceType"].ToString();
+
+                    if (dsPatientLABBills.Tables[0].Rows.Count > 0)
+                    {
+                        obj.ForAuthorization = dsPatientLABBills.Tables[0].Rows[0]["ForAuthorization"].ToString();
+                        obj.BillDate = Convert.ToDateTime(dsPatientLABBills.Tables[0].Rows[0]["BillDate"]).ToString("yyyy-MM-dd");
+                        obj.BillDatetime = Convert.ToDateTime(dsPatientLABBills.Tables[0].Rows[0]["BillDate"]).ToString("hh:mm");
+                        obj.GrossAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["GrossAmount"]);
+                        obj.TaxPercent = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TaxPercent"].ToString());
+                        obj.TaxAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TaxAmount"].ToString());
+                        obj.TotalAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TotalAmount"].ToString());
+
+
+                        obj.Discount = dsPatientLABBills.Tables[0].Rows[0]["DiscountAmount"].ToString();
+
+                        obj.Name = dsPatientLABBills.Tables[0].Rows[0]["Name"].ToString();
+                        obj.PaymentType = dsPatientLABBills.Tables[0].Rows[0]["PaymentType"].ToString();
+                        obj.PaymentDate = Convert.ToDateTime(dsPatientLABBills.Tables[0].Rows[0]["Date"]).ToString("yyyy-MM-dd");
+
+
+                        obj.Remark = dsPatientLABBills.Tables[0].Rows[0]["Remarks"].ToString();
+                        obj.Number = dsPatientLABBills.Tables[0].Rows[0]["Number"].ToString();
+
+
+                        if (dsPatientLABBills.Tables[0].Rows[0]["PreBalanceAmount"].ToString() == "")
+                        {
+
+                        }
+                        else
+                        {
+                            obj.PreBalanceAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["PreBalanceAmount"].ToString());
+                        }
+                        obj.NetPayableAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["NetPayableAmount"].ToString());
+                        obj.PaidAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["PaidAmount"].ToString());
+                        obj.BalanceAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["BalanceAmount"].ToString());
+                        obj.DiscountReason = dsPatientLABBills.Tables[0].Rows[0]["DiscountReason"].ToString();
+                        obj.TaxAmount = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TaxAmount"].ToString());
+                        obj.TaxPercent = Convert.ToDecimal(dsPatientLABBills.Tables[0].Rows[0]["TaxPercent"].ToString());
+                    }
+                }
+              
             }
-            return Json(fillList);
+
+
+            searchlist.Add(obj);
+            return new JsonResult { Data = searchlist, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
         public JsonResult ShowPatient()
         {
