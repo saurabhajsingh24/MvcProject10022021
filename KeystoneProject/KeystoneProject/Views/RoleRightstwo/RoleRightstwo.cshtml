@@ -694,7 +694,9 @@
                     </div>
 
                     <div class="container-fluid">
-
+                        <div id="loadimg" style="display:none">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/54/Ajux_loader.gif" style="display: inline-block;" />
+                        </div>
 
                         <div class="col-lg-12">
                             <div class="col-lg-12">
@@ -704,22 +706,24 @@
 
 
                                             @{
-                                                var ParentModuleID = Convert.ToInt32(Model.GetRoleAndRights.Tables[0].Rows[0]["ParentModuleID"]);
-                                                var ParentModuleName = Model.GetRoleAndRights.Tables[0].Rows[0]["ModuleName"].ToString();
-                                                
-                                                DataView dataView = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + ParentModuleID + " ", "", DataViewRowState.CurrentRows);
-                                                int levelid1 = 1;
-                                                int levelid2 = 1;
-                                                int levelid3 = 1;
-                                                int levelid4 = 1;
-                                                foreach (DataRowView dataViewLevel0 in dataView)
+                                                if(Model.GetRoleAndRights.Tables[0].Rows.Count > 0)
                                                 {
-                                                    var Level = Convert.ToInt32(dataViewLevel0["ModuleID"]);
-                                                    DataView dataView1 = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + dataViewLevel0["ModuleID"] + " ", "", DataViewRowState.CurrentRows);
-                                                    foreach (DataRowView drRow in dataView1)
+                                                    var ParentModuleID = Convert.ToInt32(Model.GetRoleAndRights.Tables[0].Rows[0]["ParentModuleID"]);
+                                                    var ParentModuleName = Model.GetRoleAndRights.Tables[0].Rows[0]["ModuleName"].ToString();
+
+                                                    DataView dataView = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + ParentModuleID + " ", "", DataViewRowState.CurrentRows);
+                                                    int levelid1 = 1;
+                                                    int levelid2 = 1;
+                                                    int levelid3 = 1;
+                                                    int levelid4 = 1;
+                                                    foreach (DataRowView dataViewLevel0 in dataView)
                                                     {
-                                                        var Level1 = Convert.ToInt32(drRow["ModuleID"]);
-                                                        DataView dataView2 = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + drRow["ModuleID"].ToString() + "", "", DataViewRowState.CurrentRows);
+                                                        var Level = Convert.ToInt32(dataViewLevel0["ModuleID"]);
+                                                        DataView dataView1 = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + dataViewLevel0["ModuleID"] + " ", "", DataViewRowState.CurrentRows);
+                                                        foreach (DataRowView drRow in dataView1)
+                                                        {
+                                                            var Level1 = Convert.ToInt32(drRow["ModuleID"]);
+                                                            DataView dataView2 = new DataView(Model.GetRoleAndRights.Tables[0], " ParentModuleID = " + drRow["ModuleID"].ToString() + "", "", DataViewRowState.CurrentRows);
                                                         <div>
                                                             <a href="#" class="list-group-item text-center" onclick="Level1('@Level1')"><input type="checkbox" class="frstmodule checkbox @Level1" name="@Level1" value="@Level1" />
                                                                 <input type="hidden" name="Level1" id="Level1" value="@Level1"><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>@drRow["ModuleName"]
@@ -727,9 +731,10 @@
                                                           
                                                         </div>
 
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                            }
                                         </div>
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
@@ -759,7 +764,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-5 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
+                                    <div id="showhidediv" class="col-lg-5 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
                                         <!-- flight section -->
                                         <div class="">
 
@@ -931,7 +936,7 @@
         function Level1(Level1ModuleID)
         {
             debugger
-
+            $("#showhidediv").show();
             var chkall1 = $('input[name=' + Level1ModuleID + ']').prop("checked");
             debugger
             $.ajax({
@@ -1005,21 +1010,20 @@
         var moduleID = value.value.split('-')[0];
         var moduleName = value.value.split('-')[1];
         var chkall1 = $('input[name=' + moduleID + ']').prop("checked");
-    //    Level2(moduleID, moduleName, value.checked);
+      Level2(moduleID, moduleName, value.checked);
         debugger
         if (chkall1 == true) {
-            $('.checked' + moduleID).prop("checked", true);
-            $('.checkedEdit' + moduleID).prop("checked", true);
-            $('.checkedDelete' + moduleID).prop("checked", true);
-            $('.checkedPrint' + moduleID).prop("checked", true);
+            $(".Add1").prop("checked", true);
+            $(".Edit1").prop("checked", true);
+            $(".Delete1").prop("checked", true);
+            $(".Print1 ").prop("checked", true);
            // $('input[name=' + d.ModuleID + ']').prop("checked", true);
-
         }
         else {
-            $('.checked' + moduleID).prop("checked", false);
-            $('.checkedEdit' + moduleID).prop("checked", false);
-            $('.checkedDelete' + moduleID).prop("checked", false);
-            $('.checkedPrint' + moduleID).prop("checked", false);
+            $(".Add1").prop("checked", false);
+            $(".Edit1").prop("checked", false);
+            $(".Delete1").prop("checked", false);
+            $(".Print1 ").prop("checked", false);
             unchk1();
            // $('input[name=' + d.ModuleID + ']').prop("checked", false);
             // Level2(d.ModuleID, d.ModuleName, false);
@@ -1141,9 +1145,12 @@
 
                 }
                 debugger
-                 chkall = $('input[name=' + Level1ModuleID + ']').prop("checked");
-                if (chkall == true) {
-
+                    chkall = $('input[name=' + Level1ModuleID + ']').prop("checked");
+                     if(chkall == true) {
+                    $(".Add1").prop("checked", true);
+                    $(".Edit1").prop("checked", true);
+                    $(".Delete1").prop("checked", true);
+                    $(".Print1 ").prop("checked", true);
                     //$('.checked' + Level1ModuleID).prop("checked", true);
                     //$('.checkedEdit' + Level1ModuleID).prop("checked", true);
                     //$('.checkedDelete' + Level1ModuleID).prop("checked", true);
@@ -1168,42 +1175,82 @@
         }
     }
 
+    function ChkAll()
+    {debugger
+        $("#showhidediv").hide();
+        var count = 0;
+        var data1 = $("input[name=Level1]").length;
+        $("input[name=Level1]").each(function () {
 
-    $(document).ready(function () {
-        $("input[name=keystone]").change(function () {
+            var Module1ID = $(this).val();
+          
 
-            if ($(this).is(":checked")) {
+            $.ajax({
+                url: '@Url.Action("RoleRightsLevel2", "RoleRightstwo")',
+                type: "POST",
+                data: { Level1ModuleID: $(this).val() },
+                dataType: "json",
+                success: function (data) {
+                    $("#level2").empty();
+                    $(".m").hide(200);
+                    $("#loadimg").show();
+                    count++;
+                            
+                    debugger
+                    $(data).each(function (index, d) {
+                               
+                        //  $("#level2").append('<a href="#" onclick="Level2(\'' + d.ModuleID + '\',\'' + d.ModuleName + '\')"  class="list-group-item text-center"><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>' + d.ModuleName + '</a>');
+                        // Level2(d.ModuleID);
+                        var chkall = $(this).is(":checked");
+                        $(".chkallhideshow").hide();
+                        Level2(d.ModuleID, d.ModuleName,chkall);
+                        if ($("input[name=keystone]").prop("checked") == true) {
 
-                $("input[name=Level1]").each(function () {
-                    $.ajax({
-                        url: '@Url.Action("RoleRightsLevel2", "RoleRightstwo")',
-                        type: "POST",
-                        data: { Level1ModuleID: $(this).val() },
-                        dataType: "json",
-                        success: function (data) {
-                            $("#level2").empty();
-                            $(".m").hide(200);
-                            $(data).each(function (index, d) {
-
-                                //  $("#level2").append('<a href="#" onclick="Level2(\'' + d.ModuleID + '\',\'' + d.ModuleName + '\')"  class="list-group-item text-center"><h4 class="glyphicon glyphicon-credit-card" style="padding-right:20px"></h4>' + d.ModuleName + '</a>');
-                                // Level2(d.ModuleID);
-                                var chkall = $(this).is(":checked");
-                                $(".chkallhideshow").hide();
-                                Level2(d.ModuleID, d.ModuleName,chkall);
-
-                            })
-
-
+                            $("input[name=" + Module1ID + "]").prop("checked", true);
+                            $(".Add1").prop("checked", true);
+                            $(".Edit1").prop("checked", true);
+                            $(".Delete1").prop("checked", true);
+                            $(".Print1 ").prop("checked", true);
+                            //  $("checkbox").prop("checked", true);
+                            $("input[name=" + d.ModuleID + "]").prop("checked", true);
+                        }
+                        else
+                        {
+                            $("input[name=" + Module1ID + "]").prop("checked", false);
+                            $(".Add1").prop("checked", false);
+                            $(".Edit1").prop("checked", false);
+                            $(".Delete1").prop("checked", false);
+                            $(".Print1 ").prop("checked", false);
+                            //  $("checkbox").prop("checked", true);
+                            $("input[name=" + d.ModuleID + "]").prop("checked", false);
                         }
                     })
+                    if (data1 == count) {
+                        $("#loadimg").hide();
+                    }
+                }
+            })
 
 
 
 
-                })
-
-            }
         })
+
+    }
+    $(document).ready(function () {
+        $("input[name=keystone]").change(function () {
+            debugger
+            if ($(this).is(":checked")) {
+                debugger
+                ChkAll();
+            }
+            else
+            {
+                ChkAll();
+            }
+            })
+ 
+        
         $(".Add").click(function () {
             debugger
             if ($(this).is(":checked")) {

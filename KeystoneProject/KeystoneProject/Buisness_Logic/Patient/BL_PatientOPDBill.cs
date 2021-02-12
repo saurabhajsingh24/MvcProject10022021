@@ -665,7 +665,7 @@ namespace KeystoneProject.Buisness_Logic.Patient
                     DataSet dsPatientBllDetails = new DataSet();
                     dsPatientBllDetails = BillModifyDetails.GetPatientLabOLdBillsDetails(HospitalID, LocationID, Convert.ToInt32(obj.BillNoId));
                     SqlCommand updateauth = new SqlCommand("update PatientBillsDetailsModify set RowStatus = 2 where BillNo = '" + obj.BillNoId + "' and RowStatus = 0", con);
-                 int cha=   updateauth.ExecuteNonQuery();
+                    int cha=   updateauth.ExecuteNonQuery();
                     foreach (DataRow dr1 in dsPatientBllDetails.Tables[0].Rows)
                     {
 

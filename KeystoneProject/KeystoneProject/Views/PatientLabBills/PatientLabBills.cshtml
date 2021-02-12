@@ -964,6 +964,8 @@
                         $("#NetPay").val(data[0].NetAmountPayable);
                         $("#DiscReason").val(data[0].DiscountReason);
                         $("#BalAmt").val(data[0].BalanceAmount);
+                        debugger
+                        $("#ForAuthorization").val(data[0].ForAuthorization);
 
                         if (data[0].PaymentType != "Cash") {
                             $("#Number").val(data[0].Number);
@@ -2110,6 +2112,8 @@
             }
 
         });
+
+
        
     })
   
@@ -2725,8 +2729,40 @@
         $("#AddAppointment").click(function () {
             $("#AppointmentTable").hide();
         });
-        $("#FORMSUBMIT").submit(function () {
-   debugger
+
+
+        var chk = false;
+        function myFunction() {
+            debugger
+
+            debugger
+            if (chk == "True") {
+                var con = confirm("Send For Authorization Confirmation");
+                if (con) {
+                    var person = prompt("Reason For Authorization");
+                    if (person) {
+                        $("#txtinput").val(person);
+                        $("#ForAuthorization").val(1);
+                        return true;
+                    }
+                    else {
+                        $("#ForAuthorization").val(0);
+                        $("#txtinput").val('');
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return true;
+            }
+
+        }
+
+        $("#form").submit(function () {
+          debugger
             var show = $("#DiscReason").val();
             var show1 = $("#Discount").val();
             if (show1 > 0) {
@@ -2737,7 +2773,43 @@
                     return false;
                 }
             }
+
+            var r = myFunction();
+            if (r) {
+                return true;
+            }
+            else {
+                return false;
+            }
         })
+
+
+        $("#OldBillNo").change(function () {
+            debugger
+            if ($(this).val() > 0) {
+
+                $.ajax({
+                    //url: "/OPDBill/GetServiceGrp",
+                    url: '@Url.Action("chkAurthorise", "OPDBill")',
+                    type: "POST",
+                    dataType: "json",
+                    data: { prefix: "" },
+                    success: function (data) {
+                        debugger
+                        // alert(data[0]);
+                        chk = data[0];
+                        if (data[1] == "True") {
+                            chk = false;
+                        }
+
+                    }
+                })
+            }
+            else {
+                chk = false;
+            }
+        })
+
 
         $("#PatientName").on("keyup", function () {
             debugger
@@ -2805,7 +2877,7 @@
 </script>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
-        <form action="" id="FORMSUBMIT" method="post">
+        <form action="" id="form" method="post">
             <div class="content-wrapper">
                 <section class="content-header">
                     <div class="container-fluid">
@@ -2972,7 +3044,7 @@
                                                     </div>
                                                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                                         @*<input type="datetime" id="Time" name="Time" value="@DateTime.Now.ToString("hh:mm:ss")" class="form-control">*@
-
+                                                        
                                                         <input type="time" id="Time" name="Time" value="now" class="form-control">
 
                                                     </div>
